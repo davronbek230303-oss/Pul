@@ -112,7 +112,17 @@
       <button class="btn" onclick="saqlaLimit()">Limitlarni saqlash</button>
     </div>
 
-    <button class="clear" onclick="hammasini()">🗑 Hammasini tozalash</button>
+    <div class="card">
+      <h3>🔒 Tozalash paroli</h3>
+      <input id="setPass" type="password" placeholder="Yangi parol (bo'sh = o'chirish)">
+      <button class="btn" onclick="saqlaParol()">Parolni saqlash</button>
+    </div>
+
+    <div class="card">
+      <h3>🗑 Tozalash</h3>
+      <input id="clearPass" type="password" placeholder="Parol (o'rnatilgan bo'lsa)">
+      <button class="clear" onclick="hammasini()" style="margin-top:0">🗑 Hammasini tozalash</button>
+    </div>
   </div>
 
 <script>
@@ -147,7 +157,8 @@
             "⛔ Ruxsat yo'q yoki Telegram orqali ochilmadi.<br>Botdagi tugma orqali oching.";
           document.getElementById("loading").classList.remove("hidden");
           document.getElementById("app").classList.add("hidden");
-        }
+        } else if(j.error==="parol"){ if(tg) tg.showAlert("🔒 Parol xato!"); else alert("Parol xato"); }
+        else if(j.error==="summa"){ if(tg) tg.showAlert("Summani to'g'ri kiriting."); else alert("Summa xato"); }
         return;
       }
       DATA = j; render();
@@ -265,8 +276,16 @@
     if(tg) tg.showConfirm("Shu yozuv o'chirilsinmi?", function(ok){ if(ok) go(); });
     else if(confirm("O'chirilsinmi?")) go();
   }
+  function saqlaParol(){
+    var pw = document.getElementById("setPass").value;
+    call({action:"setpass", parol:pw}, function(){
+      document.getElementById("setPass").value="";
+      if(tg) tg.showAlert(pw ? "✅ Parol o'rnatildi." : "✅ Parol o'chirildi."); else alert("Saqlandi");
+    });
+  }
   function hammasini(){
-    var go = function(){ call({action:"clear"}); };
+    var parol = document.getElementById("clearPass").value;
+    var go = function(){ call({action:"clear", parol:parol}, function(){ document.getElementById("clearPass").value=""; }); };
     if(tg) tg.showConfirm("BARCHA yozuv o'chiriladi, balans 0 bo'ladi. Davom etilsinmi?", function(ok){ if(ok) go(); });
     else if(confirm("Hammasini o'chirish?")) go();
   }
