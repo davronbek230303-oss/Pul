@@ -148,6 +148,7 @@
     renderChips();
   }
   function renderChips(){
+    if(!DATA) return;
     var cats = (turi==="Kirim") ? DATA.kirimKat : DATA.chiqimKat;
     var h = "";
     cats.forEach(function(c){
