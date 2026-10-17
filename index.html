@@ -69,10 +69,19 @@
       <div class="lbl" id="oy"></div>
     </div>
 
-    <div class="card"><div class="row">
-      <div class="tile"><div class="t-lbl">Shu oy kirim</div><div class="t-val t-in" id="oyKirim">—</div></div>
-      <div class="tile"><div class="t-lbl">Shu oy chiqim</div><div class="t-val t-out" id="oyChiqim">—</div></div>
-    </div></div>
+    <div class="card">
+      <div class="row">
+        <div class="tile"><div class="t-lbl">Shu oy kirim</div><div class="t-val t-in" id="oyKirim">—</div></div>
+        <div class="tile"><div class="t-lbl">Shu oy chiqim</div><div class="t-val t-out" id="oyChiqim">—</div></div>
+      </div>
+      <div id="oyByudjet" style="margin-top:12px"></div>
+    </div>
+
+    <div class="card" id="bugunCard">
+      <div class="bar-top"><span>📆 Bugun sarflangan</span><span id="bugunTxt">—</span></div>
+      <div class="bar"><i id="bugunBar" style="width:0%"></i></div>
+      <div class="muted" id="bugunHint" style="font-size:12px;margin-top:6px"></div>
+    </div>
 
     <div class="card">
       <h3>Yangi yozuv</h3>
@@ -94,6 +103,13 @@
     <div class="card">
       <h3>Oxirgi amaliyotlar</h3>
       <div id="txlist"></div>
+    </div>
+
+    <div class="card">
+      <h3>⚙️ Limitlar</h3>
+      <input id="limKun" inputmode="decimal" placeholder="Kunlik limit (masalan: 100000)">
+      <input id="limOy" inputmode="decimal" placeholder="Oylik byudjet (masalan: 3mln)">
+      <button class="btn" onclick="saqlaLimit()">Limitlarni saqlash</button>
     </div>
 
     <button class="clear" onclick="hammasini()">🗑 Hammasini tozalash</button>
@@ -134,7 +150,9 @@
         }
         return;
       }
-      DATA = j; render(); if(cb) cb();
+      DATA = j; render();
+      if(j.warn && tg) tg.showAlert("⚠️ Bugungi xarajat " + fmt(j.bugunChiqim) + " — kunlik limit " + fmt(j.limitKun) + " dan oshib ketdi!");
+      if(cb) cb();
     }).catch(function(e){
       document.getElementById("loading").innerHTML = "⚠️ Ulanish xatosi. Qayta urinib ko'ring.";
       document.getElementById("loading").classList.remove("hidden");
@@ -166,7 +184,30 @@
     document.getElementById("oy").textContent = DATA.oy;
     document.getElementById("oyKirim").textContent = fmt(DATA.oyKirim);
     document.getElementById("oyChiqim").textContent = fmt(DATA.oyChiqim);
-    if(!kat){ var cats=(turi==="Kirim")?DATA.kirimKat:DATA.chiqimKat; }
+
+    // Oylik byudjet
+    var lo = DATA.limitOy, oyEl = document.getElementById("oyByudjet");
+    if(lo>0){
+      var opct = Math.min(100, Math.round(DATA.oyChiqim/lo*100)), oover = DATA.oyChiqim>lo;
+      oyEl.innerHTML = '<div class="bar-top"><span>🎯 Oylik byudjet</span><span>'+fmt(DATA.oyChiqim)+' / '+fmt(lo)+'</span></div>'+
+        '<div class="bar"><i style="width:'+opct+'%;background:'+(oover?'var(--red)':'var(--green)')+'"></i></div>';
+    } else { oyEl.innerHTML=''; }
+
+    // Bugungi limit
+    var lk = DATA.limitKun;
+    document.getElementById("bugunTxt").textContent = fmt(DATA.bugunChiqim) + (lk>0? ' / '+fmt(lk):'');
+    var bbar = document.getElementById("bugunBar"), bhint = document.getElementById("bugunHint");
+    if(lk>0){
+      var bpct = Math.min(100, Math.round(DATA.bugunChiqim/lk*100)), bover = DATA.bugunChiqim>lk;
+      bbar.style.width = bpct+'%'; bbar.style.background = bover?'var(--red)':'var(--green)';
+      bhint.textContent = bover ? ('⚠️ Limitdan '+fmt(DATA.bugunChiqim-lk)+' oshib ketdingiz') : ('Qoldi: '+fmt(lk-DATA.bugunChiqim));
+    } else { bbar.style.width='0%'; bhint.textContent = "Kunlik limit o'rnatilmagan — pastda Limitlar'dan qo'ying."; }
+
+    // Limit inputlarini to'ldirish (yozayotgan bo'lmasa)
+    var lkEl=document.getElementById("limKun"), loEl=document.getElementById("limOy");
+    if(document.activeElement!==lkEl) lkEl.value = DATA.limitKun>0? DATA.limitKun : '';
+    if(document.activeElement!==loEl) loEl.value = DATA.limitOy>0? DATA.limitOy : '';
+
     renderChips();
 
     // kategoriya bo'yicha chiqim bar
@@ -210,6 +251,13 @@
     if(tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred("light");
     call({action:"add", turi:turi, kategoriya:k, summa:summa, izoh:izoh}, function(){
       document.getElementById("summa").value=""; document.getElementById("izoh").value=""; kat="";
+    });
+  }
+  function saqlaLimit(){
+    var kun = parseSum(document.getElementById("limKun").value);
+    var oy = parseSum(document.getElementById("limOy").value);
+    call({action:"setlimit", kun:kun, oy:oy}, function(){
+      if(tg) tg.showAlert("✅ Limitlar saqlandi."); else alert("Saqlandi.");
     });
   }
   function ochir(id){
