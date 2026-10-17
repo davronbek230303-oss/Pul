@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Mening pulim</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+  :root{
+    --bg: var(--tg-theme-bg-color, #17212b);
+    --card: var(--tg-theme-secondary-bg-color, #232e3c);
+    --text: var(--tg-theme-text-color, #f5f5f5);
+    --hint: var(--tg-theme-hint-color, #8a99a8);
+    --accent: var(--tg-theme-button-color, #3390ec);
+    --accent-text: var(--tg-theme-button-text-color, #ffffff);
+    --green:#34c759; --red:#ff453a; --line: rgba(255,255,255,.08);
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+  body{margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+       background:var(--bg); color:var(--text); padding:14px 14px 40px; font-size:15px}
+  .muted{color:var(--hint)}
+  .card{background:var(--card); border-radius:16px; padding:16px; margin-bottom:12px}
+  .hero{background:linear-gradient(135deg,#3390ec,#1a6fd4); color:#fff; text-align:center}
+  .hero .lbl{opacity:.85; font-size:13px; letter-spacing:.3px}
+  .hero .bal{font-size:30px; font-weight:800; margin:6px 0 2px; word-break:break-word}
+  .row{display:flex; gap:10px}
+  .tile{flex:1; text-align:center; padding:12px}
+  .tile .t-lbl{font-size:12px; color:var(--hint)}
+  .tile .t-val{font-size:17px; font-weight:700; margin-top:4px}
+  .t-in{color:var(--green)} .t-out{color:var(--red)}
+  h3{font-size:14px; margin:4px 2px 10px; color:var(--hint); font-weight:600; text-transform:uppercase; letter-spacing:.4px}
+  .seg{display:flex; background:rgba(0,0,0,.18); border-radius:12px; padding:4px; margin-bottom:12px}
+  .seg button{flex:1; border:0; background:transparent; color:var(--text); padding:10px; border-radius:9px; font-size:15px; font-weight:600}
+  .seg button.on.in{background:var(--green); color:#fff}
+  .seg button.on.out{background:var(--red); color:#fff}
+  .chips{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px}
+  .chip{border:1px solid var(--line); background:transparent; color:var(--text); padding:8px 12px;
+        border-radius:20px; font-size:14px}
+  .chip.on{background:var(--accent); color:var(--accent-text); border-color:var(--accent)}
+  input{width:100%; border:1px solid var(--line); background:rgba(0,0,0,.15); color:var(--text);
+        padding:13px; border-radius:12px; font-size:16px; margin-bottom:10px; outline:none}
+  .btn{width:100%; border:0; background:var(--accent); color:var(--accent-text); padding:14px;
+       border-radius:12px; font-size:16px; font-weight:700}
+  .btn:active{opacity:.8}
+  .bar-row{margin-bottom:10px}
+  .bar-top{display:flex; justify-content:space-between; font-size:14px; margin-bottom:4px}
+  .bar{height:8px; background:rgba(255,255,255,.08); border-radius:6px; overflow:hidden}
+  .bar>i{display:block; height:100%; border-radius:6px; background:var(--accent)}
+  .tx{display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid var(--line)}
+  .tx:last-child{border-bottom:0}
+  .tx .emo{font-size:20px; width:26px; text-align:center}
+  .tx .mid{flex:1; min-width:0}
+  .tx .mid .k{font-weight:600}
+  .tx .mid .d{font-size:12px; color:var(--hint)}
+  .tx .amt{font-weight:700; white-space:nowrap}
+  .tx .x{color:var(--hint); font-size:18px; padding:4px 6px}
+  .center{text-align:center; padding:30px 10px; color:var(--hint)}
+  .clear{width:100%; margin-top:6px; border:0; background:transparent; color:var(--red); padding:12px; font-size:14px}
+  .hidden{display:none}
+</style>
+</head>
+<body>
+  <div id="loading" class="center">⏳ Yuklanmoqda…</div>
+  <div id="app" class="hidden">
+
+    <div class="card hero">
+      <div class="lbl">💰 BALANS</div>
+      <div class="bal" id="balans">—</div>
+      <div class="lbl" id="oy"></div>
+    </div>
+
+    <div class="card"><div class="row">
+      <div class="tile"><div class="t-lbl">Shu oy kirim</div><div class="t-val t-in" id="oyKirim">—</div></div>
+      <div class="tile"><div class="t-lbl">Shu oy chiqim</div><div class="t-val t-out" id="oyChiqim">—</div></div>
+    </div></div>
+
+    <div class="card">
+      <h3>Yangi yozuv</h3>
+      <div class="seg">
+        <button id="segOut" class="on out" onclick="setTuri('Chiqim')">➖ Chiqim</button>
+        <button id="segIn" class="in" onclick="setTuri('Kirim')">➕ Kirim</button>
+      </div>
+      <div class="chips" id="chips"></div>
+      <input id="summa" inputmode="decimal" placeholder="Summa (masalan: 50000 yoki 50k)">
+      <input id="izoh" placeholder="Izoh (ixtiyoriy)">
+      <button class="btn" onclick="saqla()">Saqlash</button>
+    </div>
+
+    <div class="card" id="catCard">
+      <h3>Shu oy chiqimlar</h3>
+      <div id="bars"></div>
+    </div>
+
+    <div class="card">
+      <h3>Oxirgi amaliyotlar</h3>
+      <div id="txlist"></div>
+    </div>
+
+    <button class="clear" onclick="hammasini()">🗑 Hammasini tozalash</button>
+  </div>
+
+<script>
+  var API = "https://script.google.com/macros/s/AKfycby_Tuq0xlmTV_QpPF-IArtq1UVM8uAKESnKzR1QlnTIrI0ZFKUaBghIG_n_UtgE4MTpiA/exec";
+  var tg = window.Telegram ? window.Telegram.WebApp : null;
+  var INIT = tg ? tg.initData : "";
+  var turi = "Chiqim", kat = "", DATA = null;
+
+  if (tg) { tg.ready(); tg.expand(); }
+
+  function fmt(n){
+    n = Math.round(Number(n)||0);
+    var neg = n < 0; n = Math.abs(n);
+    var s = String(n).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+    return (neg?"-":"") + s + " " + (DATA? DATA.valyuta : "so'm");
+  }
+  function parseSum(v){
+    v = String(v).toLowerCase().replace(/\s/g,""); var m=1;
+    if(/(mln|million|m)$/.test(v)){m=1e6; v=v.replace(/(mln|million|m)$/,"");}
+    else if(/(ming|k)$/.test(v)){m=1e3; v=v.replace(/(ming|k)$/,"");}
+    v=v.replace(/[.,]/g,""); var n=Number(v); return isFinite(n)? n*m : 0;
+  }
+  function esc(s){ return String(s||"").replace(/[<>&]/g,function(c){return {"<":"&lt;",">":"&gt;","&":"&amp;"}[c];}); }
+
+  function call(params, cb){
+    var url = API + "?initData=" + encodeURIComponent(INIT);
+    for(var k in params) url += "&" + k + "=" + encodeURIComponent(params[k]);
+    fetch(url).then(function(r){return r.json();}).then(function(j){
+      if(!j.ok){
+        if(j.error==="auth" || j.error==="forbidden"){
+          document.getElementById("loading").innerHTML =
+            "⛔ Ruxsat yo'q yoki Telegram orqali ochilmadi.<br>Botdagi tugma orqali oching.";
+          document.getElementById("loading").classList.remove("hidden");
+          document.getElementById("app").classList.add("hidden");
+        }
+        return;
+      }
+      DATA = j; render(); if(cb) cb();
+    }).catch(function(e){
+      document.getElementById("loading").innerHTML = "⚠️ Ulanish xatosi. Qayta urinib ko'ring.";
+      document.getElementById("loading").classList.remove("hidden");
+    });
+  }
+
+  function setTuri(t){
+    turi = t; kat = "";
+    document.getElementById("segOut").className = "out" + (t==="Chiqim"?" on":"");
+    document.getElementById("segIn").className  = "in"  + (t==="Kirim"?" on":"");
+    renderChips();
+  }
+  function renderChips(){
+    var cats = (turi==="Kirim") ? DATA.kirimKat : DATA.chiqimKat;
+    var h = "";
+    cats.forEach(function(c){
+      var e = DATA.emoji[c] || "";
+      h += '<button class="chip'+(kat===c?' on':'')+'" onclick="pick(\''+c+'\')">'+e+' '+c+'</button>';
+    });
+    document.getElementById("chips").innerHTML = h;
+  }
+  function pick(c){ kat = c; renderChips(); }
+
+  function render(){
+    document.getElementById("loading").classList.add("hidden");
+    document.getElementById("app").classList.remove("hidden");
+    document.getElementById("balans").textContent = fmt(DATA.balans);
+    document.getElementById("oy").textContent = DATA.oy;
+    document.getElementById("oyKirim").textContent = fmt(DATA.oyKirim);
+    document.getElementById("oyChiqim").textContent = fmt(DATA.oyChiqim);
+    if(!kat){ var cats=(turi==="Kirim")?DATA.kirimKat:DATA.chiqimKat; }
+    renderChips();
+
+    // kategoriya bo'yicha chiqim bar
+    var cat = DATA.catChiqim, keys = Object.keys(cat).sort(function(a,b){return cat[b]-cat[a];});
+    var jami = keys.reduce(function(s,k){return s+cat[k];},0);
+    var card = document.getElementById("catCard");
+    if(!keys.length){ card.classList.add("hidden"); }
+    else{
+      card.classList.remove("hidden");
+      var h="";
+      keys.forEach(function(k){
+        var pct = jami? Math.round(cat[k]/jami*100):0;
+        h += '<div class="bar-row"><div class="bar-top"><span>'+(DATA.emoji[k]||"•")+' '+esc(k)+
+             '</span><span>'+fmt(cat[k])+' · '+pct+'%</span></div>'+
+             '<div class="bar"><i style="width:'+pct+'%"></i></div></div>';
+      });
+      document.getElementById("bars").innerHTML = h;
+    }
+
+    // oxirgi amaliyotlar
+    var t = DATA.tx, hh="";
+    if(!t.length){ hh = '<div class="muted" style="padding:6px 0">Hali yozuv yo\'q.</div>'; }
+    t.forEach(function(r){
+      var e = DATA.emoji[r.kategoriya] || (r.turi==="Kirim"?"➕":"➖");
+      var sign = r.turi==="Kirim" ? "+" : "−";
+      var col = r.turi==="Kirim" ? "t-in" : "t-out";
+      hh += '<div class="tx"><div class="emo">'+e+'</div>'+
+            '<div class="mid"><div class="k">'+esc(r.kategoriya)+(r.izoh?' <span class="d">'+esc(r.izoh)+'</span>':'')+'</div>'+
+            '<div class="d">'+r.sana+'</div></div>'+
+            '<div class="amt '+col+'">'+sign+fmt(r.summa)+'</div>'+
+            '<div class="x" onclick="ochir(\''+r.id+'\')">✕</div></div>';
+    });
+    document.getElementById("txlist").innerHTML = hh;
+  }
+
+  function saqla(){
+    var summa = parseSum(document.getElementById("summa").value);
+    if(summa<=0){ if(tg) tg.showAlert("Summani to'g'ri kiriting."); else alert("Summani kiriting."); return; }
+    var k = kat || "Boshqa";
+    var izoh = document.getElementById("izoh").value.trim();
+    if(tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred("light");
+    call({action:"add", turi:turi, kategoriya:k, summa:summa, izoh:izoh}, function(){
+      document.getElementById("summa").value=""; document.getElementById("izoh").value=""; kat="";
+    });
+  }
+  function ochir(id){
+    var go = function(){ call({action:"del", id:id}); };
+    if(tg) tg.showConfirm("Shu yozuv o'chirilsinmi?", function(ok){ if(ok) go(); });
+    else if(confirm("O'chirilsinmi?")) go();
+  }
+  function hammasini(){
+    var go = function(){ call({action:"clear"}); };
+    if(tg) tg.showConfirm("BARCHA yozuv o'chiriladi, balans 0 bo'ladi. Davom etilsinmi?", function(ok){ if(ok) go(); });
+    else if(confirm("Hammasini o'chirish?")) go();
+  }
+
+  // Boshlash
+  if(!INIT){
+    document.getElementById("loading").innerHTML =
+      "⛔ Bu sahifani <b>Telegram bot</b> ichidan oching.";
+  } else {
+    setTuri("Chiqim");
+    call({action:"data"});
+  }
+</script>
+</body>
+</html>
