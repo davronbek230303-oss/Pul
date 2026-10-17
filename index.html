@@ -57,6 +57,12 @@
   .center{text-align:center; padding:30px 10px; color:var(--hint)}
   .clear{width:100%; margin-top:6px; border:0; background:transparent; color:var(--red); padding:12px; font-size:14px}
   .hidden{display:none}
+  .goal{padding:12px 0; border-bottom:1px solid var(--line)}
+  .goal:last-child{border-bottom:0}
+  .goal-act{display:flex; gap:8px; margin-top:8px; align-items:center}
+  .goal-act input{margin:0; flex:1}
+  .goal-act button{border:0; border-radius:10px; padding:11px 15px; font-weight:700; background:var(--accent); color:var(--accent-text); font-size:15px}
+  .goal-act button.del{background:transparent; color:var(--red); padding:11px 10px}
 </style>
 </head>
 <body>
@@ -103,6 +109,17 @@
     <div class="card">
       <h3>Oxirgi amaliyotlar</h3>
       <div id="txlist"></div>
+    </div>
+
+    <div class="card">
+      <h3>🎯 Maqsadlar</h3>
+      <div id="goals"></div>
+      <div style="margin-top:12px">
+        <input id="gNom" placeholder="Maqsad nomi (masalan: Telefon)">
+        <input id="gSum" inputmode="decimal" placeholder="Kerakli summa (masalan: 5mln)">
+        <input id="gMuddat" placeholder="Muddat (ixtiyoriy: 2026-12)">
+        <button class="btn" onclick="goalAdd()">+ Yangi maqsad</button>
+      </div>
     </div>
 
     <div class="card">
@@ -260,6 +277,46 @@
             '<div class="x" onclick="ochir(\''+r.id+'\')">✕</div></div>';
     });
     document.getElementById("txlist").innerHTML = hh;
+    renderGoals();
+  }
+
+  function renderGoals(){
+    var g = DATA.maqsadlar || [], h="";
+    if(!g.length){ h = '<div class="muted" style="padding:4px 0">Hali maqsad yo\'q. Pastda yangi maqsad qo\'shing.</div>'; }
+    g.forEach(function(x){
+      var pct = x.maqsad>0 ? Math.min(100, Math.round(x.yiglangan/x.maqsad*100)) : 0;
+      var done = x.maqsad>0 && x.yiglangan>=x.maqsad;
+      h += '<div class="goal">'+
+        '<div class="bar-top"><span>'+(done?'✅':'🎯')+' '+esc(x.nom)+(x.muddat?' <span class="d">'+esc(x.muddat)+'</span>':'')+'</span>'+
+        '<span>'+fmt(x.yiglangan)+' / '+fmt(x.maqsad)+' · '+pct+'%</span></div>'+
+        '<div class="bar"><i style="width:'+pct+'%;background:'+(done?'var(--green)':'var(--accent)')+'"></i></div>'+
+        '<div class="goal-act">'+
+          '<input id="h_'+x.id+'" inputmode="decimal" placeholder="Summa qo\'shish (masalan 500k)">'+
+          '<button onclick="goalHissa(\''+x.id+'\')">+</button>'+
+          '<button class="del" onclick="goalDel(\''+x.id+'\')">✕</button>'+
+        '</div></div>';
+    });
+    document.getElementById("goals").innerHTML = h;
+  }
+  function goalAdd(){
+    var nom = document.getElementById("gNom").value.trim();
+    var sum = parseSum(document.getElementById("gSum").value);
+    var muddat = document.getElementById("gMuddat").value.trim();
+    if(!nom){ if(tg) tg.showAlert("Maqsad nomini yozing."); else alert("Nom"); return; }
+    if(sum<=0){ if(tg) tg.showAlert("Kerakli summani to'g'ri yozing."); else alert("Summa"); return; }
+    call({action:"goaladd", nom:nom, maqsad:sum, muddat:muddat}, function(){
+      document.getElementById("gNom").value=""; document.getElementById("gSum").value=""; document.getElementById("gMuddat").value="";
+    });
+  }
+  function goalHissa(id){
+    var v = parseSum(document.getElementById("h_"+id).value);
+    if(v<=0){ if(tg) tg.showAlert("Qo'shiladigan summani yozing."); else alert("Summa"); return; }
+    call({action:"goalhissa", id:id, summa:v});
+  }
+  function goalDel(id){
+    var go = function(){ call({action:"goaldel", id:id}); };
+    if(tg) tg.showConfirm("Shu maqsad o'chirilsinmi?", function(ok){ if(ok) go(); });
+    else if(confirm("O'chirilsinmi?")) go();
   }
 
   function saqla(){
