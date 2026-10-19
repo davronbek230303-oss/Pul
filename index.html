@@ -49,16 +49,16 @@
   .eye{cursor:pointer; opacity:.95; font-size:20px; vertical-align:middle}
   .chips{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px}
   .chip{border:1px solid var(--line); background:rgba(255,255,255,.03); color:var(--text); padding:8px 13px;
-        border-radius:22px; font-size:14px; font-weight:600; display:inline-flex; align-items:center; gap:6px}
+        border-radius:22px; font-size:14px; font-weight:600; display:inline-flex; align-items:center; gap:6px; cursor:pointer}
   .chip .ms{font-size:17px; color:var(--hint)}
   .chip.on{background:var(--accent); color:var(--accent-text); border-color:var(--accent)}
   .chip.on .ms{color:#fff}
   input,select{width:100%; border:1px solid var(--line); background:rgba(0,0,0,.18); color:var(--text);
         padding:13px; border-radius:13px; font-size:16px; margin-bottom:10px; outline:none; font-family:inherit; font-weight:600}
   input::placeholder{color:var(--hint); font-weight:500}
-  .link-btn{width:100%; border:0; background:transparent; color:var(--accent); padding:10px; font-size:14px; font-weight:700}
+  .link-btn{width:100%; border:0; background:transparent; color:var(--accent); padding:10px; font-size:14px; font-weight:700; cursor:pointer}
   .btn{width:100%; border:0; background:var(--accent); color:var(--accent-text); padding:15px;
-       border-radius:14px; font-size:16px; font-weight:800; display:inline-flex; align-items:center; justify-content:center; gap:8px}
+       border-radius:14px; font-size:16px; font-weight:800; display:inline-flex; align-items:center; justify-content:center; gap:8px; cursor:pointer}
   .btn.out{background:var(--red)} .btn.in{background:var(--green)}
   .btn:active{opacity:.85}
   .bar-row{margin-bottom:11px}
@@ -77,18 +77,18 @@
   .tx .x{color:var(--hint); padding:4px 4px; cursor:pointer}
   .tx .x .ms{font-size:19px}
   .center{text-align:center; padding:40px 10px; color:var(--hint)}
-  .clear{width:100%; margin-top:6px; border:0; background:rgba(255,90,95,.12); color:var(--red); padding:14px; font-size:15px; font-weight:700; border-radius:14px}
+  .clear{width:100%; margin-top:6px; border:0; background:rgba(255,90,95,.12); color:var(--red); padding:14px; font-size:15px; font-weight:700; border-radius:14px; cursor:pointer}
   .hidden{display:none}
   .goal{padding:13px 0; border-bottom:1px solid var(--line)}
   .goal:last-child{border-bottom:0}
   .goal-act{display:flex; gap:8px; margin-top:9px; align-items:center}
   .goal-act input{margin:0; flex:1}
-  .goal-act button{border:0; border-radius:11px; padding:11px 15px; font-weight:800; background:var(--accent); color:var(--accent-text); display:inline-flex; align-items:center}
+  .goal-act button{border:0; border-radius:11px; padding:11px 15px; font-weight:800; background:var(--accent); color:var(--accent-text); display:inline-flex; align-items:center; cursor:pointer}
   .goal-act button.del{background:rgba(255,90,95,.12); color:var(--red); padding:11px 12px}
   /* navigatsiya tugmalari */
   .nav{display:grid; grid-template-columns:1fr 1fr; gap:11px}
   .nav button{display:flex; flex-direction:column; gap:10px; align-items:flex-start; border:1px solid var(--line);
-       background:var(--card2); color:var(--text); padding:15px; border-radius:16px; font-size:15px; font-weight:700; text-align:left}
+       background:var(--card2); color:var(--text); padding:15px; border-radius:16px; font-size:15px; font-weight:700; text-align:left; cursor:pointer}
   .nav button:active{opacity:.8}
   .ni{width:42px; height:42px; border-radius:13px; display:flex; align-items:center; justify-content:center}
   .ni .ms{font-size:24px}
@@ -111,133 +111,136 @@
   .warn{background:rgba(255,90,95,.1); border:1px solid rgba(255,90,95,.28)}
   .warn .w{padding:6px 0; font-size:14px; font-weight:600}
   .kv{display:flex; justify-content:space-between; padding:5px 0; font-size:14px}
+  .langrow{display:flex; gap:10px}
+  .langrow .chip{flex:1; justify-content:center; font-size:15px; padding:12px}
 </style>
 </head>
 <body>
-  <div id="loading" class="center">⏳ Yuklanmoqda…</div>
+  <div id="loading" class="center" data-i18n="loading">⏳ Yuklanmoqda…</div>
   <div id="app" class="hidden">
 
     <!-- ============ BOSH MENYU ============ -->
     <div id="pHome" class="page">
       <div class="card hero">
         <button class="iq" style="position:absolute;top:12px;right:12px;background:rgba(255,255,255,.2);color:#fff" onclick="info('balans')"><span class="ms" style="font-size:16px">info</span></button>
-        <div class="lbl">BALANS <span class="ms eye" id="eyeBal" onclick="toggleEye('bal')" style="color:#fff">visibility</span></div>
+        <div class="lbl"><span data-i18n="bal_lbl">BALANS</span> <span class="ms eye" id="eyeBal" onclick="toggleEye('bal')" style="color:#fff">visibility</span></div>
         <div class="bal" id="balans">—</div>
         <div class="lbl" id="oy"></div>
       </div>
 
       <div class="card">
-        <div class="hd"><h3>Shu oy <span class="ms eye" id="eyeOy" onclick="toggleEye('oy')">visibility</span></h3>
+        <div class="hd"><h3><span data-i18n="shu_oy">Shu oy</span> <span class="ms eye" id="eyeOy" onclick="toggleEye('oy')">visibility</span></h3>
           <div class="ic"><button class="iq" onclick="info('oy')"><span class="ms" style="font-size:16px">info</span></button></div></div>
         <div class="row">
-          <div class="tile"><div class="t-lbl">Kirim</div><div class="t-val t-in" id="oyKirim">—</div></div>
-          <div class="tile"><div class="t-lbl">Chiqim</div><div class="t-val t-out" id="oyChiqim">—</div></div>
+          <div class="tile"><div class="t-lbl" data-i18n="kirim">Kirim</div><div class="t-val t-in" id="oyKirim">—</div></div>
+          <div class="tile"><div class="t-lbl" data-i18n="chiqim">Chiqim</div><div class="t-val t-out" id="oyChiqim">—</div></div>
         </div>
         <div id="oyByudjet" style="margin-top:12px"></div>
         <div id="bugunBox" style="margin-top:14px"></div>
       </div>
 
       <div class="card">
-        <div class="hd"><h3><span class="ms" style="font-size:18px">donut_large</span> Xarajatlar statistikasi</h3></div>
+        <div class="hd"><h3><span class="ms" style="font-size:18px">donut_large</span> <span data-i18n="xarajat_stat">Xarajatlar statistikasi</span></h3></div>
         <div id="homeChart" class="chartwrap"></div>
       </div>
 
       <div class="card save hidden" id="tejamCard">
-        <div class="hd"><h3 style="color:var(--green)"><span class="ms" style="font-size:18px">savings</span> Tejalgan pul</h3>
+        <div class="hd"><h3 style="color:var(--green)"><span class="ms" style="font-size:18px">savings</span> <span data-i18n="tejalgan">Tejalgan pul</span></h3>
           <div class="ic"><button class="iq" onclick="info('tejam')"><span class="ms" style="font-size:16px">info</span></button></div></div>
         <div id="tejamBox"></div>
       </div>
 
       <div class="card warn hidden" id="warnCard">
-        <div class="hd"><h3 style="color:var(--red)"><span class="ms" style="font-size:18px">warning</span> Ogohlantirish</h3></div>
+        <div class="hd"><h3 style="color:var(--red)"><span class="ms" style="font-size:18px">warning</span> <span data-i18n="ogohlantirish">Ogohlantirish</span></h3></div>
         <div id="warnList"></div>
       </div>
 
       <div class="card" id="homeGoalCard">
-        <div class="hd"><h3><span class="ms" style="font-size:18px">flag</span> Maqsadlar holati</h3>
+        <div class="hd"><h3><span class="ms" style="font-size:18px">flag</span> <span data-i18n="maqsad_holati">Maqsadlar holati</span></h3>
           <div class="ic"><button class="iq" onclick="nav('Maqsad')"><span class="ms" style="font-size:18px">chevron_right</span></button></div></div>
         <div id="homeGoals"></div>
       </div>
 
       <div class="card">
-        <div class="hd"><h3>Bo'limlar</h3></div>
+        <div class="hd"><h3 data-i18n="bolimlar">Bo'limlar</h3></div>
         <div class="nav">
-          <button onclick="nav('Chiqim')"><span class="ni" style="background:rgba(255,90,95,.16)"><span class="ms" style="color:var(--red)">trending_down</span></span>Chiqimlar</button>
-          <button onclick="nav('Kirim')"><span class="ni" style="background:rgba(47,210,126,.16)"><span class="ms" style="color:var(--green)">trending_up</span></span>Kirimlar</button>
-          <button onclick="nav('Maqsad')"><span class="ni" style="background:rgba(176,107,255,.16)"><span class="ms" style="color:var(--violet)">flag</span></span>Maqsadlar</button>
-          <button onclick="nav('Taqsim')"><span class="ni" style="background:rgba(51,144,236,.16)"><span class="ms" style="color:var(--accent)">donut_small</span></span>Byudjet taqsimoti</button>
-          <button onclick="nav('Qarz')"><span class="ni" style="background:rgba(255,171,46,.16)"><span class="ms" style="color:var(--orange)">receipt_long</span></span>Qarz daftarchasi</button>
-          <button onclick="nav('Limit')"><span class="ni" style="background:rgba(90,200,250,.16)"><span class="ms" style="color:#5ac8fa">tune</span></span>Limitlar</button>
-          <button onclick="nav('Sozlama')" style="grid-column:1 / span 2; flex-direction:row; align-items:center; gap:12px"><span class="ni" style="background:rgba(255,255,255,.08)"><span class="ms">settings</span></span>Sozlamalar (parol / tozalash)</button>
+          <button onclick="nav('Chiqim')"><span class="ni" style="background:rgba(255,90,95,.16)"><span class="ms" style="color:var(--red)">trending_down</span></span><span data-i18n="nav_chiqim">Chiqimlar</span></button>
+          <button onclick="nav('Kirim')"><span class="ni" style="background:rgba(47,210,126,.16)"><span class="ms" style="color:var(--green)">trending_up</span></span><span data-i18n="nav_kirim">Kirimlar</span></button>
+          <button onclick="nav('Maqsad')"><span class="ni" style="background:rgba(176,107,255,.16)"><span class="ms" style="color:var(--violet)">flag</span></span><span data-i18n="nav_maqsad">Maqsadlar</span></button>
+          <button onclick="nav('Taqsim')"><span class="ni" style="background:rgba(51,144,236,.16)"><span class="ms" style="color:var(--accent)">donut_small</span></span><span data-i18n="nav_taqsim">Byudjet taqsimoti</span></button>
+          <button onclick="nav('Qarz')"><span class="ni" style="background:rgba(255,171,46,.16)"><span class="ms" style="color:var(--orange)">receipt_long</span></span><span data-i18n="nav_qarz">Qarz daftarchasi</span></button>
+          <button onclick="nav('Limit')"><span class="ni" style="background:rgba(90,200,250,.16)"><span class="ms" style="color:#5ac8fa">tune</span></span><span data-i18n="nav_limit">Limitlar</span></button>
+          <button id="navUsers" class="hidden" onclick="nav('Users')"><span class="ni" style="background:rgba(176,107,255,.16)"><span class="ms" style="color:var(--violet)">group</span></span><span data-i18n="nav_users">Foydalanuvchilar</span></button>
+          <button onclick="nav('Sozlama')" style="grid-column:1 / span 2; flex-direction:row; align-items:center; gap:12px"><span class="ni" style="background:rgba(255,255,255,.08)"><span class="ms">settings</span></span><span data-i18n="nav_sozlama">Sozlamalar</span></button>
         </div>
       </div>
     </div>
 
     <!-- ============ CHIQIMLAR ============ -->
     <div id="pChiqim" class="page hidden">
-      <div class="ptitle"><span class="ms" style="color:var(--red)">trending_down</span> Chiqimlar</div>
+      <div class="ptitle"><span class="ms" style="color:var(--red)">trending_down</span> <span data-i18n="p_chiqim">Chiqimlar</span></div>
       <div class="card">
-        <div class="hd"><h3>Yangi chiqim</h3><div class="ic"><button class="iq" onclick="info('yangi')"><span class="ms" style="font-size:16px">info</span></button></div></div>
+        <div class="hd"><h3 data-i18n="yangi_chiqim">Yangi chiqim</h3><div class="ic"><button class="iq" onclick="info('yangi')"><span class="ms" style="font-size:16px">info</span></button></div></div>
         <div class="chips" id="chipsC"></div>
-        <input id="summaC" class="num" inputmode="decimal" placeholder="Summa (masalan: 50 000 yoki 50k)">
-        <input id="izohC" placeholder="Izoh (ixtiyoriy)">
-        <button class="btn out" onclick="saqla('Chiqim')"><span class="ms">add</span> Chiqim qo'shish</button>
+        <input id="summaC" class="num" inputmode="decimal" data-ph="summaC_ph" placeholder="Summa (masalan: 50 000 yoki 50k)">
+        <input id="izohC" data-ph="izoh_ph" placeholder="Izoh (ixtiyoriy)">
+        <button class="btn out" onclick="saqla('Chiqim')"><span class="ms">add</span> <span data-i18n="btn_chiqim_add">Chiqim qo'shish</span></button>
       </div>
       <div class="card">
-        <div class="hd"><h3><span class="ms" style="font-size:18px">pie_chart</span> Diagramma</h3></div>
+        <div class="hd"><h3><span class="ms" style="font-size:18px">pie_chart</span> <span data-i18n="diagramma">Diagramma</span></h3></div>
         <div id="chiqChart" class="chartwrap"></div>
       </div>
       <div class="card">
-        <div class="hd"><h3>Barcha chiqimlar <span class="ms eye" id="eyeTxC" onclick="toggleEye('tx')">visibility</span></h3></div>
+        <div class="hd"><h3><span data-i18n="barcha_chiqim">Barcha chiqimlar</span> <span class="ms eye" id="eyeTxC" onclick="toggleEye('tx')">visibility</span></h3></div>
         <div id="listC"></div>
       </div>
     </div>
 
     <!-- ============ KIRIMLAR ============ -->
     <div id="pKirim" class="page hidden">
-      <div class="ptitle"><span class="ms" style="color:var(--green)">trending_up</span> Kirimlar</div>
+      <div class="ptitle"><span class="ms" style="color:var(--green)">trending_up</span> <span data-i18n="p_kirim">Kirimlar</span></div>
       <div class="card">
-        <div class="hd"><h3>Yangi kirim</h3><div class="ic"><button class="iq" onclick="info('yangi')"><span class="ms" style="font-size:16px">info</span></button></div></div>
+        <div class="hd"><h3 data-i18n="yangi_kirim">Yangi kirim</h3><div class="ic"><button class="iq" onclick="info('yangi')"><span class="ms" style="font-size:16px">info</span></button></div></div>
         <div class="chips" id="chipsK"></div>
-        <input id="summaK" class="num" inputmode="decimal" placeholder="Summa (masalan: 3 000 000 yoki 3mln)">
-        <input id="izohK" placeholder="Izoh (ixtiyoriy)">
-        <button class="btn in" onclick="saqla('Kirim')"><span class="ms">add</span> Kirim qo'shish</button>
+        <input id="summaK" class="num" inputmode="decimal" data-ph="summaK_ph" placeholder="Summa (masalan: 3 000 000 yoki 3mln)">
+        <input id="izohK" data-ph="izoh_ph" placeholder="Izoh (ixtiyoriy)">
+        <button class="btn in" onclick="saqla('Kirim')"><span class="ms">add</span> <span data-i18n="btn_kirim_add">Kirim qo'shish</span></button>
       </div>
       <div class="card">
-        <div class="hd"><h3><span class="ms" style="font-size:18px">pie_chart</span> Diagramma</h3></div>
+        <div class="hd"><h3><span class="ms" style="font-size:18px">pie_chart</span> <span data-i18n="diagramma">Diagramma</span></h3></div>
         <div id="kirChart" class="chartwrap"></div>
       </div>
       <div class="card">
-        <div class="hd"><h3>Barcha kirimlar <span class="ms eye" id="eyeTxK" onclick="toggleEye('tx')">visibility</span></h3></div>
+        <div class="hd"><h3><span data-i18n="barcha_kirim">Barcha kirimlar</span> <span class="ms eye" id="eyeTxK" onclick="toggleEye('tx')">visibility</span></h3></div>
         <div id="listK"></div>
       </div>
     </div>
 
     <!-- ============ MAQSADLAR ============ -->
     <div id="pMaqsad" class="page hidden">
-      <div class="ptitle"><span class="ms" style="color:var(--violet)">flag</span> Maqsadlar</div>
+      <div class="ptitle"><span class="ms" style="color:var(--violet)">flag</span> <span data-i18n="p_maqsad">Maqsadlar</span></div>
       <div class="card">
-        <div class="hd"><h3>Maqsadlarim</h3><div class="ic"><button class="iq" onclick="info('maqsad')"><span class="ms" style="font-size:16px">info</span></button></div></div>
+        <div class="hd"><h3 data-i18n="maqsadlarim">Maqsadlarim</h3><div class="ic"><button class="iq" onclick="info('maqsad')"><span class="ms" style="font-size:16px">info</span></button></div></div>
         <div id="goals"></div>
       </div>
       <div class="card">
-        <div class="hd"><h3>Yangi maqsad</h3></div>
-        <input id="gNom" placeholder="Maqsad nomi (masalan: Telefon)">
-        <input id="gSum" class="num" inputmode="decimal" placeholder="Kerakli summa (masalan: 5mln)">
-        <input id="gMuddat" placeholder="Muddat (ixtiyoriy: 2026-12)">
-        <button class="btn" onclick="goalAdd()"><span class="ms">add</span> Yangi maqsad</button>
+        <div class="hd"><h3 data-i18n="yangi_maqsad">Yangi maqsad</h3></div>
+        <input id="gNom" data-ph="gnom_ph" placeholder="Maqsad nomi (masalan: Telefon)">
+        <input id="gSum" class="num" inputmode="decimal" data-ph="gsum_ph" placeholder="Kerakli summa (masalan: 5mln)">
+        <input id="gMuddat" data-ph="gmuddat_ph" placeholder="Muddat (ixtiyoriy: 2026-12)">
+        <button class="btn" onclick="goalAdd()"><span class="ms">add</span> <span data-i18n="btn_yangi_maqsad">Yangi maqsad</span></button>
       </div>
     </div>
 
     <!-- ============ TAQSIMOT ============ -->
     <div id="pTaqsim" class="page hidden">
-      <div class="ptitle"><span class="ms" style="color:var(--accent)">donut_small</span> Byudjet taqsimoti</div>
+      <div class="ptitle"><span class="ms" style="color:var(--accent)">donut_small</span> <span data-i18n="p_taqsim">Byudjet taqsimoti</span></div>
       <div class="card">
-        <div class="hd"><h3><span class="ms" style="font-size:18px">pie_chart</span> Reja diagrammasi</h3></div>
+        <div class="hd"><h3><span class="ms" style="font-size:18px">pie_chart</span> <span data-i18n="reja_diag">Reja diagrammasi</span></h3></div>
         <div id="taqChart" class="chartwrap"></div>
       </div>
       <div class="card" id="taqsimCard">
-        <div class="hd"><h3>Reja</h3>
+        <div class="hd"><h3 data-i18n="reja">Reja</h3>
           <div class="ic">
             <button class="iq" onclick="info('taqsim')"><span class="ms" style="font-size:16px">info</span></button>
             <button class="iq" id="taqPen" onclick="taqToggleEdit()"><span class="ms" style="font-size:16px">edit</span></button>
@@ -246,76 +249,101 @@
         <div id="taqEditBox" class="hidden">
           <div id="taqAdd" class="hidden" style="margin-top:12px">
             <div class="row" style="gap:8px">
-              <input id="taqNom" placeholder="Nom (masalan: Bozor)" style="flex:1">
-              <input id="taqSum" class="num" inputmode="decimal" placeholder="Summa" style="flex:1">
+              <input id="taqNom" data-ph="taqnom_ph" placeholder="Nom (masalan: Bozor)" style="flex:1">
+              <input id="taqSum" class="num" inputmode="decimal" data-ph="taqsum_ph" placeholder="Summa" style="flex:1">
             </div>
             <select id="taqTuri">
-              <option value="kat">Kategoriya rejasi (sarf kuzatiladi)</option>
-              <option value="maqsad">Maqsad (jamg'armaga qo'shiladi)</option>
-              <option value="limit">Qolgani (limitga)</option>
+              <option value="kat" data-i18n="opt_kat">Kategoriya rejasi (sarf kuzatiladi)</option>
+              <option value="maqsad" data-i18n="opt_maqsad">Maqsad (jamg'armaga qo'shiladi)</option>
+              <option value="limit" data-i18n="opt_limit">Qolgani (limitga)</option>
             </select>
-            <button class="btn" onclick="taqRowAdd()"><span class="ms">add</span> Qo'shish</button>
+            <button class="btn" onclick="taqRowAdd()"><span class="ms">add</span> <span data-i18n="btn_qosh">Qo'shish</span></button>
           </div>
-          <button class="link-btn" onclick="toggleTaqAdd()">+ Yangi bo'lak</button>
-          <button class="btn" onclick="taqSave()" style="margin-top:4px"><span class="ms">save</span> Rejani saqlash</button>
+          <button class="link-btn" onclick="toggleTaqAdd()" data-i18n="link_yangi_bolak">+ Yangi bo'lak</button>
+          <button class="btn" onclick="taqSave()" style="margin-top:4px"><span class="ms">save</span> <span data-i18n="btn_reja_saqla">Rejani saqlash</span></button>
         </div>
       </div>
       <div class="card">
-        <div class="hd"><h3>Pulni taqsimlash</h3></div>
-        <input id="taqIncome" class="num" inputmode="decimal" placeholder="Kelgan summa (masalan: 15mln)" oninput="taqPreview()">
+        <div class="hd"><h3 data-i18n="pulni_taqsim">Pulni taqsimlash</h3></div>
+        <input id="taqIncome" class="num" inputmode="decimal" data-ph="taqincome_ph" placeholder="Kelgan summa (masalan: 15mln)" oninput="taqPreview()">
         <div id="taqPrev" class="muted" style="font-size:13px;margin-bottom:10px"></div>
-        <button class="btn" onclick="taqRun()"><span class="ms">call_split</span> Taqsimlash</button>
+        <button class="btn" onclick="taqRun()"><span class="ms">call_split</span> <span data-i18n="btn_taqsimlash">Taqsimlash</span></button>
       </div>
     </div>
 
     <!-- ============ QARZLAR ============ -->
     <div id="pQarz" class="page hidden">
-      <div class="ptitle"><span class="ms" style="color:var(--orange)">receipt_long</span> Qarz daftarchasi</div>
+      <div class="ptitle"><span class="ms" style="color:var(--orange)">receipt_long</span> <span data-i18n="p_qarz">Qarz daftarchasi</span></div>
       <div class="card">
-        <div class="hd"><h3>Qarzlar</h3><div class="ic"><button class="iq" onclick="info('qarz')"><span class="ms" style="font-size:16px">info</span></button></div></div>
-        <div style="font-weight:700;color:var(--red);margin:2px 0 6px;display:flex;align-items:center;gap:6px"><span class="ms" style="font-size:18px">south_west</span> Qarz olganlarim <span class="muted" style="font-weight:500;font-size:12px">(men qarzdor)</span></div>
+        <div class="hd"><h3 data-i18n="qarzlar">Qarzlar</h3><div class="ic"><button class="iq" onclick="info('qarz')"><span class="ms" style="font-size:16px">info</span></button></div></div>
+        <div style="font-weight:700;color:var(--red);margin:2px 0 6px;display:flex;align-items:center;gap:6px"><span class="ms" style="font-size:18px">south_west</span> <span data-i18n="qarz_olgan">Qarz olganlarim</span> <span class="muted" style="font-weight:500;font-size:12px" data-i18n="men_qarzdor">(men qarzdor)</span></div>
         <div id="qarzOldim"></div>
-        <div style="font-weight:700;color:var(--green);margin:16px 0 6px;display:flex;align-items:center;gap:6px"><span class="ms" style="font-size:18px">north_east</span> Qarz berganlarim <span class="muted" style="font-weight:500;font-size:12px">(menga qarzdor)</span></div>
+        <div style="font-weight:700;color:var(--green);margin:16px 0 6px;display:flex;align-items:center;gap:6px"><span class="ms" style="font-size:18px">north_east</span> <span data-i18n="qarz_bergan">Qarz berganlarim</span> <span class="muted" style="font-weight:500;font-size:12px" data-i18n="menga_qarzdor">(menga qarzdor)</span></div>
         <div id="qarzBerdim"></div>
       </div>
       <div class="card">
-        <div class="hd"><h3>Yangi qarz</h3></div>
+        <div class="hd"><h3 data-i18n="yangi_qarz">Yangi qarz</h3></div>
         <select id="qTuri">
-          <option value="Oldim">Qarz oldim (men qarzdor)</option>
-          <option value="Berdim">Qarz berdim (menga qarzdor)</option>
+          <option value="Oldim" data-i18n="opt_oldim">Qarz oldim (men qarzdor)</option>
+          <option value="Berdim" data-i18n="opt_berdim">Qarz berdim (menga qarzdor)</option>
         </select>
-        <input id="qKim" placeholder="Kimdan / kimga (ism)">
-        <input id="qSum" class="num" inputmode="decimal" placeholder="Summa">
-        <input id="qMuddat" placeholder="Muddat (masalan: 2026-12-01 yoki 3 oy)">
-        <button class="btn" onclick="qarzAdd()"><span class="ms">add</span> Qo'shish</button>
+        <input id="qKim" data-ph="qkim_ph" placeholder="Kimdan / kimga (ism)">
+        <input id="qSum" class="num" inputmode="decimal" data-ph="qsum_ph" placeholder="Summa">
+        <input id="qMuddat" data-ph="qmuddat_ph" placeholder="Muddat (masalan: 2026-12-01 yoki 3 oy)">
+        <button class="btn" onclick="qarzAdd()"><span class="ms">add</span> <span data-i18n="btn_qosh">Qo'shish</span></button>
       </div>
     </div>
 
     <!-- ============ LIMITLAR ============ -->
     <div id="pLimit" class="page hidden">
-      <div class="ptitle"><span class="ms" style="color:#5ac8fa">tune</span> Limitlar</div>
+      <div class="ptitle"><span class="ms" style="color:#5ac8fa">tune</span> <span data-i18n="p_limit">Limitlar</span></div>
       <div class="card">
-        <div class="hd"><h3>Sarf chegarasi</h3><div class="ic"><button class="iq" onclick="info('limit')"><span class="ms" style="font-size:16px">info</span></button></div></div>
-        <input id="limKun" class="num" inputmode="decimal" placeholder="Kunlik limit (masalan: 100 000)">
-        <input id="limOy" class="num" inputmode="decimal" placeholder="Oylik byudjet (masalan: 3mln)">
-        <button class="btn" onclick="saqlaLimit()"><span class="ms">save</span> Limitlarni saqlash</button>
+        <div class="hd"><h3 data-i18n="sarf_chegara">Sarf chegarasi</h3><div class="ic"><button class="iq" onclick="info('limit')"><span class="ms" style="font-size:16px">info</span></button></div></div>
+        <input id="limKun" class="num" inputmode="decimal" data-ph="limkun_ph" placeholder="Kunlik limit (masalan: 100 000)">
+        <input id="limOy" class="num" inputmode="decimal" data-ph="limoy_ph" placeholder="Oylik byudjet (masalan: 3mln)">
+        <button class="btn" onclick="saqlaLimit()"><span class="ms">save</span> <span data-i18n="btn_lim_saqla">Limitlarni saqlash</span></button>
+      </div>
+    </div>
+
+    <!-- ============ FOYDALANUVCHILAR (faqat egasi) ============ -->
+    <div id="pUsers" class="page hidden">
+      <div class="ptitle"><span class="ms" style="color:var(--violet)">group</span> <span data-i18n="p_users">Foydalanuvchilar</span></div>
+      <div class="card">
+        <div class="hd"><h3 data-i18n="users_card">Ruxsat berilganlar</h3><div class="ic"><button class="iq" onclick="info('users')"><span class="ms" style="font-size:16px">info</span></button></div></div>
+        <div id="usersList"></div>
+      </div>
+      <div class="card">
+        <div class="hd"><h3 data-i18n="users_add">Yangi foydalanuvchi</h3></div>
+        <input id="uId" inputmode="numeric" data-ph="uid_ph" placeholder="Telegram ID (raqam)">
+        <input id="uNom" data-ph="unom_ph" placeholder="Ism (ixtiyoriy)">
+        <input id="uKun" inputmode="numeric" data-ph="ukun_ph" placeholder="Necha kun (bo'sh = cheksiz)">
+        <button class="btn" onclick="userAdd()"><span class="ms">person_add</span> <span data-i18n="btn_user_add">Qo'shish</span></button>
+        <div class="muted" style="font-size:12px;margin-top:8px" data-i18n="users_hint">Odam botga /start bossa — o'z ID sini ko'radi. Shu ID ni bu yerga kiriting. ❌ bosib istagan paytda olib tashlaysiz.</div>
       </div>
     </div>
 
     <!-- ============ SOZLAMALAR ============ -->
     <div id="pSozlama" class="page hidden">
-      <div class="ptitle"><span class="ms">settings</span> Sozlamalar</div>
+      <div class="ptitle"><span class="ms">settings</span> <span data-i18n="nav_sozlama">Sozlamalar</span></div>
       <div class="card">
-        <div class="hd"><h3>Tozalash paroli</h3><div class="ic"><button class="iq" onclick="info('parol')"><span class="ms" style="font-size:16px">info</span></button></div></div>
-        <input id="oldPass" type="password" placeholder="Eski parol (o'rnatilgan bo'lsa)">
-        <input id="newPass" type="password" placeholder="Yangi parol (bo'sh = o'chirish)">
-        <button class="btn" onclick="saqlaParol()"><span class="ms">lock</span> Parolni saqlash</button>
+        <div class="hd"><h3 data-i18n="til_card">Til / Язык</h3></div>
+        <div class="langrow">
+          <button class="chip" id="langUz" onclick="setLang('uz')">🇺🇿 O'zbekcha</button>
+          <button class="chip" id="langRu" onclick="setLang('ru')">🇷🇺 Русский</button>
+        </div>
+        <div class="muted" style="font-size:12px;margin-top:8px" data-i18n="til_hint">Interfeys va bot tili.</div>
+      </div>
+      <div class="card">
+        <div class="hd"><h3 data-i18n="tozalash_parol">Tozalash paroli</h3><div class="ic"><button class="iq" onclick="info('parol')"><span class="ms" style="font-size:16px">info</span></button></div></div>
+        <input id="oldPass" type="password" data-ph="oldpass_ph" placeholder="Eski parol (o'rnatilgan bo'lsa)">
+        <input id="newPass" type="password" data-ph="newpass_ph" placeholder="Yangi parol (bo'sh = o'chirish)">
+        <button class="btn" onclick="saqlaParol()"><span class="ms">lock</span> <span data-i18n="btn_parol_saqla">Parolni saqlash</span></button>
         <div class="muted" style="font-size:12px;margin-top:8px" id="parolHint"></div>
       </div>
       <div class="card">
-        <div class="hd"><h3>Hammasini tozalash</h3><div class="ic"><button class="iq" onclick="info('tozalash')"><span class="ms" style="font-size:16px">info</span></button></div></div>
-        <input id="clearPass" type="password" placeholder="Parol (o'rnatilgan bo'lsa)">
-        <button class="clear" onclick="hammasini()"><span class="ms" style="font-size:18px;vertical-align:-4px">delete</span> Hammasini tozalash</button>
+        <div class="hd"><h3 data-i18n="hammasini_t">Hammasini tozalash</h3><div class="ic"><button class="iq" onclick="info('tozalash')"><span class="ms" style="font-size:16px">info</span></button></div></div>
+        <input id="clearPass" type="password" data-ph="clearpass_ph" placeholder="Parol (o'rnatilgan bo'lsa)">
+        <button class="clear" onclick="hammasini()"><span class="ms" style="font-size:18px;vertical-align:-4px">delete</span> <span data-i18n="btn_hammasini">Hammasini tozalash</span></button>
       </div>
     </div>
 
@@ -329,6 +357,84 @@
   var sel = { Chiqim:"", Kirim:"" };
   var PAL = ["#2fd27e","#3390ec","#ffab2e","#ff5a5f","#b06bff","#5ac8fa","#ffd60a","#64d2ff","#ff6482","#30d158","#a2845e","#8e8e93"];
   function colorFor(i){ return PAL[i % PAL.length]; }
+
+  /* ================= TIL ================= */
+  var LANG = "uz";
+  try { var _l = localStorage.getItem('lang'); if(_l==='ru'||_l==='uz') LANG=_l; } catch(e){}
+  function L(uz, ru){ return LANG==='ru' ? ru : uz; }
+
+  var T = {
+    uz:{
+      loading:"⏳ Yuklanmoqda…", bal_lbl:"BALANS", shu_oy:"Shu oy", kirim:"Kirim", chiqim:"Chiqim",
+      xarajat_stat:"Xarajatlar statistikasi", tejalgan:"Tejalgan pul", ogohlantirish:"Ogohlantirish",
+      maqsad_holati:"Maqsadlar holati", bolimlar:"Bo'limlar",
+      nav_chiqim:"Chiqimlar", nav_kirim:"Kirimlar", nav_maqsad:"Maqsadlar", nav_taqsim:"Byudjet taqsimoti",
+      nav_qarz:"Qarz daftarchasi", nav_limit:"Limitlar", nav_sozlama:"Sozlamalar", nav_users:"Foydalanuvchilar",
+      p_chiqim:"Chiqimlar", p_kirim:"Kirimlar", p_maqsad:"Maqsadlar", p_taqsim:"Byudjet taqsimoti",
+      p_qarz:"Qarz daftarchasi", p_limit:"Limitlar", p_users:"Foydalanuvchilar",
+      yangi_chiqim:"Yangi chiqim", yangi_kirim:"Yangi kirim", izoh_ph:"Izoh (ixtiyoriy)",
+      summaC_ph:"Summa (masalan: 50 000 yoki 50k)", summaK_ph:"Summa (masalan: 3 000 000 yoki 3mln)",
+      btn_chiqim_add:"Chiqim qo'shish", btn_kirim_add:"Kirim qo'shish", diagramma:"Diagramma",
+      barcha_chiqim:"Barcha chiqimlar", barcha_kirim:"Barcha kirimlar",
+      maqsadlarim:"Maqsadlarim", yangi_maqsad:"Yangi maqsad", gnom_ph:"Maqsad nomi (masalan: Telefon)",
+      gsum_ph:"Kerakli summa (masalan: 5mln)", gmuddat_ph:"Muddat (ixtiyoriy: 2026-12)", btn_yangi_maqsad:"Yangi maqsad",
+      reja_diag:"Reja diagrammasi", reja:"Reja", taqnom_ph:"Nom (masalan: Bozor)", taqsum_ph:"Summa",
+      opt_kat:"Kategoriya rejasi (sarf kuzatiladi)", opt_maqsad:"Maqsad (jamg'armaga qo'shiladi)", opt_limit:"Qolgani (limitga)",
+      btn_qosh:"Qo'shish", link_yangi_bolak:"+ Yangi bo'lak", btn_reja_saqla:"Rejani saqlash",
+      pulni_taqsim:"Pulni taqsimlash", taqincome_ph:"Kelgan summa (masalan: 15mln)", btn_taqsimlash:"Taqsimlash",
+      qarzlar:"Qarzlar", qarz_olgan:"Qarz olganlarim", men_qarzdor:"(men qarzdor)", qarz_bergan:"Qarz berganlarim",
+      menga_qarzdor:"(menga qarzdor)", yangi_qarz:"Yangi qarz", opt_oldim:"Qarz oldim (men qarzdor)", opt_berdim:"Qarz berdim (menga qarzdor)",
+      qkim_ph:"Kimdan / kimga (ism)", qsum_ph:"Summa", qmuddat_ph:"Muddat (masalan: 2026-12-01 yoki 3 oy)",
+      sarf_chegara:"Sarf chegarasi", limkun_ph:"Kunlik limit (masalan: 100 000)", limoy_ph:"Oylik byudjet (masalan: 3mln)", btn_lim_saqla:"Limitlarni saqlash",
+      tozalash_parol:"Tozalash paroli", oldpass_ph:"Eski parol (o'rnatilgan bo'lsa)", newpass_ph:"Yangi parol (bo'sh = o'chirish)", btn_parol_saqla:"Parolni saqlash",
+      hammasini_t:"Hammasini tozalash", clearpass_ph:"Parol (o'rnatilgan bo'lsa)", btn_hammasini:"Hammasini tozalash",
+      til_card:"Til / Язык", til_hint:"Interfeys va bot tili.",
+      users_card:"Ruxsat berilganlar", users_add:"Yangi foydalanuvchi", uid_ph:"Telegram ID (raqam)", unom_ph:"Ism (ixtiyoriy)",
+      ukun_ph:"Necha kun (bo'sh = cheksiz)", btn_user_add:"Qo'shish",
+      users_hint:"Odam botga /start bossa — o'z ID sini ko'radi. Shu ID ni bu yerga kiriting. ❌ bosib istagan paytda olib tashlaysiz."
+    },
+    ru:{
+      loading:"⏳ Загрузка…", bal_lbl:"БАЛАНС", shu_oy:"Этот месяц", kirim:"Доход", chiqim:"Расход",
+      xarajat_stat:"Статистика расходов", tejalgan:"Сбережения", ogohlantirish:"Предупреждения",
+      maqsad_holati:"Статус целей", bolimlar:"Разделы",
+      nav_chiqim:"Расходы", nav_kirim:"Доходы", nav_maqsad:"Цели", nav_taqsim:"Распределение бюджета",
+      nav_qarz:"Долги", nav_limit:"Лимиты", nav_sozlama:"Настройки", nav_users:"Пользователи",
+      p_chiqim:"Расходы", p_kirim:"Доходы", p_maqsad:"Цели", p_taqsim:"Распределение бюджета",
+      p_qarz:"Долги", p_limit:"Лимиты", p_users:"Пользователи",
+      yangi_chiqim:"Новый расход", yangi_kirim:"Новый доход", izoh_ph:"Комментарий (необязательно)",
+      summaC_ph:"Сумма (например: 50 000 или 50k)", summaK_ph:"Сумма (например: 3 000 000 или 3mln)",
+      btn_chiqim_add:"Добавить расход", btn_kirim_add:"Добавить доход", diagramma:"Диаграмма",
+      barcha_chiqim:"Все расходы", barcha_kirim:"Все доходы",
+      maqsadlarim:"Мои цели", yangi_maqsad:"Новая цель", gnom_ph:"Название цели (например: Телефон)",
+      gsum_ph:"Нужная сумма (например: 5mln)", gmuddat_ph:"Срок (необязательно: 2026-12)", btn_yangi_maqsad:"Новая цель",
+      reja_diag:"Диаграмма плана", reja:"План", taqnom_ph:"Название (например: Базар)", taqsum_ph:"Сумма",
+      opt_kat:"План категории (расход отслеживается)", opt_maqsad:"Цель (идёт в накопления)", opt_limit:"Остаток (в лимит)",
+      btn_qosh:"Добавить", link_yangi_bolak:"+ Новая часть", btn_reja_saqla:"Сохранить план",
+      pulni_taqsim:"Распределить деньги", taqincome_ph:"Поступившая сумма (например: 15mln)", btn_taqsimlash:"Распределить",
+      qarzlar:"Долги", qarz_olgan:"Я взял в долг", men_qarzdor:"(я должен)", qarz_bergan:"Я дал в долг",
+      menga_qarzdor:"(мне должны)", yangi_qarz:"Новый долг", opt_oldim:"Взял в долг (я должен)", opt_berdim:"Дал в долг (мне должны)",
+      qkim_ph:"У кого / кому (имя)", qsum_ph:"Сумма", qmuddat_ph:"Срок (например: 2026-12-01 или 3 мес)",
+      sarf_chegara:"Лимит расходов", limkun_ph:"Дневной лимит (например: 100 000)", limoy_ph:"Месячный бюджет (например: 3mln)", btn_lim_saqla:"Сохранить лимиты",
+      tozalash_parol:"Пароль очистки", oldpass_ph:"Старый пароль (если установлен)", newpass_ph:"Новый пароль (пусто = удалить)", btn_parol_saqla:"Сохранить пароль",
+      hammasini_t:"Очистить всё", clearpass_ph:"Пароль (если установлен)", btn_hammasini:"Очистить всё",
+      til_card:"Язык / Til", til_hint:"Язык интерфейса и бота.",
+      users_card:"С доступом", users_add:"Новый пользователь", uid_ph:"Telegram ID (число)", unom_ph:"Имя (необязательно)",
+      ukun_ph:"Сколько дней (пусто = бессрочно)", btn_user_add:"Добавить",
+      users_hint:"Когда человек нажмёт /start в боте — он увидит свой ID. Введите этот ID сюда. Нажав ❌, можно отозвать доступ в любой момент."
+    }
+  };
+  function applyLang(){
+    var d = T[LANG] || T.uz;
+    document.documentElement.lang = LANG;
+    var els = document.querySelectorAll('[data-i18n]');
+    for(var i=0;i<els.length;i++){ var k=els[i].getAttribute('data-i18n'); if(d[k]!=null) els[i].textContent = d[k]; }
+    var phs = document.querySelectorAll('[data-ph]');
+    for(var j=0;j<phs.length;j++){ var k2=phs[j].getAttribute('data-ph'); if(d[k2]!=null) phs[j].setAttribute('placeholder', d[k2]); }
+    var u=document.getElementById('langUz'), r=document.getElementById('langRu');
+    if(u) u.classList.toggle('on', LANG==='uz');
+    if(r) r.classList.toggle('on', LANG==='ru');
+  }
+  function catL(k){ return (LANG==='ru' && DATA && DATA.katRu && DATA.katRu[k]) ? DATA.katRu[k] : k; }
 
   var CAT_MS = {
     "Oylik":"payments","Levi":"savings","Qarz oldim":"south_west","Qarz berdim":"north_east",
@@ -394,18 +500,34 @@
   });
 
   var INFO = {
-    balans:"Umumiy qoldiq — barcha kirimlardan chiqimlar ayirilgani.\n👁 bosib yashirish yoki ko'rsatish mumkin.",
-    oy:"Shu oyda qancha kirim qilgansiz va qancha sarflagansiz, limit holati.",
-    tejam:"Kunlik limitdan ortib qolgan (tejalgan) pul oy davomida yig'ilib boradi.\nMasalan limit 100 000, bugun 50 000 sarflasangiz — 50 000 tejaladi.\nUni ishlatsangiz: Chiqim → «Tejamdan» kategoriyasini tanlang (bu kunlik limitga ta'sir qilmaydi).",
-    yangi:"Turi shu bo'limga mos. Kategoriya tanlang, summa va izoh yozing.",
-    maqsad:"Jamg'arma maqsadlari. Byudjet taqsimotidagi maqsad ulushi avtomat shu yerga tushadi.",
-    taqsim:"Oylik pul kelganda avtomat bo'laklarga ajratish. ✏️ — rejani o'zgartirish.",
-    qarz:"Qarz daftarchasi. Olgan va bergan pullaringiz muddati bilan. Qaytsa ✓ bosing.",
-    limit:"Kunlik va oylik sarf chegarasi. Byudjetda ajratilgan kategoriyalar kunlik limitga kirmaydi.",
-    parol:"Hammasini tozalash paroli. O'zgartirishda eski parol kerak. Unutsangiz — botda /parol_tiklash.",
-    tozalash:"BARCHA amaliyotni o'chirib balansni 0 qiladi. Qaytarib bo'lmaydi!"
+    uz:{
+      balans:"Umumiy qoldiq — barcha kirimlardan chiqimlar ayirilgani.\n👁 bosib yashirish yoki ko'rsatish mumkin.",
+      oy:"Shu oyda qancha kirim qilgansiz va qancha sarflagansiz, limit holati.",
+      tejam:"Kunlik limitdan ortib qolgan (tejalgan) pul oy davomida yig'ilib boradi.\nMasalan limit 100 000, bugun 50 000 sarflasangiz — 50 000 tejaladi.\nUni ishlatsangiz: Chiqim → «Tejamdan» kategoriyasini tanlang (bu kunlik limitga ta'sir qilmaydi).",
+      yangi:"Turi shu bo'limga mos. Kategoriya tanlang, summa va izoh yozing.",
+      maqsad:"Jamg'arma maqsadlari. Byudjet taqsimotidagi maqsad ulushi avtomat shu yerga tushadi.",
+      taqsim:"Oylik pul kelganda avtomat bo'laklarga ajratish. ✏️ — rejani o'zgartirish.",
+      qarz:"Qarz daftarchasi. Olgan va bergan pullaringiz muddati bilan. Qaytsa ✓ bosing.",
+      limit:"Kunlik va oylik sarf chegarasi. Byudjetda ajratilgan kategoriyalar kunlik limitga kirmaydi.",
+      parol:"Hammasini tozalash paroli. O'zgartirishda eski parol kerak. Unutsangiz — botda /parol_tiklash.",
+      tozalash:"BARCHA amaliyotni o'chirib balansni 0 qiladi. Qaytarib bo'lmaydi!",
+      users:"Botni boshqa odamlar ham ishlatishiga ruxsat berasiz. Har kimning ma'lumoti alohida. ID qo'shing yoki ❌ bilan oling. Kun qo'ysangiz — muddat tugagach avtomat o'chadi."
+    },
+    ru:{
+      balans:"Общий остаток — все доходы минус расходы.\n👁 можно скрыть или показать.",
+      oy:"Сколько в этом месяце заработали и потратили, статус лимита.",
+      tejam:"Деньги, сэкономленные сверх дневного лимита, копятся весь месяц.\nНапример лимит 100 000, сегодня потратили 50 000 — 50 000 сэкономлено.\nЧтобы потратить: Расход → категория «Из сбережений» (не влияет на дневной лимит).",
+      yangi:"Тип соответствует разделу. Выберите категорию, введите сумму и комментарий.",
+      maqsad:"Цели накоплений. Доля цели из распределения бюджета попадает сюда автоматически.",
+      taqsim:"Когда приходят деньги за месяц — автоматически разложить по частям. ✏️ — изменить план.",
+      qarz:"Книга долгов. Взятые и данные деньги со сроком. Когда вернут — нажмите ✓.",
+      limit:"Дневной и месячный лимит расходов. Выделенные в бюджете категории не входят в дневной лимит.",
+      parol:"Пароль для очистки всего. Для смены нужен старый пароль. Забыли — в боте /parol_tiklash.",
+      tozalash:"Удаляет ВСЕ операции и обнуляет баланс. Необратимо!",
+      users:"Вы даёте доступ другим людям. У каждого свои данные. Добавьте ID или уберите кнопкой ❌. Если задать дни — доступ закроется автоматически по истечении срока."
+    }
   };
-  function info(k){ var t = INFO[k]||""; if(tg) tg.showAlert(t); else alert(t); }
+  function info(k){ var t = (INFO[LANG]&&INFO[LANG][k]) || INFO.uz[k] || ""; if(tg) tg.showAlert(t); else alert(t); }
 
   function call(params, cb){
     var url = API + "?initData=" + encodeURIComponent(INIT);
@@ -413,29 +535,42 @@
     fetch(url).then(function(r){return r.json();}).then(function(j){
       if(!j.ok){
         if(j.error==="auth" || j.error==="forbidden"){
+          var idtxt = j.id ? ("<br><br>"+L("Sizning ID","Ваш ID")+": <b>"+j.id+"</b><br><i>"+L("Egaga shu ID ni yuboring.","Отправьте этот ID владельцу.")+"</i>") : "";
           document.getElementById("loading").innerHTML =
-            "⛔ Ruxsat yo'q yoki Telegram orqali ochilmadi.<br>Botdagi tugma orqali oching.";
+            "⛔ "+L("Ruxsat yo'q yoki Telegram orqali ochilmadi.","Нет доступа или открыто не через Telegram.")+idtxt;
           document.getElementById("loading").classList.remove("hidden");
           document.getElementById("app").classList.add("hidden");
-        } else if(j.error==="parol"){ if(tg) tg.showAlert("🔒 Parol xato!"); else alert("Parol xato"); }
-        else if(j.error==="eski_parol"){ if(tg) tg.showAlert("🔒 Eski parol noto'g'ri!"); else alert("Eski parol xato"); }
-        else if(j.error==="summa"){ if(tg) tg.showAlert("Summani to'g'ri kiriting."); else alert("Summa xato"); }
+        } else if(j.error==="parol"){ if(tg) tg.showAlert(L("🔒 Parol xato!","🔒 Неверный пароль!")); }
+        else if(j.error==="eski_parol"){ if(tg) tg.showAlert(L("🔒 Eski parol noto'g'ri!","🔒 Старый пароль неверный!")); }
+        else if(j.error==="summa"){ if(tg) tg.showAlert(L("Summani to'g'ri kiriting.","Введите сумму правильно.")); }
+        else if(j.error==="id"){ if(tg) tg.showAlert(L("Telegram ID faqat raqam bo'lishi kerak.","Telegram ID должен быть числом.")); }
         return;
       }
-      DATA = j; render();
-      if(j.warn && tg) tg.showAlert("⚠️ Bugungi (limitga kiradigan) xarajat " + fmt(j.bugunLimit) + " — kunlik limit " + fmt(j.limitKun) + " dan oshib ketdi!");
+      DATA = j;
+      if(j.til && j.til!==LANG){ LANG=j.til; try{localStorage.setItem('lang',LANG);}catch(e){} applyLang(); }
+      render();
+      if(j.warn && tg) tg.showAlert("⚠️ "+L("Bugungi (limitga kiradigan) xarajat ","Сегодняшний (в лимите) расход ")+fmt(j.bugunLimit)+L(" — kunlik limit ", " — дневной лимит ")+fmt(j.limitKun)+L(" dan oshib ketdi!"," превышен!"));
       if(cb) cb();
     }).catch(function(e){
-      document.getElementById("loading").innerHTML = "⚠️ Ulanish xatosi. Qayta urinib ko'ring.";
+      document.getElementById("loading").innerHTML = "⚠️ "+L("Ulanish xatosi. Qayta urinib ko'ring.","Ошибка соединения. Попробуйте снова.");
       document.getElementById("loading").classList.remove("hidden");
     });
+  }
+
+  /* ---- til almashtirish ---- */
+  function setLang(l){
+    if(l!=='uz'&&l!=='ru') return;
+    LANG=l; try{localStorage.setItem('lang',l);}catch(e){}
+    applyLang(); if(DATA) render();
+    if(INIT) call({action:"setlang", til:l});
+    if(tg && tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
   }
 
   /* ---- diagramma (donut) ---- */
   function donutHTML(segs, cLabel, cVal, showAmt){
     segs = (segs||[]).filter(function(s){return (Number(s.value)||0)>0;});
     var total = segs.reduce(function(s,x){return s+(Number(x.value)||0);},0);
-    if(total<=0) return '<div class="muted" style="text-align:center;padding:16px 0">Hali ma\'lumot yo\'q</div>';
+    if(total<=0) return '<div class="muted" style="text-align:center;padding:16px 0">'+L("Hali ma'lumot yo'q","Пока нет данных")+'</div>';
     var acc=0, stops=[];
     segs.forEach(function(s){
       var a=acc/total*100, b=(acc+s.value)/total*100;
@@ -454,7 +589,7 @@
   function catSegs(obj){
     obj = obj || {};
     var keys = Object.keys(obj).sort(function(a,b){return obj[b]-obj[a];});
-    return keys.map(function(k,i){ return {label:k, value:obj[k], color:colorFor(i)}; });
+    return keys.map(function(k,i){ return {label:catL(k), value:obj[k], color:colorFor(i)}; });
   }
 
   /* ---- chiplar ---- */
@@ -464,7 +599,7 @@
     var cont = (turi==="Kirim") ? "chipsK" : "chipsC";
     var h = "";
     cats.forEach(function(c){
-      h += '<button class="chip'+(sel[turi]===c?' on':'')+'" onclick="pick(\''+turi+'\',\''+c+'\')">'+ms(catMs(c),17)+' '+c+'</button>';
+      h += '<button class="chip'+(sel[turi]===c?' on':'')+'" onclick="pick(\''+turi+'\',\''+c+'\')">'+ms(catMs(c),17)+' '+esc(catL(c))+'</button>';
     });
     document.getElementById(cont).innerHTML = h;
   }
@@ -482,32 +617,36 @@
     document.getElementById("oyKirim").textContent = amt(DATA.oyKirim, EYE.oy);
     document.getElementById("oyChiqim").textContent = amt(DATA.oyChiqim, EYE.oy);
 
+    // egaga foydalanuvchilar tugmasi
+    var nu = document.getElementById("navUsers");
+    if(nu) nu.classList.toggle("hidden", !DATA.owner);
+
     var lo = DATA.limitOy, oyEl = document.getElementById("oyByudjet");
     if(lo>0){
       var opct = Math.min(100, Math.round(DATA.oyChiqim/lo*100)), oover = DATA.oyChiqim>lo;
-      oyEl.innerHTML = '<div class="bar-top"><span>Oylik byudjet</span><span>'+fmt(DATA.oyChiqim)+' / '+fmt(lo)+'</span></div>'+
+      oyEl.innerHTML = '<div class="bar-top"><span>'+L("Oylik byudjet","Месячный бюджет")+'</span><span>'+fmt(DATA.oyChiqim)+' / '+fmt(lo)+'</span></div>'+
         '<div class="bar"><i style="width:'+opct+'%;background:'+(oover?'var(--red)':'var(--green)')+'"></i></div>';
     } else { oyEl.innerHTML=''; }
 
     var lk = DATA.limitKun, bl = DATA.bugunLimit, bugunEl = document.getElementById("bugunBox");
     if(lk>0){
       var bpct = Math.min(100, Math.round(bl/lk*100)), bover = bl>lk;
-      bugunEl.innerHTML = '<div class="bar-top"><span>Bugun (limitga kiradi)</span><span>'+fmt(bl)+' / '+fmt(lk)+'</span></div>'+
+      bugunEl.innerHTML = '<div class="bar-top"><span>'+L("Bugun (limitga kiradi)","Сегодня (в лимите)")+'</span><span>'+fmt(bl)+' / '+fmt(lk)+'</span></div>'+
         '<div class="bar"><i style="width:'+bpct+'%;background:'+(bover?'var(--red)':'var(--green)')+'"></i></div>'+
-        '<div class="muted" style="font-size:12px;margin-top:6px">'+(bover?('⚠️ Limitdan '+fmt(bl-lk)+' oshdingiz'):('Qoldi: '+fmt(lk-bl)))+'</div>';
+        '<div class="muted" style="font-size:12px;margin-top:6px">'+(bover?('⚠️ '+L("Limitdan ","Превышение на ")+fmt(bl-lk)+L(" oshdingiz","")):( L("Qoldi: ","Остаток: ")+fmt(lk-bl)))+'</div>';
     } else {
-      bugunEl.innerHTML = '<div class="bar-top"><span>Bugun sarflangan</span><span>'+fmt(bl)+'</span></div>'+
-        '<div class="muted" style="font-size:12px;margin-top:4px">Kunlik limit yo\'q — Limitlar bo\'limidan qo\'ying.</div>';
+      bugunEl.innerHTML = '<div class="bar-top"><span>'+L("Bugun sarflangan","Потрачено сегодня")+'</span><span>'+fmt(bl)+'</span></div>'+
+        '<div class="muted" style="font-size:12px;margin-top:4px">'+L("Kunlik limit yo'q — Limitlar bo'limidan qo'ying.","Нет дневного лимита — задайте в разделе Лимиты.")+'</div>';
     }
 
     // Diagrammalar
-    document.getElementById("homeChart").innerHTML = donutHTML(catSegs(DATA.catChiqim), "Shu oy chiqim", amt(DATA.oyChiqim, EYE.oy), EYE.oy);
-    document.getElementById("chiqChart").innerHTML = donutHTML(catSegs(DATA.catChiqim), "Chiqim", amt(DATA.oyChiqim, EYE.tx), EYE.tx);
-    document.getElementById("kirChart").innerHTML  = donutHTML(catSegs(DATA.catKirim), "Kirim", amt(DATA.oyKirim, EYE.tx), EYE.tx);
+    document.getElementById("homeChart").innerHTML = donutHTML(catSegs(DATA.catChiqim), L("Shu oy chiqim","Расход за месяц"), amt(DATA.oyChiqim, EYE.oy), EYE.oy);
+    document.getElementById("chiqChart").innerHTML = donutHTML(catSegs(DATA.catChiqim), L("Chiqim","Расход"), amt(DATA.oyChiqim, EYE.tx), EYE.tx);
+    document.getElementById("kirChart").innerHTML  = donutHTML(catSegs(DATA.catKirim), L("Kirim","Доход"), amt(DATA.oyKirim, EYE.tx), EYE.tx);
     var tsegs = (DATA.taqsim||[]).filter(function(x){return x.turi!=="limit" && (Number(x.summa)||0)>0;})
                   .map(function(x,i){ return {label:x.nom, value:Number(x.summa)||0, color:colorFor(i)}; });
     var ttot = tsegs.reduce(function(s,x){return s+x.value;},0);
-    document.getElementById("taqChart").innerHTML = donutHTML(tsegs, "Reja", fmt(ttot), true);
+    document.getElementById("taqChart").innerHTML = donutHTML(tsegs, L("Reja","План"), fmt(ttot), true);
 
     renderTejam();
     renderWarn();
@@ -519,26 +658,28 @@
 
     var ph = document.getElementById("parolHint");
     if(ph) ph.textContent = DATA.parolBor
-      ? "🔒 Parol o'rnatilgan. O'zgartirish uchun avval eski parolni kiriting. Unutsangiz — botda /parol_tiklash yozing."
-      : "Parol o'rnatilmagan. Yangi parol qo'ying.";
+      ? L("🔒 Parol o'rnatilgan. O'zgartirish uchun avval eski parolni kiriting. Unutsangiz — botda /parol_tiklash yozing.",
+          "🔒 Пароль установлен. Для смены сначала введите старый. Забыли — в боте /parol_tiklash.")
+      : L("Parol o'rnatilmagan. Yangi parol qo'ying.","Пароль не установлен. Задайте новый.");
 
     renderChips("Chiqim"); renderChips("Kirim");
     renderTxList("Chiqim"); renderTxList("Kirim");
     renderGoals();
     drawTaqsimFromData();
     renderQarz();
+    renderUsers();
   }
 
   function renderTejam(){
     var t = DATA.tejam || {limit:0}, card = document.getElementById("tejamCard");
     if(!t.limit || t.limit<=0){ card.classList.add("hidden"); return; }
     card.classList.remove("hidden");
-    var h = '<div style="text-align:center;margin:4px 0 10px"><div class="muted" style="font-size:12px">Hozir ishlatish mumkin</div>'+
+    var h = '<div style="text-align:center;margin:4px 0 10px"><div class="muted" style="font-size:12px">'+L("Hozir ishlatish mumkin","Доступно сейчас")+'</div>'+
             '<div class="big">'+fmt(t.qoldi)+'</div></div>'+
-            '<div class="kv"><span class="muted">Yig\'ilgan (limitdan ortgan)</span><span>'+fmt(t.yigildi)+'</span></div>'+
-            '<div class="kv"><span class="muted">Tejamdan ishlatilgan</span><span>'+fmt(t.ishlatildi)+'</span></div>';
-    if(DATA.limitOy>0) h += '<div class="kv"><span class="muted">Oylik byudjet qoldig\'i</span><span>'+fmt(DATA.oyByudjetQoldi||0)+'</span></div>';
-    h += '<div class="muted" style="font-size:12px;margin-top:8px">💡 Ishlatish: Chiqim → <b>Tejamdan</b> kategoriyasi (kunlik limitga ta\'sir qilmaydi).</div>';
+            '<div class="kv"><span class="muted">'+L("Yig'ilgan (limitdan ortgan)","Накоплено (сверх лимита)")+'</span><span>'+fmt(t.yigildi)+'</span></div>'+
+            '<div class="kv"><span class="muted">'+L("Tejamdan ishlatilgan","Потрачено из сбережений")+'</span><span>'+fmt(t.ishlatildi)+'</span></div>';
+    if(DATA.limitOy>0) h += '<div class="kv"><span class="muted">'+L("Oylik byudjet qoldig'i","Остаток мес. бюджета")+'</span><span>'+fmt(DATA.oyByudjetQoldi||0)+'</span></div>';
+    h += '<div class="muted" style="font-size:12px;margin-top:8px">💡 '+L("Ishlatish: Chiqim → <b>Tejamdan</b> kategoriyasi (kunlik limitga ta'sir qilmaydi).","Использовать: Расход → категория <b>«Из сбережений»</b> (не влияет на дневной лимит).")+'</div>';
     document.getElementById("tejamBox").innerHTML = h;
   }
 
@@ -546,12 +687,12 @@
     var cont = (turi==="Kirim") ? "listK" : "listC";
     var arr = (DATA.tx||[]).filter(function(r){ return r.turi===turi; });
     var hh="";
-    if(!arr.length){ hh = '<div class="muted" style="padding:6px 0">Hali yozuv yo\'q.</div>'; }
+    if(!arr.length){ hh = '<div class="muted" style="padding:6px 0">'+L("Hali yozuv yo'q.","Пока нет записей.")+'</div>'; }
     arr.forEach(function(r){
       var sign = r.turi==="Kirim" ? "+" : "−";
       var col = r.turi==="Kirim" ? "t-in" : "t-out";
       hh += '<div class="tx"><div class="emo">'+ms(catMs(r.kategoriya),20)+'</div>'+
-            '<div class="mid"><div class="k">'+esc(r.kategoriya)+(r.izoh?' <span class="d">'+esc(r.izoh)+'</span>':'')+'</div>'+
+            '<div class="mid"><div class="k">'+esc(catL(r.kategoriya))+(r.izoh?' <span class="d">'+esc(r.izoh)+'</span>':'')+'</div>'+
             '<div class="d">'+r.sana+'</div></div>'+
             '<div class="amt '+col+'">'+(EYE.tx?(sign+fmt(r.summa)):DOTS)+'</div>'+
             '<div class="x" onclick="ochir(\''+r.id+'\')">'+ms("close",19)+'</div></div>';
@@ -561,13 +702,13 @@
 
   function renderWarn(){
     var w = [];
-    if(DATA.limitKun>0 && DATA.bugunLimit>DATA.limitKun) w.push("Bugun kunlik limitdan <b>"+fmt(DATA.bugunLimit-DATA.limitKun)+"</b> oshdingiz");
-    if(DATA.limitOy>0 && DATA.oyChiqim>DATA.limitOy) w.push("Oylik byudjetdan <b>"+fmt(DATA.oyChiqim-DATA.limitOy)+"</b> oshdi");
+    if(DATA.limitKun>0 && DATA.bugunLimit>DATA.limitKun) w.push(L("Bugun kunlik limitdan <b>","Сегодня дневной лимит превышен на <b>")+fmt(DATA.bugunLimit-DATA.limitKun)+L("</b> oshdingiz","</b>"));
+    if(DATA.limitOy>0 && DATA.oyChiqim>DATA.limitOy) w.push(L("Oylik byudjetdan <b>","Месячный бюджет превышен на <b>")+fmt(DATA.oyChiqim-DATA.limitOy)+L("</b> oshdi","</b>"));
     var cat = DATA.catChiqim||{};
     (DATA.taqsim||[]).forEach(function(it){
       if(it.turi==="kat" && it.kat && it.summa>0){
         var sp = cat[it.kat]||0;
-        if(sp>it.summa) w.push(esc(it.nom)+" rejadan <b>"+fmt(sp-it.summa)+"</b> oshdi");
+        if(sp>it.summa) w.push(esc(it.nom)+L(" rejadan <b>"," — план превышен на <b>")+fmt(sp-it.summa)+L("</b> oshdi","</b>"));
       }
     });
     var card = document.getElementById("warnCard");
@@ -592,12 +733,12 @@
     document.getElementById("homeGoals").innerHTML = h;
   }
   function goalStatus(x, done){
-    if(done) return {late:false, txt:"✅ Erishildi!"};
+    if(done) return {late:false, txt:L("✅ Erishildi!","✅ Достигнуто!")};
     var late=false, txt="", d = parseDate(x.muddat);
     if(d){
-      if(new Date() > d){ late=true; txt="⚠️ Muddat o'tdi — "+fmt(x.maqsad-x.yiglangan)+" qoldi"; }
-      else txt="⏳ "+x.muddat+" gacha · "+fmt(x.maqsad-x.yiglangan)+" qoldi";
-    } else txt = fmt(x.maqsad-x.yiglangan)+" qoldi";
+      if(new Date() > d){ late=true; txt="⚠️ "+L("Muddat o'tdi — ","Срок прошёл — ")+fmt(x.maqsad-x.yiglangan)+L(" qoldi"," осталось"); }
+      else txt="⏳ "+x.muddat+L(" gacha · "," · ")+fmt(x.maqsad-x.yiglangan)+L(" qoldi"," осталось");
+    } else txt = fmt(x.maqsad-x.yiglangan)+L(" qoldi"," осталось");
     return {late:late, txt:txt};
   }
   function parseDate(s){
@@ -609,7 +750,7 @@
 
   function renderGoals(){
     var g = DATA.maqsadlar || [], h="";
-    if(!g.length){ h = '<div class="muted" style="padding:4px 0">Hali maqsad yo\'q. Pastda yangi maqsad qo\'shing.</div>'; }
+    if(!g.length){ h = '<div class="muted" style="padding:4px 0">'+L("Hali maqsad yo'q. Pastda yangi maqsad qo'shing.","Целей пока нет. Добавьте новую ниже.")+'</div>'; }
     g.forEach(function(x){
       var pct = x.maqsad>0 ? Math.min(100, Math.round(x.yiglangan/x.maqsad*100)) : 0;
       var done = x.maqsad>0 && x.yiglangan>=x.maqsad;
@@ -618,7 +759,7 @@
         '<span>'+fmt(x.yiglangan)+' / '+fmt(x.maqsad)+' · '+pct+'%</span></div>'+
         '<div class="bar"><i style="width:'+pct+'%;background:'+(done?'var(--green)':'var(--accent)')+'"></i></div>'+
         '<div class="goal-act">'+
-          '<input id="h_'+x.id+'" class="num" inputmode="decimal" placeholder="Summa qo\'shish (masalan 500k)">'+
+          '<input id="h_'+x.id+'" class="num" inputmode="decimal" placeholder="'+L("Summa qo'shish (masalan 500k)","Добавить сумму (например 500k)")+'">'+
           '<button onclick="goalHissa(\''+x.id+'\')">'+ms("add",20)+'</button>'+
           '<button class="del" onclick="goalDel(\''+x.id+'\')">'+ms("close",20)+'</button>'+
         '</div></div>';
@@ -627,21 +768,21 @@
   }
   function goalAdd(){
     var nom = val("gNom").trim(), sum = parseSum(val("gSum")), muddat = val("gMuddat").trim();
-    if(!nom){ if(tg) tg.showAlert("Maqsad nomini yozing."); else alert("Nom"); return; }
-    if(sum<=0){ if(tg) tg.showAlert("Kerakli summani to'g'ri yozing."); else alert("Summa"); return; }
+    if(!nom){ if(tg) tg.showAlert(L("Maqsad nomini yozing.","Введите название цели.")); return; }
+    if(sum<=0){ if(tg) tg.showAlert(L("Kerakli summani to'g'ri yozing.","Введите нужную сумму правильно.")); return; }
     call({action:"goaladd", nom:nom, maqsad:sum, muddat:muddat}, function(){
       document.getElementById("gNom").value=""; document.getElementById("gSum").value=""; document.getElementById("gMuddat").value="";
     });
   }
   function goalHissa(id){
     var v = parseSum(val("h_"+id));
-    if(v<=0){ if(tg) tg.showAlert("Qo'shiladigan summani yozing."); else alert("Summa"); return; }
+    if(v<=0){ if(tg) tg.showAlert(L("Qo'shiladigan summani yozing.","Введите сумму для добавления.")); return; }
     call({action:"goalhissa", id:id, summa:v});
   }
   function goalDel(id){
     var go = function(){ call({action:"goaldel", id:id}); };
-    if(tg) tg.showConfirm("Shu maqsad o'chirilsinmi?", function(ok){ if(ok) go(); });
-    else if(confirm("O'chirilsinmi?")) go();
+    if(tg) tg.showConfirm(L("Shu maqsad o'chirilsinmi?","Удалить эту цель?"), function(ok){ if(ok) go(); });
+    else if(confirm("?")) go();
   }
 
   /* ---- Byudjet taqsimoti ---- */
@@ -653,7 +794,7 @@
     drawTaqsim();
   }
   function taqMs(t){ return t==="maqsad"?"flag":(t==="limit"?"donut_small":"shopping_basket"); }
-  function badge_(t){ return t==="maqsad"?"maqsad":(t==="limit"?"qolgani (limit)":"reja"); }
+  function badge_(t){ return t==="maqsad"?L("maqsad","цель"):(t==="limit"?L("qolgani (limit)","остаток (лимит)"):L("reja","план")); }
   function taqToggleEdit(){
     taqEdit = !taqEdit;
     document.getElementById("taqEditBox").classList.toggle("hidden", !taqEdit);
@@ -666,24 +807,24 @@
       h += '<div style="padding:11px 0;border-bottom:1px solid var(--line)">'+
         '<div class="bar-top"><span>'+ms(taqMs(it.turi),17)+' '+esc(it.nom)+' <span class="d">'+badge_(it.turi)+'</span></span>'+
         (taqEdit ? '<span class="x" onclick="taqDel('+i+')">'+ms("close",18)+'</span>'
-                 : '<span>'+(it.turi==="limit"?'<span class="muted">qolgani</span>':('<b>'+fmt(it.summa)+'</b>'))+'</span>')+
+                 : '<span>'+(it.turi==="limit"?'<span class="muted">'+L("qolgani","остаток")+'</span>':('<b>'+fmt(it.summa)+'</b>'))+'</span>')+
         '</div>';
       if(taqEdit && it.turi!=="limit"){
-        h += '<input class="num" inputmode="decimal" value="'+grp(it.summa)+'" oninput="taqSet('+i+',this.value)" placeholder="Summa" style="margin:6px 0 0">';
+        h += '<input class="num" inputmode="decimal" value="'+grp(it.summa)+'" oninput="taqSet('+i+',this.value)" placeholder="'+L("Summa","Сумма")+'" style="margin:6px 0 0">';
       }
       if(it.turi==="limit" && !taqEdit){
-        h += '<div class="muted" style="font-size:12px">Qolgan summa avtomat oylik/kunlik limitga aylanadi.</div>';
+        h += '<div class="muted" style="font-size:12px">'+L("Qolgan summa avtomat oylik/kunlik limitga aylanadi.","Остаток автоматически станет месячным/дневным лимитом.")+'</div>';
       }
       if(it.turi==="kat" && it.kat){
         var sp = cat[it.kat]||0, pl=it.summa||0;
         var pct = pl>0?Math.min(100,Math.round(sp/pl*100)):0, over=pl>0&&sp>pl;
-        h += '<div class="bar-top" style="margin-top:8px"><span class="muted">Shu oy sarflangan</span>'+
+        h += '<div class="bar-top" style="margin-top:8px"><span class="muted">'+L("Shu oy sarflangan","Потрачено в этом месяце")+'</span>'+
              '<span class="muted">'+fmt(sp)+' / '+fmt(pl)+'</span></div>'+
              '<div class="bar"><i style="width:'+pct+'%;background:'+(over?'var(--red)':'var(--green)')+'"></i></div>';
       }
       h += '</div>';
     });
-    if(!PLAN.length) h = '<div class="muted" style="padding:4px 0">Reja bo\'sh. ✏️ bosib «+ Yangi bo\'lak» qo\'shing.</div>';
+    if(!PLAN.length) h = '<div class="muted" style="padding:4px 0">'+L("Reja bo'sh. ✏️ bosib «+ Yangi bo'lak» qo'shing.","План пуст. Нажмите ✏️ и «+ Новая часть».")+'</div>';
     document.getElementById("taqsimList").innerHTML = h;
     taqPreview();
   }
@@ -692,9 +833,9 @@
   function toggleTaqAdd(){ document.getElementById("taqAdd").classList.toggle("hidden"); }
   function taqRowAdd(){
     var nom = val("taqNom").trim(), sum = parseSum(val("taqSum")), tr = val("taqTuri");
-    if(!nom){ if(tg) tg.showAlert("Bo'lak nomini yozing."); else alert("Nom"); return; }
+    if(!nom){ if(tg) tg.showAlert(L("Bo'lak nomini yozing.","Введите название части.")); return; }
     if(tr==="limit" && PLAN.some(function(x){return x.turi==="limit";})){
-      if(tg) tg.showAlert("'Qolgani' bo'lagi faqat bitta bo'ladi."); else alert("Limit bitta"); return;
+      if(tg) tg.showAlert(L("'Qolgani' bo'lagi faqat bitta bo'ladi.","Часть «Остаток» может быть только одна.")); return;
     }
     PLAN.push({nom:nom, emoji:"", summa:tr==="limit"?0:sum, turi:tr, kat:tr==="kat"?cap_(nom):""});
     document.getElementById("taqNom").value=""; document.getElementById("taqSum").value="";
@@ -707,32 +848,32 @@
     var alloc = 0; PLAN.forEach(function(it){ if(it.turi!=="limit") alloc += Number(it.summa)||0; });
     var el = document.getElementById("taqPrev");
     if(!el) return;
-    if(inc<=0){ el.innerHTML = "📌 Belgilangan jami: <b>"+fmt(alloc)+"</b>"; return; }
+    if(inc<=0){ el.innerHTML = "📌 "+L("Belgilangan jami: <b>","Назначено всего: <b>")+fmt(alloc)+"</b>"; return; }
     var rem = inc - alloc, col = rem<0?"var(--red)":"var(--green)";
-    var html = "Belgilangan: <b>"+fmt(alloc)+"</b> · Qolgani (limit): <b style='color:"+col+"'>"+fmt(rem)+"</b>";
-    if(rem<0) html += "<br>⚠️ Reja kelgan summadan ko'p — kamaytiring.";
+    var html = L("Belgilangan: <b>","Назначено: <b>")+fmt(alloc)+L("</b> · Qolgani (limit): <b style='color:","</b> · Остаток (лимит): <b style='color:")+col+"'>"+fmt(rem)+"</b>";
+    if(rem<0) html += "<br>⚠️ "+L("Reja kelgan summadan ko'p — kamaytiring.","План больше суммы — уменьшите.");
     el.innerHTML = html;
   }
   function taqSave(){
     call({action:"taqsimset", plan:JSON.stringify(PLAN)}, function(){
-      if(tg) tg.showAlert("✅ Reja saqlandi."); else alert("Saqlandi");
+      if(tg) tg.showAlert(L("✅ Reja saqlandi.","✅ План сохранён."));
     });
   }
   function taqRun(){
     var inc = parseSum(val("taqIncome"));
-    if(inc<=0){ if(tg) tg.showAlert("Kelgan summani yozing."); else alert("Summa"); return; }
+    if(inc<=0){ if(tg) tg.showAlert(L("Kelgan summani yozing.","Введите поступившую сумму.")); return; }
     var go = function(){
       call({action:"taqsimset", plan:JSON.stringify(PLAN)}, function(){
         call({action:"taqsimla", summa:inc}, function(){
-          var n = DATA.taqsimNatija, txt = "✅ "+fmt(inc)+" taqsimlandi!\n";
+          var n = DATA.taqsimNatija, txt = "✅ "+fmt(inc)+L(" taqsimlandi!\n"," распределено!\n");
           if(n && n.log) n.log.forEach(function(l){ txt += "• "+l.nom+": "+fmt(l.summa)+"\n"; });
-          txt += "\n🎯 Limit yangilandi, maqsad ulushi qo'shildi.";
+          txt += "\n🎯 "+L("Limit yangilandi, maqsad ulushi qo'shildi.","Лимит обновлён, доля цели добавлена.");
           if(tg) tg.showAlert(txt); else alert(txt);
           document.getElementById("taqIncome").value="";
         });
       });
     };
-    var msg = "💰 "+fmt(inc)+" shu reja bo'yicha taqsimlansinmi?";
+    var msg = "💰 "+fmt(inc)+L(" shu reja bo'yicha taqsimlansinmi?"," распределить по этому плану?");
     if(tg) tg.showConfirm(msg, function(ok){ if(ok) go(); });
     else if(confirm(msg)) go();
   }
@@ -744,11 +885,11 @@
     document.getElementById("qarzBerdim").innerHTML = qarzRows(list.filter(function(x){return x.turi==="Berdim";}));
   }
   function qarzRows(arr){
-    if(!arr.length) return '<div class="muted" style="font-size:12.5px;padding:2px 0">— yo\'q —</div>';
+    if(!arr.length) return '<div class="muted" style="font-size:12.5px;padding:2px 0">'+L("— yo'q —","— нет —")+'</div>';
     var h="";
     arr.forEach(function(x){
-      var sub = x.muddat ? ("⏳ "+esc(x.muddat)) : "muddat belgilanmagan";
-      if(x.sana) sub += " · olingan: "+esc(x.sana);
+      var sub = x.muddat ? ("⏳ "+esc(x.muddat)) : L("muddat belgilanmagan","срок не указан");
+      if(x.sana) sub += L(" · olingan: "," · внесено: ")+esc(x.sana);
       h += '<div class="tx"><div class="mid"><div class="k">'+esc(x.kim||"—")+'</div>'+
            '<div class="d">'+sub+'</div></div>'+
            '<div class="amt">'+fmt(x.summa)+'</div>'+
@@ -758,23 +899,51 @@
   }
   function qarzAdd(){
     var tr = val("qTuri"), kim = val("qKim").trim(), sum = parseSum(val("qSum")), muddat = val("qMuddat").trim();
-    if(sum<=0){ if(tg) tg.showAlert("Summani to'g'ri yozing."); else alert("Summa"); return; }
+    if(sum<=0){ if(tg) tg.showAlert(L("Summani to'g'ri yozing.","Введите сумму правильно.")); return; }
     call({action:"qarzadd", turi:tr, kim:kim, summa:sum, muddat:muddat}, function(){
       document.getElementById("qKim").value=""; document.getElementById("qSum").value=""; document.getElementById("qMuddat").value="";
-      if(tg) tg.showAlert("✅ Qarz qo'shildi.");
+      if(tg) tg.showAlert(L("✅ Qarz qo'shildi.","✅ Долг добавлен."));
     });
   }
   function qarzDel(id){
     var go = function(){ call({action:"qarzdel", id:id}); };
-    if(tg) tg.showConfirm("Qarz qaytdi / ro'yxatdan o'chirilsinmi?", function(ok){ if(ok) go(); });
-    else if(confirm("Qaytdi?")) go();
+    if(tg) tg.showConfirm(L("Qarz qaytdi / ro'yxatdan o'chirilsinmi?","Долг вернули / удалить из списка?"), function(ok){ if(ok) go(); });
+    else if(confirm("?")) go();
+  }
+
+  /* ---- Foydalanuvchilar (egasi) ---- */
+  function renderUsers(){
+    if(!DATA.owner) return;
+    var u = DATA.users||[], h="";
+    if(!u.length){ h = '<div class="muted" style="padding:4px 0">'+L("Hozircha hech kim yo'q.","Пока никого нет.")+'</div>'; }
+    u.forEach(function(x){
+      var m = x.muddat ? ("⏳ "+esc(x.muddat)+L(" gacha"," (до)")) : L("cheksiz","бессрочно");
+      h += '<div class="tx"><div class="emo">'+ms("person",20)+'</div>'+
+           '<div class="mid"><div class="k">'+esc(x.nom|| ("ID "+x.id))+'</div>'+
+           '<div class="d">🆔 '+esc(x.id)+' · '+m+'</div></div>'+
+           '<div class="x" onclick="userDel(\''+esc(x.id)+'\')">'+ms("person_remove",20,"var(--red)")+'</div></div>';
+    });
+    var el = document.getElementById("usersList"); if(el) el.innerHTML = h;
+  }
+  function userAdd(){
+    var id = val("uId").replace(/\D/g,""), nom = val("uNom").trim(), kun = val("uKun").replace(/\D/g,"");
+    if(!id){ if(tg) tg.showAlert(L("Telegram ID yozing (faqat raqam).","Введите Telegram ID (только цифры).")); return; }
+    call({action:"useradd", id:id, nom:nom, kun:kun||0}, function(){
+      document.getElementById("uId").value=""; document.getElementById("uNom").value=""; document.getElementById("uKun").value="";
+      if(tg) tg.showAlert("✅ "+L("Qo'shildi va odamga xabar yuborildi.","Добавлен, человеку отправлено уведомление."));
+    });
+  }
+  function userDel(id){
+    var go = function(){ call({action:"userdel", id:id}); };
+    if(tg) tg.showConfirm(L("Dostupni olib tashlaymizmi?","Отозвать доступ?"), function(ok){ if(ok) go(); });
+    else if(confirm("?")) go();
   }
 
   /* ---- saqlash ---- */
   function saqla(turi){
     var id = (turi==="Kirim") ? "K" : "C";
     var summa = parseSum(val("summa"+id));
-    if(summa<=0){ if(tg) tg.showAlert("Summani to'g'ri kiriting."); else alert("Summani kiriting."); return; }
+    if(summa<=0){ if(tg) tg.showAlert(L("Summani to'g'ri kiriting.","Введите сумму правильно.")); return; }
     var k = sel[turi] || "Boshqa", izoh = val("izoh"+id).trim();
     if(tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred("light");
     call({action:"add", turi:turi, kategoriya:k, summa:summa, izoh:izoh}, function(){
@@ -783,31 +952,32 @@
   }
   function saqlaLimit(){
     call({action:"setlimit", kun:parseSum(val("limKun")), oy:parseSum(val("limOy"))}, function(){
-      if(tg) tg.showAlert("✅ Limitlar saqlandi."); else alert("Saqlandi.");
+      if(tg) tg.showAlert(L("✅ Limitlar saqlandi.","✅ Лимиты сохранены."));
     });
   }
   function ochir(id){
     var go = function(){ call({action:"del", id:id}); };
-    if(tg) tg.showConfirm("Shu yozuv o'chirilsinmi?", function(ok){ if(ok) go(); });
-    else if(confirm("O'chirilsinmi?")) go();
+    if(tg) tg.showConfirm(L("Shu yozuv o'chirilsinmi?","Удалить эту запись?"), function(ok){ if(ok) go(); });
+    else if(confirm("?")) go();
   }
   function saqlaParol(){
     var eski = val("oldPass"), yangi = val("newPass");
     call({action:"setpass", eski:eski, yangi:yangi}, function(){
       document.getElementById("oldPass").value=""; document.getElementById("newPass").value="";
-      if(tg) tg.showAlert(yangi ? "✅ Parol saqlandi." : "✅ Parol o'chirildi."); else alert("Saqlandi");
+      if(tg) tg.showAlert(yangi ? L("✅ Parol saqlandi.","✅ Пароль сохранён.") : L("✅ Parol o'chirildi.","✅ Пароль удалён."));
     });
   }
   function hammasini(){
     var parol = val("clearPass");
     var go = function(){ call({action:"clear", parol:parol}, function(){ document.getElementById("clearPass").value=""; }); };
-    if(tg) tg.showConfirm("BARCHA yozuv o'chiriladi, balans 0 bo'ladi. Davom etilsinmi?", function(ok){ if(ok) go(); });
-    else if(confirm("Hammasini o'chirish?")) go();
+    if(tg) tg.showConfirm(L("BARCHA yozuv o'chiriladi, balans 0 bo'ladi. Davom etilsinmi?","ВСЕ записи будут удалены, баланс станет 0. Продолжить?"), function(ok){ if(ok) go(); });
+    else if(confirm("?")) go();
   }
 
   // Boshlash
+  applyLang();
   if(!INIT){
-    document.getElementById("loading").innerHTML = "⛔ Bu sahifani <b>Telegram bot</b> ichidan oching.";
+    document.getElementById("loading").innerHTML = "⛔ "+L("Bu sahifani <b>Telegram bot</b> ichidan oching.","Откройте эту страницу внутри <b>Telegram-бота</b>.");
   } else {
     nav('Home');
     call({action:"data"});
