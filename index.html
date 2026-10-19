@@ -39,6 +39,9 @@
   .chip.on{background:var(--accent); color:var(--accent-text); border-color:var(--accent)}
   input{width:100%; border:1px solid var(--line); background:rgba(0,0,0,.15); color:var(--text);
         padding:13px; border-radius:12px; font-size:16px; margin-bottom:10px; outline:none}
+  select{width:100%; border:1px solid var(--line); background:rgba(0,0,0,.15); color:var(--text);
+        padding:13px; border-radius:12px; font-size:16px; margin-bottom:10px; outline:none}
+  .link-btn{width:100%; border:0; background:transparent; color:var(--accent); padding:10px; font-size:14px; font-weight:600}
   .btn{width:100%; border:0; background:var(--accent); color:var(--accent-text); padding:14px;
        border-radius:12px; font-size:16px; font-weight:700}
   .btn:active{opacity:.8}
@@ -120,6 +123,37 @@
         <input id="gMuddat" placeholder="Muddat (ixtiyoriy: 2026-12)">
         <button class="btn" onclick="goalAdd()">+ Yangi maqsad</button>
       </div>
+    </div>
+
+    <div class="card" id="taqsimCard">
+      <h3>💼 Byudjet taqsimoti</h3>
+      <div class="muted" style="font-size:12.5px;margin-bottom:12px">
+        Oylik pul kelganda avtomat bo'laklarga ajrating:
+        🎯 maqsad ulushi jamg'armaga qo'shiladi, 🛒 kategoriya — oylik reja,
+        📊 <b>qolgani</b> esa oylik/kunlik limitga aylanadi.
+      </div>
+      <div id="taqsimList"></div>
+
+      <div id="taqAdd" class="hidden" style="margin-top:12px">
+        <div class="row" style="gap:8px">
+          <input id="taqNom" placeholder="Nom (masalan: Bozor)" style="flex:1">
+          <input id="taqSum" inputmode="decimal" placeholder="Summa" style="flex:1">
+        </div>
+        <select id="taqTuri">
+          <option value="kat">🛒 Kategoriya rejasi (sarf kuzatiladi)</option>
+          <option value="maqsad">🎯 Maqsad (jamg'armaga qo'shiladi)</option>
+          <option value="limit">📊 Qolgani (limitga)</option>
+        </select>
+        <button class="btn" onclick="taqRowAdd()">Qo'shish</button>
+      </div>
+      <button class="link-btn" onclick="toggleTaqAdd()">+ Yangi bo'lak</button>
+      <button class="btn" onclick="taqSave()" style="margin-top:4px">💾 Rejani saqlash</button>
+
+      <div style="border-top:1px solid var(--line); margin:16px 0 12px"></div>
+      <div style="font-weight:600;margin-bottom:8px">💰 Pulni taqsimlash</div>
+      <input id="taqIncome" inputmode="decimal" placeholder="Kelgan summa (masalan: 15mln)" oninput="taqPreview()">
+      <div id="taqPrev" class="muted" style="font-size:13px;margin-bottom:10px"></div>
+      <button class="btn" onclick="taqRun()">💰 Taqsimlash</button>
     </div>
 
     <div class="card">
@@ -278,6 +312,7 @@
     });
     document.getElementById("txlist").innerHTML = hh;
     renderGoals();
+    drawTaqsimFromData();
   }
 
   function renderGoals(){
@@ -317,6 +352,92 @@
     var go = function(){ call({action:"goaldel", id:id}); };
     if(tg) tg.showConfirm("Shu maqsad o'chirilsinmi?", function(ok){ if(ok) go(); });
     else if(confirm("O'chirilsinmi?")) go();
+  }
+
+  /* ---- Byudjet taqsimoti ---- */
+  var PLAN = [];
+  function drawTaqsimFromData(){
+    PLAN = (DATA.taqsim||[]).map(function(x){
+      return {nom:x.nom, emoji:x.emoji, summa:Number(x.summa)||0, turi:x.turi, kat:x.kat||""};
+    });
+    drawTaqsim();
+  }
+  function badge_(turi){ return turi==="maqsad"?"🎯 maqsad":(turi==="limit"?"📊 qolgani (limit)":"🛒 reja"); }
+  function drawTaqsim(){
+    var cat = (DATA&&DATA.catChiqim)||{}, h="";
+    PLAN.forEach(function(it,i){
+      h += '<div style="padding:10px 0;border-bottom:1px solid var(--line)">'+
+        '<div class="bar-top"><span>'+(it.emoji||"•")+' '+esc(it.nom)+' <span class="d">'+badge_(it.turi)+'</span></span>'+
+        '<span class="x" onclick="taqDel('+i+')">✕</span></div>';
+      if(it.turi==="limit"){
+        h += '<div class="muted" style="font-size:12px">Qolgan summa avtomat oylik/kunlik limitga aylanadi.</div>';
+      } else {
+        h += '<input inputmode="decimal" value="'+it.summa+'" oninput="taqSet('+i+',this.value)" placeholder="Summa" style="margin:6px 0 0">';
+        if(it.turi==="kat" && it.kat){
+          var sp = cat[it.kat]||0, pl=it.summa||0;
+          var pct = pl>0?Math.min(100,Math.round(sp/pl*100)):0, over=pl>0&&sp>pl;
+          h += '<div class="bar-top" style="margin-top:8px"><span class="muted">Shu oy sarflangan</span>'+
+               '<span class="muted">'+fmt(sp)+' / '+fmt(pl)+'</span></div>'+
+               '<div class="bar"><i style="width:'+pct+'%;background:'+(over?'var(--red)':'var(--green)')+'"></i></div>';
+        }
+      }
+      h += '</div>';
+    });
+    if(!PLAN.length) h = '<div class="muted" style="padding:4px 0">Reja bo\'sh. "+ Yangi bo\'lak" bilan qo\'shing.</div>';
+    document.getElementById("taqsimList").innerHTML = h;
+    taqPreview();
+  }
+  function taqSet(i,v){ if(PLAN[i]) PLAN[i].summa = parseSum(v); taqPreview(); }
+  function taqDel(i){ PLAN.splice(i,1); drawTaqsim(); }
+  function toggleTaqAdd(){ document.getElementById("taqAdd").classList.toggle("hidden"); }
+  function taqRowAdd(){
+    var nom = document.getElementById("taqNom").value.trim();
+    var sum = parseSum(document.getElementById("taqSum").value);
+    var turi = document.getElementById("taqTuri").value;
+    if(!nom){ if(tg) tg.showAlert("Bo'lak nomini yozing."); else alert("Nom"); return; }
+    if(turi==="limit" && PLAN.some(function(x){return x.turi==="limit";})){
+      if(tg) tg.showAlert("'Qolgani' bo'lagi faqat bitta bo'ladi."); else alert("Limit bitta"); return;
+    }
+    var emoji = turi==="maqsad"?"🎯":(turi==="limit"?"📊":(DATA.emoji[cap_(nom)]||"🛒"));
+    PLAN.push({nom:nom, emoji:emoji, summa:turi==="limit"?0:sum, turi:turi, kat:turi==="kat"?cap_(nom):""});
+    document.getElementById("taqNom").value=""; document.getElementById("taqSum").value="";
+    document.getElementById("taqAdd").classList.add("hidden");
+    drawTaqsim();
+  }
+  function cap_(s){ return s ? s.charAt(0).toUpperCase()+s.slice(1) : s; }
+  function taqPreview(){
+    var inc = parseSum(document.getElementById("taqIncome").value);
+    var alloc = 0; PLAN.forEach(function(it){ if(it.turi!=="limit") alloc += Number(it.summa)||0; });
+    var el = document.getElementById("taqPrev");
+    if(inc<=0){ el.innerHTML = "📌 Belgilangan jami: <b>"+fmt(alloc)+"</b>"; return; }
+    var rem = inc - alloc;
+    var col = rem<0?"var(--red)":"var(--green)";
+    var html = "Belgilangan: <b>"+fmt(alloc)+"</b> · Qolgani (limit): <b style='color:"+col+"'>"+fmt(rem)+"</b>";
+    if(rem<0) html += "<br>⚠️ Reja kelgan summadan ko'p — kamaytiring.";
+    el.innerHTML = html;
+  }
+  function taqSave(){
+    call({action:"taqsimset", plan:JSON.stringify(PLAN)}, function(){
+      if(tg) tg.showAlert("✅ Reja saqlandi."); else alert("Saqlandi");
+    });
+  }
+  function taqRun(){
+    var inc = parseSum(document.getElementById("taqIncome").value);
+    if(inc<=0){ if(tg) tg.showAlert("Kelgan summani yozing."); else alert("Summa"); return; }
+    var go = function(){
+      call({action:"taqsimset", plan:JSON.stringify(PLAN)}, function(){
+        call({action:"taqsimla", summa:inc}, function(){
+          var n = DATA.taqsimNatija, txt = "✅ "+fmt(inc)+" taqsimlandi!\n";
+          if(n && n.log) n.log.forEach(function(l){ txt += "• "+l.nom+": "+fmt(l.summa)+"\n"; });
+          txt += "\n🎯 Limit yangilandi, maqsad ulushi qo'shildi.";
+          if(tg) tg.showAlert(txt); else alert(txt);
+          document.getElementById("taqIncome").value="";
+        });
+      });
+    };
+    var msg = "💰 "+fmt(inc)+" shu reja bo'yicha taqsimlansinmi?";
+    if(tg) tg.showConfirm(msg, function(ok){ if(ok) go(); });
+    else if(confirm(msg)) go();
   }
 
   function saqla(){
