@@ -313,6 +313,10 @@
         <div id="usersList"></div>
       </div>
       <div class="card">
+        <div class="hd"><h3 data-i18n="users_stat">Har bir odam (amaliyotlari)</h3></div>
+        <div id="usersStat"></div>
+      </div>
+      <div class="card">
         <div class="hd"><h3 data-i18n="users_add">Yangi foydalanuvchi</h3></div>
         <input id="uId" inputmode="numeric" data-ph="uid_ph" placeholder="Telegram ID (raqam)">
         <input id="uNom" data-ph="unom_ph" placeholder="Ism (ixtiyoriy)">
@@ -389,7 +393,7 @@
       tozalash_parol:"Tozalash paroli", oldpass_ph:"Eski parol (o'rnatilgan bo'lsa)", newpass_ph:"Yangi parol (bo'sh = o'chirish)", btn_parol_saqla:"Parolni saqlash",
       hammasini_t:"Hammasini tozalash", clearpass_ph:"Parol (o'rnatilgan bo'lsa)", btn_hammasini:"Hammasini tozalash",
       til_card:"Til / Язык", til_hint:"Interfeys va bot tili.",
-      users_card:"Ruxsat berilganlar", users_add:"Yangi foydalanuvchi", uid_ph:"Telegram ID (raqam)", unom_ph:"Ism (ixtiyoriy)",
+      users_card:"Ruxsat berilganlar", users_stat:"Har bir odam (amaliyotlari)", users_add:"Yangi foydalanuvchi", uid_ph:"Telegram ID (raqam)", unom_ph:"Ism (ixtiyoriy)",
       ukun_ph:"Necha kun (bo'sh = cheksiz)", btn_user_add:"Qo'shish",
       users_hint:"Odam botga /start bossa — o'z ID sini ko'radi. Shu ID ni bu yerga kiriting. ❌ bosib istagan paytda olib tashlaysiz."
     },
@@ -418,7 +422,7 @@
       tozalash_parol:"Пароль очистки", oldpass_ph:"Старый пароль (если установлен)", newpass_ph:"Новый пароль (пусто = удалить)", btn_parol_saqla:"Сохранить пароль",
       hammasini_t:"Очистить всё", clearpass_ph:"Пароль (если установлен)", btn_hammasini:"Очистить всё",
       til_card:"Язык / Til", til_hint:"Язык интерфейса и бота.",
-      users_card:"С доступом", users_add:"Новый пользователь", uid_ph:"Telegram ID (число)", unom_ph:"Имя (необязательно)",
+      users_card:"С доступом", users_stat:"По каждому человеку (операции)", users_add:"Новый пользователь", uid_ph:"Telegram ID (число)", unom_ph:"Имя (необязательно)",
       ukun_ph:"Сколько дней (пусто = бессрочно)", btn_user_add:"Добавить",
       users_hint:"Когда человек нажмёт /start в боте — он увидит свой ID. Введите этот ID сюда. Нажав ❌, можно отозвать доступ в любой момент."
     }
@@ -924,6 +928,37 @@
            '<div class="x" onclick="userDel(\''+esc(x.id)+'\')">'+ms("person_remove",20,"var(--red)")+'</div></div>';
     });
     var el = document.getElementById("usersList"); if(el) el.innerHTML = h;
+    renderUsersStat();
+  }
+  function renderUsersStat(){
+    var st = DATA.usersStat||[], hs="";
+    st.forEach(function(u){
+      var holat = u.egasi ? L("👑 Egasi","👑 Владелец")
+        : (u.faol ? (u.muddat ? ("⏳ "+esc(u.muddat)) : L("cheksiz","бессрочно")) : L("o'chirilgan","удалён"));
+      hs += '<div style="border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px">'+
+            '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px">'+
+              '<b>'+esc(u.nom||("ID "+u.id))+'</b>'+
+              '<span class="d" style="font-size:12px">🆔 '+esc(u.id)+'</span></div>'+
+            '<div class="d" style="font-size:12px;margin-top:3px">'+holat+' · '+L("Amallar","Операций")+': '+u.count+
+              (u.last?(' · '+L("oxirgi","посл.")+' '+esc(u.last)):'')+'</div>'+
+            '<div style="display:flex;justify-content:space-between;margin-top:8px;font-size:14px">'+
+              '<span style="color:var(--green)">➕ '+fmt(u.kirim)+'</span>'+
+              '<span style="color:var(--red)">➖ '+fmt(u.chiqim)+'</span></div>'+
+            '<div style="margin-top:4px;font-size:14px">'+L("Balans","Баланс")+': <b>'+fmt(u.balans)+'</b></div>';
+      if(u.tx && u.tx.length){
+        hs += '<details style="margin-top:8px"><summary class="d" style="font-size:13px;cursor:pointer">'+
+              L("Amaliyotlarini ko'rish","Показать операции")+' ('+u.tx.length+')</summary><div style="margin-top:6px">';
+        u.tx.forEach(function(t){
+          hs += '<div style="padding:6px 0;border-top:1px solid var(--line);font-size:13px">'+
+                (t.turi==="Kirim"?"➕":"➖")+' <span class="d">'+esc(t.sana)+'</span> '+esc(catL(t.kategoriya))+
+                ' — <b>'+fmt(t.summa)+'</b>'+(t.izoh?' <span class="d">'+esc(t.izoh)+'</span>':'')+'</div>';
+        });
+        hs += '</div></details>';
+      }
+      hs += '</div>';
+    });
+    var es = document.getElementById("usersStat");
+    if(es) es.innerHTML = hs || '<div class="muted" style="padding:4px 0">'+L("Ma'lumot yo'q.","Нет данных.")+'</div>';
   }
   function userAdd(){
     var id = val("uId").replace(/\D/g,""), nom = val("uNom").trim(), kun = val("uKun").replace(/\D/g,"");
