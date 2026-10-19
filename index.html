@@ -20,7 +20,7 @@
        background:var(--bg); color:var(--text); padding:14px 14px 40px; font-size:15px}
   .muted{color:var(--hint)}
   .card{background:var(--card); border-radius:16px; padding:16px; margin-bottom:12px}
-  .hero{background:linear-gradient(135deg,#3390ec,#1a6fd4); color:#fff; text-align:center}
+  .hero{background:linear-gradient(135deg,#3390ec,#1a6fd4); color:#fff; text-align:center; position:relative}
   .hero .lbl{opacity:.85; font-size:13px; letter-spacing:.3px}
   .hero .bal{font-size:30px; font-weight:800; margin:6px 0 2px; word-break:break-word}
   .row{display:flex; gap:10px}
@@ -28,7 +28,13 @@
   .tile .t-lbl{font-size:12px; color:var(--hint)}
   .tile .t-val{font-size:17px; font-weight:700; margin-top:4px}
   .t-in{color:var(--green)} .t-out{color:var(--red)}
-  h3{font-size:14px; margin:4px 2px 10px; color:var(--hint); font-weight:600; text-transform:uppercase; letter-spacing:.4px}
+  h3{font-size:14px; margin:0; color:var(--hint); font-weight:600; text-transform:uppercase; letter-spacing:.4px}
+  .hd{display:flex; align-items:center; justify-content:space-between; margin:2px 2px 12px}
+  .ic{display:flex; gap:7px; align-items:center}
+  .iq{border:0; background:rgba(255,255,255,.09); color:var(--text); min-width:28px; height:28px;
+      border-radius:50%; font-size:14px; line-height:1; padding:0 6px; cursor:pointer}
+  .iq:active{opacity:.6}
+  .eye{display:inline-block; cursor:pointer; opacity:.85; font-size:15px; margin-left:4px; vertical-align:middle}
   .seg{display:flex; background:rgba(0,0,0,.18); border-radius:12px; padding:4px; margin-bottom:12px}
   .seg button{flex:1; border:0; background:transparent; color:var(--text); padding:10px; border-radius:9px; font-size:15px; font-weight:600}
   .seg button.on.in{background:var(--green); color:#fff}
@@ -73,98 +79,119 @@
   <div id="app" class="hidden">
 
     <div class="card hero">
-      <div class="lbl">💰 BALANS</div>
+      <button class="iq" style="position:absolute;top:12px;right:12px;background:rgba(255,255,255,.2);color:#fff" onclick="info('balans')">ℹ️</button>
+      <div class="lbl">💰 BALANS <span class="eye" onclick="toggleEye('bal')">👁</span></div>
       <div class="bal" id="balans">—</div>
       <div class="lbl" id="oy"></div>
     </div>
 
     <div class="card">
+      <div class="hd"><h3>Shu oy <span class="eye" onclick="toggleEye('oy')">👁</span></h3>
+        <div class="ic"><button class="iq" onclick="info('oy')">ℹ️</button></div></div>
       <div class="row">
-        <div class="tile"><div class="t-lbl">Shu oy kirim</div><div class="t-val t-in" id="oyKirim">—</div></div>
-        <div class="tile"><div class="t-lbl">Shu oy chiqim</div><div class="t-val t-out" id="oyChiqim">—</div></div>
+        <div class="tile"><div class="t-lbl">Kirim</div><div class="t-val t-in" id="oyKirim">—</div></div>
+        <div class="tile"><div class="t-lbl">Chiqim</div><div class="t-val t-out" id="oyChiqim">—</div></div>
       </div>
       <div id="oyByudjet" style="margin-top:12px"></div>
     </div>
 
     <div class="card" id="bugunCard">
-      <div class="bar-top"><span>📆 Bugun sarflangan</span><span id="bugunTxt">—</span></div>
+      <div class="bar-top"><span>📆 Bugun (limitga kiradi) <span class="eye" onclick="info('bugun')" style="font-size:13px">ℹ️</span></span><span id="bugunTxt">—</span></div>
       <div class="bar"><i id="bugunBar" style="width:0%"></i></div>
       <div class="muted" id="bugunHint" style="font-size:12px;margin-top:6px"></div>
     </div>
 
     <div class="card">
-      <h3>Yangi yozuv</h3>
+      <div class="hd"><h3>Yangi yozuv</h3><div class="ic"><button class="iq" onclick="info('yangi')">ℹ️</button></div></div>
       <div class="seg">
         <button id="segOut" class="on out" onclick="setTuri('Chiqim')">➖ Chiqim</button>
         <button id="segIn" class="in" onclick="setTuri('Kirim')">➕ Kirim</button>
       </div>
       <div class="chips" id="chips"></div>
-      <input id="summa" inputmode="decimal" placeholder="Summa (masalan: 50000 yoki 50k)">
+      <input id="summa" class="num" inputmode="decimal" placeholder="Summa (masalan: 50 000 yoki 50k)">
       <input id="izoh" placeholder="Izoh (ixtiyoriy)">
       <button class="btn" onclick="saqla()">Saqlash</button>
     </div>
 
     <div class="card" id="catCard">
-      <h3>Shu oy chiqimlar</h3>
+      <div class="hd"><h3>Shu oy chiqimlar</h3><div class="ic"><button class="iq" onclick="info('cat')">ℹ️</button></div></div>
       <div id="bars"></div>
     </div>
 
     <div class="card">
-      <h3>Oxirgi amaliyotlar</h3>
+      <div class="hd"><h3>Oxirgi amaliyotlar</h3><div class="ic"><button class="iq" onclick="info('oxirgi')">ℹ️</button></div></div>
       <div id="txlist"></div>
     </div>
 
     <div class="card">
-      <h3>🎯 Maqsadlar</h3>
+      <div class="hd"><h3>🎯 Maqsadlar</h3><div class="ic"><button class="iq" onclick="info('maqsad')">ℹ️</button></div></div>
       <div id="goals"></div>
       <div style="margin-top:12px">
         <input id="gNom" placeholder="Maqsad nomi (masalan: Telefon)">
-        <input id="gSum" inputmode="decimal" placeholder="Kerakli summa (masalan: 5mln)">
+        <input id="gSum" class="num" inputmode="decimal" placeholder="Kerakli summa (masalan: 5mln)">
         <input id="gMuddat" placeholder="Muddat (ixtiyoriy: 2026-12)">
         <button class="btn" onclick="goalAdd()">+ Yangi maqsad</button>
       </div>
     </div>
 
     <div class="card" id="taqsimCard">
-      <h3>💼 Byudjet taqsimoti</h3>
-      <div class="muted" style="font-size:12.5px;margin-bottom:12px">
-        Oylik pul kelganda avtomat bo'laklarga ajrating:
-        🎯 maqsad ulushi jamg'armaga qo'shiladi, 🛒 kategoriya — oylik reja,
-        📊 <b>qolgani</b> esa oylik/kunlik limitga aylanadi.
-      </div>
+      <div class="hd"><h3>💼 Byudjet taqsimoti</h3>
+        <div class="ic">
+          <button class="iq" onclick="info('taqsim')">ℹ️</button>
+          <button class="iq" id="taqPen" onclick="taqToggleEdit()">✏️</button>
+        </div></div>
       <div id="taqsimList"></div>
 
-      <div id="taqAdd" class="hidden" style="margin-top:12px">
-        <div class="row" style="gap:8px">
-          <input id="taqNom" placeholder="Nom (masalan: Bozor)" style="flex:1">
-          <input id="taqSum" inputmode="decimal" placeholder="Summa" style="flex:1">
+      <div id="taqEditBox" class="hidden">
+        <div id="taqAdd" class="hidden" style="margin-top:12px">
+          <div class="row" style="gap:8px">
+            <input id="taqNom" placeholder="Nom (masalan: Bozor)" style="flex:1">
+            <input id="taqSum" class="num" inputmode="decimal" placeholder="Summa" style="flex:1">
+          </div>
+          <select id="taqTuri">
+            <option value="kat">🛒 Kategoriya rejasi (sarf kuzatiladi)</option>
+            <option value="maqsad">🎯 Maqsad (jamg'armaga qo'shiladi)</option>
+            <option value="limit">📊 Qolgani (limitga)</option>
+          </select>
+          <button class="btn" onclick="taqRowAdd()">Qo'shish</button>
         </div>
-        <select id="taqTuri">
-          <option value="kat">🛒 Kategoriya rejasi (sarf kuzatiladi)</option>
-          <option value="maqsad">🎯 Maqsad (jamg'armaga qo'shiladi)</option>
-          <option value="limit">📊 Qolgani (limitga)</option>
-        </select>
-        <button class="btn" onclick="taqRowAdd()">Qo'shish</button>
+        <button class="link-btn" onclick="toggleTaqAdd()">+ Yangi bo'lak</button>
+        <button class="btn" onclick="taqSave()" style="margin-top:4px">💾 Rejani saqlash</button>
       </div>
-      <button class="link-btn" onclick="toggleTaqAdd()">+ Yangi bo'lak</button>
-      <button class="btn" onclick="taqSave()" style="margin-top:4px">💾 Rejani saqlash</button>
 
       <div style="border-top:1px solid var(--line); margin:16px 0 12px"></div>
       <div style="font-weight:600;margin-bottom:8px">💰 Pulni taqsimlash</div>
-      <input id="taqIncome" inputmode="decimal" placeholder="Kelgan summa (masalan: 15mln)" oninput="taqPreview()">
+      <input id="taqIncome" class="num" inputmode="decimal" placeholder="Kelgan summa (masalan: 15mln)" oninput="taqPreview()">
       <div id="taqPrev" class="muted" style="font-size:13px;margin-bottom:10px"></div>
       <button class="btn" onclick="taqRun()">💰 Taqsimlash</button>
     </div>
 
     <div class="card">
-      <h3>⚙️ Limitlar</h3>
-      <input id="limKun" inputmode="decimal" placeholder="Kunlik limit (masalan: 100000)">
-      <input id="limOy" inputmode="decimal" placeholder="Oylik byudjet (masalan: 3mln)">
+      <div class="hd"><h3>🧾 Qarz daftarchasi</h3><div class="ic"><button class="iq" onclick="info('qarz')">ℹ️</button></div></div>
+      <div style="font-weight:600;color:var(--red);margin:2px 0 6px">⬇️ Qarz olganlarim <span class="muted" style="font-weight:400;font-size:12px">(men qarzdor)</span></div>
+      <div id="qarzOldim"></div>
+      <div style="font-weight:600;color:var(--green);margin:14px 0 6px">⬆️ Qarz berganlarim <span class="muted" style="font-weight:400;font-size:12px">(menga qarzdor)</span></div>
+      <div id="qarzBerdim"></div>
+      <div style="border-top:1px solid var(--line); margin:14px 0 10px"></div>
+      <select id="qTuri">
+        <option value="Oldim">⬇️ Qarz oldim (men qarzdor)</option>
+        <option value="Berdim">⬆️ Qarz berdim (menga qarzdor)</option>
+      </select>
+      <input id="qKim" placeholder="Kimdan / kimga (ism)">
+      <input id="qSum" class="num" inputmode="decimal" placeholder="Summa">
+      <input id="qMuddat" placeholder="Muddat (masalan: 2026-12-01 yoki 3 oy)">
+      <button class="btn" onclick="qarzAdd()">+ Qo'shish</button>
+    </div>
+
+    <div class="card">
+      <div class="hd"><h3>⚙️ Limitlar</h3><div class="ic"><button class="iq" onclick="info('limit')">ℹ️</button></div></div>
+      <input id="limKun" class="num" inputmode="decimal" placeholder="Kunlik limit (masalan: 100 000)">
+      <input id="limOy" class="num" inputmode="decimal" placeholder="Oylik byudjet (masalan: 3mln)">
       <button class="btn" onclick="saqlaLimit()">Limitlarni saqlash</button>
     </div>
 
     <div class="card">
-      <h3>🔒 Tozalash paroli</h3>
+      <div class="hd"><h3>🔒 Tozalash paroli</h3><div class="ic"><button class="iq" onclick="info('parol')">ℹ️</button></div></div>
       <input id="oldPass" type="password" placeholder="Eski parol (o'rnatilgan bo'lsa)">
       <input id="newPass" type="password" placeholder="Yangi parol (bo'sh = o'chirish)">
       <button class="btn" onclick="saqlaParol()">Parolni saqlash</button>
@@ -172,7 +199,7 @@
     </div>
 
     <div class="card">
-      <h3>🗑 Tozalash</h3>
+      <div class="hd"><h3>🗑 Tozalash</h3><div class="ic"><button class="iq" onclick="info('tozalash')">ℹ️</button></div></div>
       <input id="clearPass" type="password" placeholder="Parol (o'rnatilgan bo'lsa)">
       <button class="clear" onclick="hammasini()" style="margin-top:0">🗑 Hammasini tozalash</button>
     </div>
@@ -185,6 +212,12 @@
   var turi = "Chiqim", kat = "", DATA = null;
 
   if (tg) { tg.ready(); tg.expand(); }
+
+  /* ---- ko'z (balans/oy yashirish) ---- */
+  var EYE = { bal:false, oy:false };
+  try { EYE.bal = localStorage.getItem('eye_bal')==='1'; EYE.oy = localStorage.getItem('eye_oy')==='1'; } catch(e){}
+  function toggleEye(k){ EYE[k] = !EYE[k]; try{ localStorage.setItem('eye_'+k, EYE[k]?'1':'0'); }catch(e){} if(DATA) render(); }
+  var DOTS = "••••••";
 
   function fmt(n){
     n = Math.round(Number(n)||0);
@@ -199,6 +232,36 @@
     v=v.replace(/[.,]/g,""); var n=Number(v); return isFinite(n)? n*m : 0;
   }
   function esc(s){ return String(s||"").replace(/[<>&]/g,function(c){return {"<":"&lt;",">":"&gt;","&":"&amp;"}[c];}); }
+
+  /* ---- summa inputlarini yozayotganda 3 xonadan bo'shliq bilan ko'rsatish ---- */
+  function liveFmt(el){
+    var v = el.value;
+    if(/[a-z]/i.test(v)) return;              // "5mln", "50k" — tegmaymiz
+    var d = v.replace(/[^\d]/g,"");
+    if(!d){ if(v!=="") el.value=""; return; }
+    var out = d.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+    if(out !== v) el.value = out;
+  }
+  document.addEventListener('input', function(e){
+    if(e.target && e.target.classList && e.target.classList.contains('num')) liveFmt(e.target);
+  });
+
+  /* ---- bo'lim tushuntirishlari (ℹ️) ---- */
+  var INFO = {
+    balans:"Umumiy qoldiq — barcha kirimlardan chiqimlar ayirilgani.\n👁 bosib yashirish yoki ko'rsatish mumkin.",
+    oy:"Shu oyda qancha kirim qilgansiz va qancha sarflagansiz.\n👁 bilan yashira olasiz.",
+    bugun:"Bugun limitga kiradigan xarajat.\nByudjetda alohida ajratilgan kategoriyalar (bozor, komunalka...) bu limitga KIRMAYDI — ular o'z rejasida hisoblanadi.",
+    yangi:"Yangi kirim yoki chiqim qo'shish.\nTurni tanlang → kategoriya → summa (izoh ixtiyoriy).",
+    cat:"Shu oy kategoriyalar bo'yicha qancha sarflanganini ko'rsatadi.",
+    oxirgi:"So'nggi 20 ta amaliyot. ✕ bosib o'chira olasiz.",
+    maqsad:"Jamg'arma maqsadlari. Har biriga summa qo'shib borasiz.\nByudjet taqsimotidagi 🎯 ulush avtomat shu yerga tushadi.",
+    taqsim:"Oylik pul kelganda avtomat bo'laklarga ajratish.\n✏️ — rejani o'zgartirish. Pastda kelgan summani yozib «Taqsimlash».\n🎯 maqsadga, 🛒 kategoriya rejasiga, 📊 qolgani esa limitga ketadi.",
+    qarz:"Qarz daftarchasi.\n⬇️ olganlaringiz (siz qarzdor) va ⬆️ berganlaringiz (sizga qarzdor), muddati bilan.\nQarz qaytsa ✕ bosing.",
+    limit:"Kunlik va oylik sarf chegarasi. Oshsa ogohlantiradi.\nByudjetda ajratilgan kategoriyalar KUNLIK limitga kirmaydi.",
+    parol:"Hammasini tozalash paroli. O'zgartirishda avval eski parolni kiriting.\nUnutsangiz — botda /parol_tiklash.",
+    tozalash:"BARCHA amaliyotni o'chirib balansni 0 qiladi. Parol so'raydi (o'rnatilgan bo'lsa). Qaytarib bo'lmaydi!"
+  };
+  function info(k){ var t = INFO[k]||""; if(tg) tg.showAlert(t); else alert(t); }
 
   function call(params, cb){
     var url = API + "?initData=" + encodeURIComponent(INIT);
@@ -216,7 +279,7 @@
         return;
       }
       DATA = j; render();
-      if(j.warn && tg) tg.showAlert("⚠️ Bugungi xarajat " + fmt(j.bugunChiqim) + " — kunlik limit " + fmt(j.limitKun) + " dan oshib ketdi!");
+      if(j.warn && tg) tg.showAlert("⚠️ Bugungi (limitga kiradigan) xarajat " + fmt(j.bugunLimit) + " — kunlik limit " + fmt(j.limitKun) + " dan oshib ketdi!");
       if(cb) cb();
     }).catch(function(e){
       document.getElementById("loading").innerHTML = "⚠️ Ulanish xatosi. Qayta urinib ko'ring.";
@@ -245,10 +308,10 @@
   function render(){
     document.getElementById("loading").classList.add("hidden");
     document.getElementById("app").classList.remove("hidden");
-    document.getElementById("balans").textContent = fmt(DATA.balans);
+    document.getElementById("balans").textContent = EYE.bal ? fmt(DATA.balans) : DOTS;
     document.getElementById("oy").textContent = DATA.oy;
-    document.getElementById("oyKirim").textContent = fmt(DATA.oyKirim);
-    document.getElementById("oyChiqim").textContent = fmt(DATA.oyChiqim);
+    document.getElementById("oyKirim").textContent = EYE.oy ? fmt(DATA.oyKirim) : DOTS;
+    document.getElementById("oyChiqim").textContent = EYE.oy ? fmt(DATA.oyChiqim) : DOTS;
 
     // Oylik byudjet
     var lo = DATA.limitOy, oyEl = document.getElementById("oyByudjet");
@@ -258,20 +321,20 @@
         '<div class="bar"><i style="width:'+opct+'%;background:'+(oover?'var(--red)':'var(--green)')+'"></i></div>';
     } else { oyEl.innerHTML=''; }
 
-    // Bugungi limit
-    var lk = DATA.limitKun;
-    document.getElementById("bugunTxt").textContent = fmt(DATA.bugunChiqim) + (lk>0? ' / '+fmt(lk):'');
+    // Bugungi limit (ajratilgan kategoriyalarsiz)
+    var lk = DATA.limitKun, bl = DATA.bugunLimit;
+    document.getElementById("bugunTxt").textContent = fmt(bl) + (lk>0? ' / '+fmt(lk):'');
     var bbar = document.getElementById("bugunBar"), bhint = document.getElementById("bugunHint");
     if(lk>0){
-      var bpct = Math.min(100, Math.round(DATA.bugunChiqim/lk*100)), bover = DATA.bugunChiqim>lk;
+      var bpct = Math.min(100, Math.round(bl/lk*100)), bover = bl>lk;
       bbar.style.width = bpct+'%'; bbar.style.background = bover?'var(--red)':'var(--green)';
-      bhint.textContent = bover ? ('⚠️ Limitdan '+fmt(DATA.bugunChiqim-lk)+' oshib ketdingiz') : ('Qoldi: '+fmt(lk-DATA.bugunChiqim));
+      bhint.textContent = bover ? ('⚠️ Limitdan '+fmt(bl-lk)+' oshib ketdingiz') : ('Qoldi: '+fmt(lk-bl));
     } else { bbar.style.width='0%'; bhint.textContent = "Kunlik limit o'rnatilmagan — pastda Limitlar'dan qo'ying."; }
 
     // Limit inputlarini to'ldirish (yozayotgan bo'lmasa)
     var lkEl=document.getElementById("limKun"), loEl=document.getElementById("limOy");
-    if(document.activeElement!==lkEl) lkEl.value = DATA.limitKun>0? DATA.limitKun : '';
-    if(document.activeElement!==loEl) loEl.value = DATA.limitOy>0? DATA.limitOy : '';
+    if(document.activeElement!==lkEl) lkEl.value = DATA.limitKun>0? String(DATA.limitKun).replace(/\B(?=(\d{3})+(?!\d))/g," ") : '';
+    if(document.activeElement!==loEl) loEl.value = DATA.limitOy>0? String(DATA.limitOy).replace(/\B(?=(\d{3})+(?!\d))/g," ") : '';
 
     var ph = document.getElementById("parolHint");
     if(ph) ph.textContent = DATA.parolBor
@@ -313,6 +376,7 @@
     document.getElementById("txlist").innerHTML = hh;
     renderGoals();
     drawTaqsimFromData();
+    renderQarz();
   }
 
   function renderGoals(){
@@ -326,7 +390,7 @@
         '<span>'+fmt(x.yiglangan)+' / '+fmt(x.maqsad)+' · '+pct+'%</span></div>'+
         '<div class="bar"><i style="width:'+pct+'%;background:'+(done?'var(--green)':'var(--accent)')+'"></i></div>'+
         '<div class="goal-act">'+
-          '<input id="h_'+x.id+'" inputmode="decimal" placeholder="Summa qo\'shish (masalan 500k)">'+
+          '<input id="h_'+x.id+'" class="num" inputmode="decimal" placeholder="Summa qo\'shish (masalan 500k)">'+
           '<button onclick="goalHissa(\''+x.id+'\')">+</button>'+
           '<button class="del" onclick="goalDel(\''+x.id+'\')">✕</button>'+
         '</div></div>';
@@ -355,7 +419,7 @@
   }
 
   /* ---- Byudjet taqsimoti ---- */
-  var PLAN = [];
+  var PLAN = [], taqEdit = false;
   function drawTaqsimFromData(){
     PLAN = (DATA.taqsim||[]).map(function(x){
       return {nom:x.nom, emoji:x.emoji, summa:Number(x.summa)||0, turi:x.turi, kat:x.kat||""};
@@ -363,27 +427,36 @@
     drawTaqsim();
   }
   function badge_(turi){ return turi==="maqsad"?"🎯 maqsad":(turi==="limit"?"📊 qolgani (limit)":"🛒 reja"); }
+  function taqToggleEdit(){
+    taqEdit = !taqEdit;
+    document.getElementById("taqEditBox").classList.toggle("hidden", !taqEdit);
+    document.getElementById("taqPen").style.background = taqEdit ? 'var(--accent)' : 'rgba(255,255,255,.09)';
+    drawTaqsim();
+  }
   function drawTaqsim(){
     var cat = (DATA&&DATA.catChiqim)||{}, h="";
     PLAN.forEach(function(it,i){
       h += '<div style="padding:10px 0;border-bottom:1px solid var(--line)">'+
         '<div class="bar-top"><span>'+(it.emoji||"•")+' '+esc(it.nom)+' <span class="d">'+badge_(it.turi)+'</span></span>'+
-        '<span class="x" onclick="taqDel('+i+')">✕</span></div>';
-      if(it.turi==="limit"){
+        (taqEdit ? '<span class="x" onclick="taqDel('+i+')">✕</span>'
+                 : '<span>'+(it.turi==="limit"?'<span class="muted">qolgani</span>':('<b>'+fmt(it.summa)+'</b>'))+'</span>')+
+        '</div>';
+      if(taqEdit && it.turi!=="limit"){
+        h += '<input class="num" inputmode="decimal" value="'+String(it.summa).replace(/\B(?=(\d{3})+(?!\d))/g," ")+'" oninput="taqSet('+i+',this.value)" placeholder="Summa" style="margin:6px 0 0">';
+      }
+      if(it.turi==="limit" && !taqEdit){
         h += '<div class="muted" style="font-size:12px">Qolgan summa avtomat oylik/kunlik limitga aylanadi.</div>';
-      } else {
-        h += '<input inputmode="decimal" value="'+it.summa+'" oninput="taqSet('+i+',this.value)" placeholder="Summa" style="margin:6px 0 0">';
-        if(it.turi==="kat" && it.kat){
-          var sp = cat[it.kat]||0, pl=it.summa||0;
-          var pct = pl>0?Math.min(100,Math.round(sp/pl*100)):0, over=pl>0&&sp>pl;
-          h += '<div class="bar-top" style="margin-top:8px"><span class="muted">Shu oy sarflangan</span>'+
-               '<span class="muted">'+fmt(sp)+' / '+fmt(pl)+'</span></div>'+
-               '<div class="bar"><i style="width:'+pct+'%;background:'+(over?'var(--red)':'var(--green)')+'"></i></div>';
-        }
+      }
+      if(it.turi==="kat" && it.kat){
+        var sp = cat[it.kat]||0, pl=it.summa||0;
+        var pct = pl>0?Math.min(100,Math.round(sp/pl*100)):0, over=pl>0&&sp>pl;
+        h += '<div class="bar-top" style="margin-top:8px"><span class="muted">Shu oy sarflangan</span>'+
+             '<span class="muted">'+fmt(sp)+' / '+fmt(pl)+'</span></div>'+
+             '<div class="bar"><i style="width:'+pct+'%;background:'+(over?'var(--red)':'var(--green)')+'"></i></div>';
       }
       h += '</div>';
     });
-    if(!PLAN.length) h = '<div class="muted" style="padding:4px 0">Reja bo\'sh. "+ Yangi bo\'lak" bilan qo\'shing.</div>';
+    if(!PLAN.length) h = '<div class="muted" style="padding:4px 0">Reja bo\'sh. ✏️ bosib «+ Yangi bo\'lak» qo\'shing.</div>';
     document.getElementById("taqsimList").innerHTML = h;
     taqPreview();
   }
@@ -393,13 +466,13 @@
   function taqRowAdd(){
     var nom = document.getElementById("taqNom").value.trim();
     var sum = parseSum(document.getElementById("taqSum").value);
-    var turi = document.getElementById("taqTuri").value;
+    var tr = document.getElementById("taqTuri").value;
     if(!nom){ if(tg) tg.showAlert("Bo'lak nomini yozing."); else alert("Nom"); return; }
-    if(turi==="limit" && PLAN.some(function(x){return x.turi==="limit";})){
+    if(tr==="limit" && PLAN.some(function(x){return x.turi==="limit";})){
       if(tg) tg.showAlert("'Qolgani' bo'lagi faqat bitta bo'ladi."); else alert("Limit bitta"); return;
     }
-    var emoji = turi==="maqsad"?"🎯":(turi==="limit"?"📊":(DATA.emoji[cap_(nom)]||"🛒"));
-    PLAN.push({nom:nom, emoji:emoji, summa:turi==="limit"?0:sum, turi:turi, kat:turi==="kat"?cap_(nom):""});
+    var emoji = tr==="maqsad"?"🎯":(tr==="limit"?"📊":(DATA.emoji[cap_(nom)]||"🛒"));
+    PLAN.push({nom:nom, emoji:emoji, summa:tr==="limit"?0:sum, turi:tr, kat:tr==="kat"?cap_(nom):""});
     document.getElementById("taqNom").value=""; document.getElementById("taqSum").value="";
     document.getElementById("taqAdd").classList.add("hidden");
     drawTaqsim();
@@ -410,8 +483,7 @@
     var alloc = 0; PLAN.forEach(function(it){ if(it.turi!=="limit") alloc += Number(it.summa)||0; });
     var el = document.getElementById("taqPrev");
     if(inc<=0){ el.innerHTML = "📌 Belgilangan jami: <b>"+fmt(alloc)+"</b>"; return; }
-    var rem = inc - alloc;
-    var col = rem<0?"var(--red)":"var(--green)";
+    var rem = inc - alloc, col = rem<0?"var(--red)":"var(--green)";
     var html = "Belgilangan: <b>"+fmt(alloc)+"</b> · Qolgani (limit): <b style='color:"+col+"'>"+fmt(rem)+"</b>";
     if(rem<0) html += "<br>⚠️ Reja kelgan summadan ko'p — kamaytiring.";
     el.innerHTML = html;
@@ -438,6 +510,44 @@
     var msg = "💰 "+fmt(inc)+" shu reja bo'yicha taqsimlansinmi?";
     if(tg) tg.showConfirm(msg, function(ok){ if(ok) go(); });
     else if(confirm(msg)) go();
+  }
+
+  /* ---- Qarz daftarchasi ---- */
+  function renderQarz(){
+    var list = DATA.qarzlar || [];
+    var ol = list.filter(function(x){return x.turi==="Oldim";});
+    var be = list.filter(function(x){return x.turi==="Berdim";});
+    document.getElementById("qarzOldim").innerHTML = qarzRows(ol);
+    document.getElementById("qarzBerdim").innerHTML = qarzRows(be);
+  }
+  function qarzRows(arr){
+    if(!arr.length) return '<div class="muted" style="font-size:12.5px;padding:2px 0">— yo\'q —</div>';
+    var h="";
+    arr.forEach(function(x){
+      var sub = x.muddat ? ("⏳ "+esc(x.muddat)) : "muddat belgilanmagan";
+      if(x.sana) sub += " · olingan: "+esc(x.sana);
+      h += '<div class="tx"><div class="mid"><div class="k">'+esc(x.kim||"—")+'</div>'+
+           '<div class="d">'+sub+'</div></div>'+
+           '<div class="amt">'+fmt(x.summa)+'</div>'+
+           '<div class="x" onclick="qarzDel(\''+x.id+'\')">✓</div></div>';
+    });
+    return h;
+  }
+  function qarzAdd(){
+    var tr = document.getElementById("qTuri").value;
+    var kim = document.getElementById("qKim").value.trim();
+    var sum = parseSum(document.getElementById("qSum").value);
+    var muddat = document.getElementById("qMuddat").value.trim();
+    if(sum<=0){ if(tg) tg.showAlert("Summani to'g'ri yozing."); else alert("Summa"); return; }
+    call({action:"qarzadd", turi:tr, kim:kim, summa:sum, muddat:muddat}, function(){
+      document.getElementById("qKim").value=""; document.getElementById("qSum").value=""; document.getElementById("qMuddat").value="";
+      if(tg) tg.showAlert("✅ Qarz qo'shildi.");
+    });
+  }
+  function qarzDel(id){
+    var go = function(){ call({action:"qarzdel", id:id}); };
+    if(tg) tg.showConfirm("Qarz qaytdi / ro'yxatdan o'chirilsinmi?", function(ok){ if(ok) go(); });
+    else if(confirm("Qaytdi?")) go();
   }
 
   function saqla(){
