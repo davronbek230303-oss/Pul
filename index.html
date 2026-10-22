@@ -20,6 +20,8 @@
     --grad:linear-gradient(135deg,#4b55e6 0%,#5b63f0 45%,#8b7bff 120%);
     --shadow:0 14px 34px rgba(0,0,0,.42);
     --glow:0 10px 28px rgba(91,99,240,.42);
+    --glass:rgba(23,27,37,.55); --glass-bd:rgba(255,255,255,.1); --glass-strong:rgba(20,24,33,.72);
+    --blob1:rgba(91,99,240,.34); --blob2:rgba(139,123,255,.26); --blob3:rgba(20,184,166,.16);
   }
   :root[data-theme="light"]{
     --bg:#f3f4f8; --bg2:#fafbfd; --card:#ffffff; --card2:#f3f5fb; --text:#141722; --hint:#67707f;
@@ -31,17 +33,25 @@
     --grad:linear-gradient(135deg,#4b55e6 0%,#5b63f0 45%,#6b73ff 120%);
     --shadow:0 12px 30px rgba(60,66,130,.12);
     --glow:0 12px 26px rgba(75,85,230,.26);
+    --glass:rgba(255,255,255,.62); --glass-bd:rgba(20,23,40,.08); --glass-strong:rgba(255,255,255,.78);
+    --blob1:rgba(91,99,240,.2); --blob2:rgba(139,123,255,.16); --blob3:rgba(20,184,166,.1);
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
   body{margin:0; font-family:'Manrope',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-       background:var(--bg); background-image:radial-gradient(120% 60% at 50% -10%, var(--bg2) 0%, var(--bg) 60%);
-       background-attachment:fixed; color:var(--text); padding:14px 14px 96px; font-size:15px; font-weight:500}
+       background:var(--bg); color:var(--text); padding:14px 14px 104px; font-size:15px; font-weight:500}
+  body::before{content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
+       background:
+         radial-gradient(42% 32% at 12% 8%, var(--blob1), transparent 70%),
+         radial-gradient(46% 36% at 92% 16%, var(--blob2), transparent 72%),
+         radial-gradient(52% 42% at 72% 96%, var(--blob3), transparent 72%),
+         var(--bg)}
   .muted{color:var(--hint)}
   .ms{font-family:'Material Symbols Rounded'; font-weight:normal; font-style:normal; font-size:20px;
       line-height:1; letter-spacing:normal; text-transform:none; display:inline-block; white-space:nowrap;
       direction:ltr; vertical-align:middle; font-variation-settings:'FILL' 1,'wght' 500;
       -webkit-font-feature-settings:'liga'; -webkit-font-smoothing:antialiased}
-  .card{background:var(--card); border:1px solid var(--line); border-radius:22px; padding:17px; margin-bottom:13px; box-shadow:var(--shadow)}
+  .card{background:var(--glass); border:1px solid var(--glass-bd); border-radius:22px; padding:17px; margin-bottom:13px; box-shadow:var(--shadow);
+        backdrop-filter:blur(18px) saturate(1.4); -webkit-backdrop-filter:blur(18px) saturate(1.4)}
   .hero{background:var(--grad); color:#fff; text-align:center; position:relative; overflow:hidden; border:0; padding:26px 18px 22px; box-shadow:var(--glow)}
   .hero:before{content:"";position:absolute;width:260px;height:260px;right:-90px;top:-120px;border-radius:50%;background:rgba(255,255,255,.14)}
   .hero:after{content:"";position:absolute;width:180px;height:180px;left:-70px;bottom:-110px;border-radius:50%;background:rgba(255,255,255,.08)}
@@ -146,12 +156,36 @@
   .kv{display:flex; justify-content:space-between; padding:6px 0; font-size:14px}
   .langrow{display:flex; gap:10px}
   .langrow .chip{flex:1; justify-content:center; font-size:15px; padding:13px}
-  @keyframes fadeUp{from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none}}
-  .page:not(.hidden){animation:fadeUp .22s ease}
+  /* banner (rasm joyi) */
+  .banner{position:relative; height:132px; border-radius:22px; overflow:hidden; margin-bottom:13px; cursor:pointer;
+      border:1px solid var(--glass-bd); box-shadow:var(--shadow);
+      background:linear-gradient(120deg,#4b55e6,#8b7bff 55%,#19d3c5)}
+  .banner img{width:100%; height:100%; object-fit:cover; display:block}
+  .banner-ph{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
+      color:#fff; font-weight:700; font-size:13px; text-shadow:0 1px 4px rgba(0,0,0,.3)}
+  .banner-ph .ms{font-size:30px}
+  .banner:before{content:""; position:absolute; top:0; bottom:0; width:40%; left:-60%;
+      background:linear-gradient(100deg, transparent, rgba(255,255,255,.28), transparent); animation:shine 3.4s ease-in-out infinite}
+  @keyframes shine{0%{left:-60%} 55%,100%{left:120%}}
+  /* animatsiyalar */
+  @keyframes fadeUp{from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:none}}
+  @keyframes popIn2{0%{opacity:0; transform:translateY(12px) scale(.98)} 100%{opacity:1; transform:none}}
+  .page:not(.hidden){animation:fadeUp .24s ease}
+  .page:not(.hidden) > .card, .page:not(.hidden) > .banner, .page:not(.hidden) > .ptitle{animation:popIn2 .34s both ease}
+  .page:not(.hidden) > *:nth-child(2){animation-delay:.04s}
+  .page:not(.hidden) > *:nth-child(3){animation-delay:.08s}
+  .page:not(.hidden) > *:nth-child(4){animation-delay:.12s}
+  .page:not(.hidden) > *:nth-child(5){animation-delay:.16s}
+  .page:not(.hidden) > *:nth-child(6){animation-delay:.2s}
+  .page:not(.hidden) > *:nth-child(n+7){animation-delay:.24s}
+  .bar>i{transition:width .55s cubic-bezier(.22,1,.36,1)}
+  .tabbar button:active{transform:scale(.9)}
+  .card, .chip, .btn, .nav button, .tile.acc{will-change:transform}
   /* pastki tab-menyu */
-  .tabbar{position:fixed; left:0; right:0; bottom:0; z-index:60; display:flex; justify-content:space-around; gap:2px;
-      background:var(--card); border-top:1px solid var(--line); padding:9px 6px calc(10px + env(safe-area-inset-bottom));
-      box-shadow:0 -8px 24px rgba(0,0,0,.22); backdrop-filter:saturate(1.2)}
+  .tabbar{position:fixed; left:12px; right:12px; bottom:12px; z-index:60; display:flex; justify-content:space-around; gap:2px;
+      background:var(--glass-strong); border:1px solid var(--glass-bd); border-radius:26px;
+      padding:9px 6px calc(9px + env(safe-area-inset-bottom)); box-shadow:0 12px 34px rgba(0,0,0,.34);
+      backdrop-filter:blur(22px) saturate(1.5); -webkit-backdrop-filter:blur(22px) saturate(1.5)}
   .tabbar button{flex:1; border:0; background:transparent; color:var(--hint); cursor:pointer; padding:3px 2px;
       display:flex; flex-direction:column; align-items:center; gap:3px; font-size:11px; font-weight:700; font-family:inherit; transition:color .14s}
   .tabbar button .ms{font-size:24px}
@@ -186,6 +220,11 @@
           <button class="btn" style="flex:1;background:var(--accent)" onclick="yechish('plastikka')"><span class="ms">north</span> <span data-i18n="btn_solish">Naqdni plastikka</span></button>
         </div>
         <div class="muted" style="font-size:12px;margin-top:8px" data-i18n="hisoblar_hint">Plastikdan naqd olsangiz — umumiy balans o'zgarmaydi, pul faqat Naqdga o'tadi.</div>
+      </div>
+
+      <div class="banner" id="bannerCard" onclick="bannerClick()">
+        <img id="bannerImg" alt="" style="display:none">
+        <div class="banner-ph" id="bannerPh"><span class="ms">add_photo_alternate</span><span data-i18n="banner_ph">Bu yerga rasm qo'yish mumkin</span></div>
       </div>
 
       <div class="card">
@@ -433,6 +472,13 @@
         <div class="muted" style="font-size:12px;margin-top:8px" data-i18n="mavzu_hint">Qorong'u yoki yorug' rejim.</div>
       </div>
       <div class="card">
+        <div class="hd"><h3><span class="ms" style="font-size:18px">image</span> <span data-i18n="banner_card">Banner rasmi</span></h3></div>
+        <div class="muted" style="font-size:13px;margin-bottom:10px" data-i18n="banner_desc">Bosh sahifadagi banner uchun rasm tanlang (faqat shu qurilmada saqlanadi).</div>
+        <label class="btn" style="cursor:pointer"><span class="ms">add_photo_alternate</span> <span data-i18n="banner_pick">Rasm tanlash</span>
+          <input type="file" accept="image/*" id="bannerFile" onchange="bannerPick(this)" style="display:none"></label>
+        <button class="link-btn" onclick="bannerRemove()" data-i18n="banner_remove">Rasmni olib tashlash</button>
+      </div>
+      <div class="card">
         <div class="hd"><h3 data-i18n="til_card">Til / Язык</h3></div>
         <div class="langrow">
           <button class="chip" id="langUz" onclick="setLang('uz')">🇺🇿 O'zbekcha</button>
@@ -452,7 +498,7 @@
         <input id="clearPass" type="password" data-ph="clearpass_ph" placeholder="Parol (o'rnatilgan bo'lsa)">
         <button class="clear" onclick="hammasini()"><span class="ms" style="font-size:18px;vertical-align:-4px">delete</span> <span data-i18n="btn_hammasini">Hammasini tozalash</span></button>
       </div>
-      <div class="muted" style="text-align:center;font-size:12px;margin:4px 0 6px">Pul bot · dizayn v9 (limit: yashil→qizil) · 2026-10-22</div>
+      <div class="muted" style="text-align:center;font-size:12px;margin:4px 0 6px">Pul bot · dizayn v10 (glass · banner · animatsiya) · 2026-10-22</div>
     </div>
 
     <nav class="tabbar" id="tabbar">
@@ -498,6 +544,8 @@
       p_oylar:"Oylik hisobotlar", oylik_chiqim:"Oylik chiqimlar", oylar_royxat:"Oylar bo'yicha",
       mavzu_card:"Ko'rinish", tungi:"Tungi", kunduzgi:"Kunduzgi", mavzu_hint:"Qorong'u yoki yorug' rejim.",
       tab_home:"Asosiy", tab_chiqim:"Chiqim", tab_kirim:"Kirim", tab_oylar:"Oylar", tab_sozlama:"Sozlama",
+      banner_ph:"Bu yerga rasm qo'yish mumkin", banner_card:"Banner rasmi",
+      banner_desc:"Bosh sahifadagi banner uchun rasm tanlang (faqat shu qurilmada saqlanadi).", banner_pick:"Rasm tanlash", banner_remove:"Rasmni olib tashlash",
       acc_chiqim_lbl:"Pul qayerdan ketdi?", acc_kirim_lbl:"Pul qayerga tushdi?",
       avto_card:"Avtomobil xarajatlari", jami:"Jami", avto_add:"Avto xarajat qo'shish",
       avto_ph:"Summa (masalan: 200 000)", avto_izoh_ph:"Izoh (masalan: benzin, moyka)",
@@ -536,6 +584,8 @@
       p_oylar:"Отчёты по месяцам", oylik_chiqim:"Расходы по месяцам", oylar_royxat:"По месяцам",
       mavzu_card:"Оформление", tungi:"Тёмная", kunduzgi:"Светлая", mavzu_hint:"Тёмный или светлый режим.",
       tab_home:"Главная", tab_chiqim:"Расход", tab_kirim:"Доход", tab_oylar:"Месяцы", tab_sozlama:"Настройки",
+      banner_ph:"Сюда можно поставить фото", banner_card:"Фото баннера",
+      banner_desc:"Выберите фото для баннера на главной (хранится только на этом устройстве).", banner_pick:"Выбрать фото", banner_remove:"Убрать фото",
       acc_chiqim_lbl:"Откуда ушли деньги?", acc_kirim_lbl:"Куда поступили деньги?",
       avto_card:"Расходы на авто", jami:"Всего", avto_add:"Добавить авто-расход",
       avto_ph:"Сумма (например: 200 000)", avto_izoh_ph:"Комментарий (например: бензин, мойка)",
@@ -884,7 +934,40 @@
     renderUsers();
     renderOylar();
     renderAvto();
+    renderBanner();
   }
+
+  /* ---- Banner rasmi (qurilmada saqlanadi) ---- */
+  function renderBanner(){
+    var img=document.getElementById("bannerImg"), ph=document.getElementById("bannerPh");
+    if(!img) return;
+    var url=""; try{ url=localStorage.getItem('banner_url')||""; }catch(e){}
+    if(url){ img.src=url; img.style.display="block"; if(ph) ph.style.display="none"; }
+    else { img.removeAttribute('src'); img.style.display="none"; if(ph) ph.style.display="flex"; }
+  }
+  function bannerClick(){ nav('Sozlama'); if(tg) tg.showAlert(L("Sozlamalar → «Banner rasmi» bo'limidan rasm tanlang.","Настройки → раздел «Фото баннера» — выберите фото.")); }
+  function bannerPick(inp){
+    var f=inp.files&&inp.files[0]; if(!f){ return; }
+    var r=new FileReader();
+    r.onload=function(){
+      var im=new Image();
+      im.onload=function(){
+        try{
+          var mw=1000, sc=Math.min(1, mw/im.width);
+          var cw=Math.round(im.width*sc), ch=Math.round(im.height*sc);
+          var cv=document.createElement('canvas'); cv.width=cw; cv.height=ch;
+          cv.getContext('2d').drawImage(im,0,0,cw,ch);
+          var durl=cv.toDataURL('image/jpeg',0.82);
+          localStorage.setItem('banner_url', durl);
+          renderBanner();
+          if(tg) tg.showAlert(L("✅ Rasm qo'yildi.","✅ Фото установлено."));
+        }catch(e){ if(tg) tg.showAlert(L("Rasm juda katta. Kichikrog'ini tanlang.","Фото слишком большое. Выберите меньше.")); }
+      };
+      im.src=r.result;
+    };
+    r.readAsDataURL(f); inp.value="";
+  }
+  function bannerRemove(){ try{ localStorage.removeItem('banner_url'); }catch(e){} renderBanner(); if(tg) tg.showAlert(L("Rasm olib tashlandi.","Фото удалено.")); }
 
   /* ---- Avtomobil xarajatlari (bosh sahifa) ---- */
   var accAvto = "Plastik";
