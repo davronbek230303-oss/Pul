@@ -8,128 +8,150 @@
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,500,1,0&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#0e1621; --card:#1b2633; --card2:#223040; --text:#f3f6fa; --hint:#8696a7;
-    --accent:#3390ec; --accent-text:#ffffff;
-    --green:#2fd27e; --red:#ff5a5f; --orange:#ffab2e; --violet:#b06bff;
+    --bg:#070d14; --bg2:#0d1620; --card:#111a24; --card2:#182430; --text:#eaf2f6; --hint:#8ba0ac;
+    --accent:#0a97b0; --accent2:#19d3c5; --accent-text:#ffffff;
+    --green:#2fd38c; --red:#fb6f72; --orange:#fbbf3c; --violet:#7aa7ff;
     --line: rgba(255,255,255,.07);
-    --chip-bg:rgba(255,255,255,.03); --inp-bg:rgba(0,0,0,.18); --bar-bg:rgba(255,255,255,.08);
-    --iq-bg:rgba(255,255,255,.08); --emo-bg:rgba(255,255,255,.06);
-    --shadow:0 6px 20px rgba(0,0,0,.28);
+    --chip-bg:rgba(255,255,255,.04); --inp-bg:rgba(255,255,255,.04); --bar-bg:rgba(255,255,255,.09);
+    --iq-bg:rgba(255,255,255,.09); --emo-bg:rgba(255,255,255,.06);
+    --grad:linear-gradient(135deg,#0a7a8f 0%,#0a97b0 45%,#19d3c5 120%);
+    --shadow:0 14px 34px rgba(0,0,0,.42);
+    --glow:0 10px 28px rgba(10,151,176,.42);
   }
   :root[data-theme="light"]{
-    --bg:#eaeef4; --card:#ffffff; --card2:#f3f6fb; --text:#10203a; --hint:#64748b;
-    --accent:#2f7ff0; --accent-text:#ffffff;
-    --green:#17b26a; --red:#f0444b; --orange:#f59e0b; --violet:#8b5cf6;
-    --line: rgba(16,30,50,.10);
-    --chip-bg:rgba(16,30,50,.035); --inp-bg:rgba(16,30,50,.045); --bar-bg:rgba(16,30,50,.09);
-    --iq-bg:rgba(16,30,50,.06); --emo-bg:rgba(16,30,50,.05);
-    --shadow:0 6px 18px rgba(16,30,50,.08);
+    --bg:#e9f0f1; --bg2:#f4f9f9; --card:#ffffff; --card2:#eef4f5; --text:#0d1b24; --hint:#5d7682;
+    --accent:#0a97b0; --accent2:#12b6c4; --accent-text:#ffffff;
+    --green:#0fae73; --red:#ef4b50; --orange:#f59e0b; --violet:#4f80e0;
+    --line: rgba(13,27,36,.09);
+    --chip-bg:rgba(13,27,36,.035); --inp-bg:rgba(13,27,36,.04); --bar-bg:rgba(13,27,36,.09);
+    --iq-bg:rgba(13,27,36,.06); --emo-bg:rgba(13,27,36,.05);
+    --grad:linear-gradient(135deg,#0a8599 0%,#0a97b0 45%,#12b6c4 120%);
+    --shadow:0 12px 30px rgba(10,100,120,.12);
+    --glow:0 12px 26px rgba(10,151,176,.26);
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
   body{margin:0; font-family:'Manrope',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-       background:var(--bg); color:var(--text); padding:14px 14px 42px; font-size:15px; font-weight:500}
+       background:var(--bg); background-image:radial-gradient(120% 60% at 50% -10%, var(--bg2) 0%, var(--bg) 60%);
+       background-attachment:fixed; color:var(--text); padding:14px 14px 96px; font-size:15px; font-weight:500}
   .muted{color:var(--hint)}
   .ms{font-family:'Material Symbols Rounded'; font-weight:normal; font-style:normal; font-size:20px;
       line-height:1; letter-spacing:normal; text-transform:none; display:inline-block; white-space:nowrap;
-      direction:ltr; vertical-align:middle; -webkit-font-feature-settings:'liga'; -webkit-font-smoothing:antialiased}
-  .card{background:var(--card); border:1px solid var(--line); border-radius:18px; padding:16px; margin-bottom:12px; box-shadow:var(--shadow)}
-  .hero{background:linear-gradient(135deg,#2f7ff0,#1560d0 55%,#123e8f); color:#fff; text-align:center; position:relative; overflow:hidden}
-  .hero:before{content:"";position:absolute;width:220px;height:220px;right:-70px;top:-90px;border-radius:50%;background:rgba(255,255,255,.08)}
-  .hero .lbl{opacity:.9; font-size:13px; letter-spacing:.3px; position:relative}
-  .hero .bal{font-size:32px; font-weight:800; margin:6px 0 2px; word-break:break-word; position:relative}
-  .row{display:flex; gap:10px}
+      direction:ltr; vertical-align:middle; font-variation-settings:'FILL' 1,'wght' 500;
+      -webkit-font-feature-settings:'liga'; -webkit-font-smoothing:antialiased}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:22px; padding:17px; margin-bottom:13px; box-shadow:var(--shadow)}
+  .hero{background:var(--grad); color:#fff; text-align:center; position:relative; overflow:hidden; border:0; padding:26px 18px 22px; box-shadow:var(--glow)}
+  .hero:before{content:"";position:absolute;width:260px;height:260px;right:-90px;top:-120px;border-radius:50%;background:rgba(255,255,255,.14)}
+  .hero:after{content:"";position:absolute;width:180px;height:180px;left:-70px;bottom:-110px;border-radius:50%;background:rgba(255,255,255,.08)}
+  .hero .lbl{opacity:.92; font-size:12px; letter-spacing:1.2px; text-transform:uppercase; font-weight:700; position:relative}
+  .hero .bal{font-size:36px; font-weight:800; margin:8px 0 2px; word-break:break-word; position:relative; letter-spacing:-.5px}
+  .row{display:flex; gap:11px}
   .tile{flex:1; text-align:center; padding:10px}
   .tile .t-lbl{font-size:12px; color:var(--hint)}
-  .tile .t-val{font-size:18px; font-weight:800; margin-top:4px}
+  .tile .t-val{font-size:18px; font-weight:800; margin-top:4px; letter-spacing:-.3px}
   .tile.acc{display:flex; flex-direction:column; align-items:center; gap:7px; background:var(--card2);
-        border:1px solid var(--line); border-radius:15px; padding:14px 8px}
-  .tile.acc .ni{width:38px; height:38px; border-radius:12px}
-  .tile.acc .ni .ms{font-size:21px}
+        border:1px solid var(--line); border-radius:17px; padding:15px 8px}
+  .tile.acc .ni{width:40px; height:40px; border-radius:13px}
+  .tile.acc .ni .ms{font-size:22px}
   .tile.acc .t-lbl{font-weight:600}
   .t-in{color:var(--green)} .t-out{color:var(--red)}
-  h3{font-size:13px; margin:0; color:var(--hint); font-weight:700; text-transform:uppercase; letter-spacing:.5px}
-  .ptitle{font-size:22px; font-weight:800; margin:2px 2px 16px; display:flex; align-items:center; gap:10px}
-  .ptitle .ms{font-size:26px}
-  .hd{display:flex; align-items:center; justify-content:space-between; margin:2px 2px 12px; gap:8px}
+  h3{font-size:12px; margin:0; color:var(--hint); font-weight:700; text-transform:uppercase; letter-spacing:.8px}
+  .ptitle{font-size:23px; font-weight:800; margin:4px 2px 18px; display:flex; align-items:center; gap:11px; letter-spacing:-.4px}
+  .ptitle .ms{font-size:27px}
+  .hd{display:flex; align-items:center; justify-content:space-between; margin:0 2px 13px; gap:8px}
   .hd h3{display:flex; align-items:center; gap:8px}
+  .hd h3 .ms{color:var(--accent)}
   .ic{display:flex; gap:7px; align-items:center}
-  .iq{border:0; background:var(--iq-bg); color:var(--hint); min-width:30px; height:30px;
+  .iq{border:0; background:var(--iq-bg); color:var(--hint); min-width:31px; height:31px;
       border-radius:50%; font-size:14px; line-height:1; padding:0 7px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center}
   .iq:active{opacity:.6}
   .eye{cursor:pointer; opacity:.95; font-size:20px; vertical-align:middle}
   .chips{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px}
-  .chip{position:relative; border:1px solid var(--line); background:var(--chip-bg); color:var(--text); padding:8px 13px;
-        border-radius:22px; font-size:14px; font-weight:600; display:inline-flex; align-items:center; gap:6px; cursor:pointer; transition:background .12s,border-color .12s}
+  .chip{position:relative; border:1px solid var(--line); background:var(--chip-bg); color:var(--text); padding:9px 14px;
+        border-radius:14px; font-size:14px; font-weight:600; display:inline-flex; align-items:center; gap:6px; cursor:pointer; transition:transform .1s, background .14s, border-color .14s}
   .chip .ms{font-size:17px; color:var(--hint)}
-  .chip.on{background:var(--accent); color:var(--accent-text); border-color:var(--accent)}
+  .chip:active{transform:scale(.96)}
+  .chip.on{background:var(--grad); color:#fff; border-color:transparent; box-shadow:var(--glow)}
   .chip.on .ms{color:#fff}
   .chip.cust{padding-right:30px}
   .chip .chipx{position:absolute; right:7px; top:50%; transform:translateY(-50%); width:18px; height:18px; border-radius:50%;
         background:var(--iq-bg); color:var(--hint); font-size:13px; line-height:18px; text-align:center; font-weight:700}
-  .chip.on .chipx{background:rgba(255,255,255,.28); color:#fff}
+  .chip.on .chipx{background:rgba(255,255,255,.3); color:#fff}
   input,select{width:100%; border:1px solid var(--line); background:var(--inp-bg); color:var(--text);
-        padding:13px; border-radius:13px; font-size:16px; margin-bottom:10px; outline:none; font-family:inherit; font-weight:600}
+        padding:14px; border-radius:15px; font-size:16px; margin-bottom:10px; outline:none; font-family:inherit; font-weight:600; transition:border-color .14s, box-shadow .14s}
+  input:focus,select:focus{border-color:var(--accent); box-shadow:0 0 0 3px rgba(123,97,255,.16)}
   input::placeholder{color:var(--hint); font-weight:500}
   .link-btn{width:100%; border:0; background:transparent; color:var(--accent); padding:10px; font-size:14px; font-weight:700; cursor:pointer}
-  .btn{width:100%; border:0; background:var(--accent); color:var(--accent-text); padding:15px;
-       border-radius:14px; font-size:16px; font-weight:800; display:inline-flex; align-items:center; justify-content:center; gap:8px; cursor:pointer}
-  .btn.out{background:var(--red)} .btn.in{background:var(--green)}
-  .btn:active{opacity:.85}
+  .btn{width:100%; border:0; background:var(--grad); color:#fff; padding:15px;
+       border-radius:16px; font-size:16px; font-weight:800; display:inline-flex; align-items:center; justify-content:center; gap:8px; cursor:pointer; box-shadow:var(--glow); transition:transform .1s, opacity .14s}
+  .btn.out{background:linear-gradient(135deg,#ff6b6e,#e23d6d); box-shadow:0 10px 26px rgba(226,61,109,.32)}
+  .btn.in{background:linear-gradient(135deg,#2fe0a6,#12b981); box-shadow:0 10px 26px rgba(18,185,129,.3)}
+  .btn:active{transform:scale(.98); opacity:.92}
   .bar-row{margin-bottom:11px}
-  .bar-top{display:flex; justify-content:space-between; font-size:14px; margin-bottom:5px; gap:8px; align-items:center}
+  .bar-top{display:flex; justify-content:space-between; font-size:14px; margin-bottom:6px; gap:8px; align-items:center; font-weight:600}
   .bar-top .ms{font-size:17px; color:var(--hint)}
-  .bar{height:9px; background:var(--bar-bg); border-radius:7px; overflow:hidden}
-  .bar>i{display:block; height:100%; border-radius:7px; background:var(--accent)}
-  .tx{display:flex; align-items:center; gap:12px; padding:11px 0; border-bottom:1px solid var(--line)}
+  .bar{height:10px; background:var(--bar-bg); border-radius:8px; overflow:hidden}
+  .bar>i{display:block; height:100%; border-radius:8px; background:var(--grad)}
+  .tx{display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid var(--line)}
   .tx:last-child{border-bottom:0}
-  .tx .emo{width:38px; height:38px; border-radius:11px; background:var(--emo-bg); display:flex; align-items:center; justify-content:center}
-  .tx .emo .ms{font-size:20px; color:var(--text)}
+  .tx .emo{width:40px; height:40px; border-radius:13px; background:var(--emo-bg); display:flex; align-items:center; justify-content:center}
+  .tx .emo .ms{font-size:21px; color:var(--accent)}
   .tx .mid{flex:1; min-width:0}
   .tx .mid .k{font-weight:700}
   .tx .mid .d{font-size:12px; color:var(--hint)}
-  .tx .amt{font-weight:800; white-space:nowrap}
+  .tx .amt{font-weight:800; white-space:nowrap; letter-spacing:-.3px}
   .tx .x{color:var(--hint); padding:4px 4px; cursor:pointer}
   .tx .x .ms{font-size:19px}
   .center{text-align:center; padding:40px 10px; color:var(--hint)}
-  .clear{width:100%; margin-top:6px; border:0; background:rgba(255,90,95,.12); color:var(--red); padding:14px; font-size:15px; font-weight:700; border-radius:14px; cursor:pointer}
+  .clear{width:100%; margin-top:6px; border:0; background:rgba(251,111,114,.13); color:var(--red); padding:14px; font-size:15px; font-weight:800; border-radius:15px; cursor:pointer}
   .hidden{display:none}
   .goal{padding:13px 0; border-bottom:1px solid var(--line)}
   .goal:last-child{border-bottom:0}
   .goal-act{display:flex; gap:8px; margin-top:9px; align-items:center}
   .goal-act input{margin:0; flex:1}
-  .goal-act button{border:0; border-radius:11px; padding:11px 15px; font-weight:800; background:var(--accent); color:var(--accent-text); display:inline-flex; align-items:center; cursor:pointer}
-  .goal-act button.del{background:rgba(255,90,95,.12); color:var(--red); padding:11px 12px}
+  .goal-act button{border:0; border-radius:13px; padding:12px 15px; font-weight:800; background:var(--grad); color:#fff; display:inline-flex; align-items:center; cursor:pointer}
+  .goal-act button.del{background:rgba(251,111,114,.13); color:var(--red); padding:12px 13px; box-shadow:none}
   /* navigatsiya tugmalari */
-  .nav{display:grid; grid-template-columns:1fr 1fr; gap:11px}
-  .nav button{display:flex; flex-direction:column; gap:10px; align-items:flex-start; border:1px solid var(--line);
-       background:var(--card2); color:var(--text); padding:15px; border-radius:16px; font-size:15px; font-weight:700; text-align:left; cursor:pointer}
-  .nav button:active{opacity:.8}
-  .ni{width:42px; height:42px; border-radius:13px; display:flex; align-items:center; justify-content:center}
-  .ni .ms{font-size:24px}
+  .nav{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+  .nav button{display:flex; flex-direction:column; gap:12px; align-items:flex-start; border:1px solid var(--line);
+       background:var(--card2); color:var(--text); padding:16px; border-radius:18px; font-size:15px; font-weight:700; text-align:left; cursor:pointer; transition:transform .1s, border-color .14s}
+  .nav button:active{transform:scale(.97)}
+  .ni{width:46px; height:46px; border-radius:15px; display:flex; align-items:center; justify-content:center}
+  .ni .ms{font-size:25px}
   /* diagramma (donut) */
   .chartwrap{display:flex; flex-direction:column; align-items:center; gap:16px}
-  .donut{width:176px; height:176px; border-radius:50%; position:relative; flex:0 0 auto}
-  .donut:after{content:""; position:absolute; inset:27px; border-radius:50%; background:var(--card)}
+  .donut{width:180px; height:180px; border-radius:50%; position:relative; flex:0 0 auto; box-shadow:var(--shadow)}
+  .donut:after{content:""; position:absolute; inset:28px; border-radius:50%; background:var(--card)}
   .dc{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; z-index:1}
   .dc .l{font-size:11px; color:var(--hint)}
   .dc .v{font-size:16px; font-weight:800; margin-top:2px}
   .legend{width:100%}
-  .lg{display:flex; align-items:center; gap:10px; padding:7px 0; border-bottom:1px solid var(--line)}
+  .lg{display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid var(--line)}
   .lg:last-child{border-bottom:0}
-  .lg .dot{width:12px; height:12px; border-radius:4px; flex:0 0 auto}
+  .lg .dot{width:12px; height:12px; border-radius:5px; flex:0 0 auto}
   .lg .ln{flex:1; min-width:0; font-weight:600}
   .lg .lv{color:var(--hint); font-size:13px; white-space:nowrap}
   /* tejalgan / ogohlantirish */
-  .save{background:linear-gradient(135deg,#143a2e,#0f2a3a)}
-  .save .big{font-size:26px; font-weight:800; color:var(--green)}
-  .warn{background:rgba(255,90,95,.1); border:1px solid rgba(255,90,95,.28)}
+  .save{background:linear-gradient(135deg,#0f3a30,#0c2740); border-color:rgba(48,217,154,.2)}
+  .save .big{font-size:27px; font-weight:800; color:var(--green)}
+  .warn{background:rgba(251,111,114,.1); border:1px solid rgba(251,111,114,.3)}
   .warn .w{padding:6px 0; font-size:14px; font-weight:600}
-  .kv{display:flex; justify-content:space-between; padding:5px 0; font-size:14px}
+  .kv{display:flex; justify-content:space-between; padding:6px 0; font-size:14px}
   .langrow{display:flex; gap:10px}
-  .langrow .chip{flex:1; justify-content:center; font-size:15px; padding:12px}
+  .langrow .chip{flex:1; justify-content:center; font-size:15px; padding:13px}
+  @keyframes fadeUp{from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none}}
+  .page:not(.hidden){animation:fadeUp .22s ease}
+  /* pastki tab-menyu */
+  .tabbar{position:fixed; left:0; right:0; bottom:0; z-index:60; display:flex; justify-content:space-around; gap:2px;
+      background:var(--card); border-top:1px solid var(--line); padding:9px 6px calc(10px + env(safe-area-inset-bottom));
+      box-shadow:0 -8px 24px rgba(0,0,0,.22); backdrop-filter:saturate(1.2)}
+  .tabbar button{flex:1; border:0; background:transparent; color:var(--hint); cursor:pointer; padding:3px 2px;
+      display:flex; flex-direction:column; align-items:center; gap:3px; font-size:11px; font-weight:700; font-family:inherit; transition:color .14s}
+  .tabbar button .ms{font-size:24px}
+  .tabbar button.on{color:var(--accent)}
+  .tabbar button.on .ms{filter:drop-shadow(0 4px 10px rgba(10,151,176,.5))}
 </style>
 </head>
 <body>
@@ -208,6 +230,21 @@
           <button onclick="nav('Sozlama')" style="grid-column:1 / span 2; flex-direction:row; align-items:center; gap:12px"><span class="ni" style="background:rgba(255,255,255,.08)"><span class="ms">settings</span></span><span data-i18n="nav_sozlama">Sozlamalar</span></button>
         </div>
       </div>
+
+      <div class="card">
+        <div class="hd"><h3><span class="ms" style="font-size:18px">directions_car</span> <span data-i18n="avto_card">Avtomobil xarajatlari</span></h3>
+          <div class="ic"><button class="iq" onclick="info('avto')"><span class="ms" style="font-size:16px">info</span></button></div></div>
+        <div class="row">
+          <div class="tile acc"><span class="ni" style="background:rgba(255,171,46,.16)"><span class="ms" style="color:var(--orange)">calendar_month</span></span><div class="t-lbl" data-i18n="shu_oy">Shu oy</div><div class="t-val" id="avtoOy">—</div></div>
+          <div class="tile acc"><span class="ni" style="background:rgba(176,107,255,.16)"><span class="ms" style="color:var(--violet)">functions</span></span><div class="t-lbl" data-i18n="jami">Jami</div><div class="t-val" id="avtoJami">—</div></div>
+        </div>
+        <input id="avtoSum" class="num" inputmode="decimal" data-ph="avto_ph" placeholder="Summa" style="margin-top:12px">
+        <div class="muted" style="font-size:12px;margin:0 2px 6px" data-i18n="acc_chiqim_lbl">Pul qayerdan ketdi?</div>
+        <div class="chips" id="avtoAcc"></div>
+        <input id="avtoIzoh" data-ph="avto_izoh_ph" placeholder="Izoh (masalan: benzin, moyka)">
+        <button class="btn out" onclick="avtoQosh()"><span class="ms">add</span> <span data-i18n="avto_add">Avto xarajat qo'shish</span></button>
+        <div id="avtoList" style="margin-top:8px"></div>
+      </div>
     </div>
 
     <!-- ============ CHIQIMLAR ============ -->
@@ -216,7 +253,8 @@
       <div class="card">
         <div class="hd"><h3 data-i18n="yangi_chiqim">Yangi chiqim</h3><div class="ic"><button class="iq" onclick="info('yangi')"><span class="ms" style="font-size:16px">info</span></button></div></div>
         <div class="chips" id="chipsC"></div>
-        <div class="chips" id="accC" style="margin-top:8px"></div>
+        <div class="muted" style="font-size:12px;margin:4px 2px 6px" data-i18n="acc_chiqim_lbl">Pul qayerdan ketdi?</div>
+        <div class="chips" id="accC"></div>
         <input id="boshqaC" class="hidden" data-ph="boshqa_ph" placeholder="Nima uchun? (nomi)">
         <input id="summaC" class="num" inputmode="decimal" data-ph="summaC_ph" placeholder="Summa (masalan: 50 000 yoki 50k)">
         <input id="izohC" data-ph="izoh_ph" placeholder="Izoh (ixtiyoriy)">
@@ -238,7 +276,8 @@
       <div class="card">
         <div class="hd"><h3 data-i18n="yangi_kirim">Yangi kirim</h3><div class="ic"><button class="iq" onclick="info('yangi')"><span class="ms" style="font-size:16px">info</span></button></div></div>
         <div class="chips" id="chipsK"></div>
-        <div class="chips" id="accK" style="margin-top:8px"></div>
+        <div class="muted" style="font-size:12px;margin:4px 2px 6px" data-i18n="acc_kirim_lbl">Pul qayerga tushdi?</div>
+        <div class="chips" id="accK"></div>
         <input id="boshqaK" class="hidden" data-ph="boshqa_ph" placeholder="Nima uchun? (nomi)">
         <input id="summaK" class="num" inputmode="decimal" data-ph="summaK_ph" placeholder="Summa (masalan: 3 000 000 yoki 3mln)">
         <input id="izohK" data-ph="izoh_ph" placeholder="Izoh (ixtiyoriy)">
@@ -408,7 +447,16 @@
         <input id="clearPass" type="password" data-ph="clearpass_ph" placeholder="Parol (o'rnatilgan bo'lsa)">
         <button class="clear" onclick="hammasini()"><span class="ms" style="font-size:18px;vertical-align:-4px">delete</span> <span data-i18n="btn_hammasini">Hammasini tozalash</span></button>
       </div>
+      <div class="muted" style="text-align:center;font-size:12px;margin:4px 0 6px">Pul bot · dizayn v3 (teal) · 2026-10-22</div>
     </div>
+
+    <nav class="tabbar" id="tabbar">
+      <button data-tab="Home" onclick="nav('Home')"><span class="ms">home</span><span data-i18n="tab_home">Asosiy</span></button>
+      <button data-tab="Chiqim" onclick="nav('Chiqim')"><span class="ms">trending_down</span><span data-i18n="tab_chiqim">Chiqim</span></button>
+      <button data-tab="Kirim" onclick="nav('Kirim')"><span class="ms">trending_up</span><span data-i18n="tab_kirim">Kirim</span></button>
+      <button data-tab="Oylar" onclick="nav('Oylar')"><span class="ms">bar_chart</span><span data-i18n="tab_oylar">Oylar</span></button>
+      <button data-tab="Sozlama" onclick="nav('Sozlama')"><span class="ms">settings</span><span data-i18n="tab_sozlama">Sozlama</span></button>
+    </nav>
 
   </div>
 
@@ -438,6 +486,10 @@
       p_qarz:"Qarz daftarchasi", p_limit:"Limitlar", p_users:"Foydalanuvchilar",
       p_oylar:"Oylik hisobotlar", oylik_chiqim:"Oylik chiqimlar", oylar_royxat:"Oylar bo'yicha",
       mavzu_card:"Ko'rinish", tungi:"Tungi", kunduzgi:"Kunduzgi", mavzu_hint:"Qorong'u yoki yorug' rejim.",
+      tab_home:"Asosiy", tab_chiqim:"Chiqim", tab_kirim:"Kirim", tab_oylar:"Oylar", tab_sozlama:"Sozlama",
+      acc_chiqim_lbl:"Pul qayerdan ketdi?", acc_kirim_lbl:"Pul qayerga tushdi?",
+      avto_card:"Avtomobil xarajatlari", jami:"Jami", avto_add:"Avto xarajat qo'shish",
+      avto_ph:"Summa (masalan: 200 000)", avto_izoh_ph:"Izoh (masalan: benzin, moyka)",
       yangi_chiqim:"Yangi chiqim", yangi_kirim:"Yangi kirim", izoh_ph:"Izoh (ixtiyoriy)", boshqa_ph:"Nima uchun? (nomi)",
       summaC_ph:"Summa (masalan: 50 000 yoki 50k)", summaK_ph:"Summa (masalan: 3 000 000 yoki 3mln)",
       btn_chiqim_add:"Chiqim qo'shish", btn_kirim_add:"Kirim qo'shish", diagramma:"Diagramma",
@@ -472,6 +524,10 @@
       p_qarz:"Долги", p_limit:"Лимиты", p_users:"Пользователи",
       p_oylar:"Отчёты по месяцам", oylik_chiqim:"Расходы по месяцам", oylar_royxat:"По месяцам",
       mavzu_card:"Оформление", tungi:"Тёмная", kunduzgi:"Светлая", mavzu_hint:"Тёмный или светлый режим.",
+      tab_home:"Главная", tab_chiqim:"Расход", tab_kirim:"Доход", tab_oylar:"Месяцы", tab_sozlama:"Настройки",
+      acc_chiqim_lbl:"Откуда ушли деньги?", acc_kirim_lbl:"Куда поступили деньги?",
+      avto_card:"Расходы на авто", jami:"Всего", avto_add:"Добавить авто-расход",
+      avto_ph:"Сумма (например: 200 000)", avto_izoh_ph:"Комментарий (например: бензин, мойка)",
       yangi_chiqim:"Новый расход", yangi_kirim:"Новый доход", izoh_ph:"Комментарий (необязательно)", boshqa_ph:"На что? (название)",
       summaC_ph:"Сумма (например: 50 000 или 50k)", summaK_ph:"Сумма (например: 3 000 000 или 3mln)",
       btn_chiqim_add:"Добавить расход", btn_kirim_add:"Добавить доход", diagramma:"Диаграмма",
@@ -514,7 +570,7 @@
     "Oylik":"payments","Levi":"savings","Qarz oldim":"south_west","Qarz berdim":"north_east",
     "Ovqatlanish":"restaurant","Taxi":"local_taxi","Avtobus":"directions_bus","Metro":"subway",
     "Kiyim-kechak":"checkroom","Bozor":"shopping_basket","Magazin":"storefront",
-    "Sigaret":"smoking_rooms","Apteka":"local_pharmacy","Non":"bakery_dining",
+    "Sigaret":"smoking_rooms","Apteka":"local_pharmacy","Non":"bakery_dining","Avtomobil":"directions_car",
     "Komunalka":"bolt","Ijara":"home","Tejamdan":"savings","Boshqa":"category"
   };
   function catMs(k){ return CAT_MS[k] || "category"; }
@@ -550,6 +606,8 @@
     for(var i=0;i<pages.length;i++) pages[i].classList.add('hidden');
     var el = document.getElementById('p'+p);
     if(el) el.classList.remove('hidden');
+    var tb = document.querySelectorAll('.tabbar button');
+    for(var j=0;j<tb.length;j++) tb[j].classList.toggle('on', tb[j].getAttribute('data-tab')===p);
     try{ window.scrollTo(0,0); }catch(e){}
     if(tg && tg.BackButton){ if(p==="Home") tg.BackButton.hide(); else tg.BackButton.show(); }
   }
@@ -609,7 +667,8 @@
       tozalash:"BARCHA amaliyotni o'chirib balansni 0 qiladi. Qaytarib bo'lmaydi!",
       users:"Botni boshqa odamlar ham ishlatishiga ruxsat berasiz. Har kimning ma'lumoti alohida. ID qo'shing yoki ❌ bilan oling. Kun qo'ysangiz — muddat tugagach avtomat o'chadi.",
       hisoblar:"Pulingiz ikki hisobda: 💳 Plastik va 💵 Naqd. Kirim/chiqim qo'shganda qaysi hisob ekanini tanlaysiz.\n«Plastikdan naqd» — plastikdan pul yechganingizda: Plastik kamayadi, Naqd ko'payadi, umumiy balans o'zgarmaydi.",
-      oylar:"Har oy bo'yicha hisobot. Grafikda qaysi oyda qancha sarflaganingiz ko'rinadi. Oyni bossangiz — kirim/chiqim/balans va nimalaga ko'p sarflaganingiz (diagramma) chiqadi.\nMalumot har oy avtomat alohida yig'iladi — tozalashga hojat yo'q."
+      oylar:"Har oy bo'yicha hisobot. Grafikda qaysi oyda qancha sarflaganingiz ko'rinadi. Oyni bossangiz — kirim/chiqim/balans va nimalaga ko'p sarflaganingiz (diagramma) chiqadi.\nMalumot har oy avtomat alohida yig'iladi — tozalashga hojat yo'q.",
+      avto:"Avtomobil xarajatlari (benzin, moyka, ta'mir va h.k.). Summani yozib, pul qayerdan ketganini (Plastik/Naqd) tanlab qo'shasiz. «Avtomobil» kategoriyasi chiqimga yoziladi. Shu oy va jami sarf ko'rinadi."
     },
     ru:{
       balans:"Общий остаток — все доходы минус расходы.\n👁 можно скрыть или показать.",
@@ -624,7 +683,8 @@
       tozalash:"Удаляет ВСЕ операции и обнуляет баланс. Необратимо!",
       users:"Вы даёте доступ другим людям. У каждого свои данные. Добавьте ID или уберите кнопкой ❌. Если задать дни — доступ закроется автоматически по истечении срока.",
       hisoblar:"Деньги на двух счетах: 💳 Карта и 💵 Наличка. При добавлении дохода/расхода выбираете счёт.\n«С карты в наличные» — при снятии: Карта уменьшается, Наличка растёт, общий баланс не меняется.",
-      oylar:"Отчёт по каждому месяцу. На графике видно, сколько в каком месяце потрачено. Нажмите на месяц — доход/расход/баланс и на что ушло больше всего (диаграмма).\nДанные по месяцам собираются автоматически — очищать ничего не нужно."
+      oylar:"Отчёт по каждому месяцу. На графике видно, сколько в каком месяце потрачено. Нажмите на месяц — доход/расход/баланс и на что ушло больше всего (диаграмма).\nДанные по месяцам собираются автоматически — очищать ничего не нужно.",
+      avto:"Расходы на авто (бензин, мойка, ремонт и т.д.). Вводите сумму, выбираете откуда ушли деньги (Карта/Наличка) и добавляете. Записывается в категорию «Авто». Видно за месяц и всего."
     }
   };
   function info(k){ var t = (INFO[LANG]&&INFO[LANG][k]) || INFO.uz[k] || ""; if(tg) tg.showAlert(t); else alert(t); }
@@ -809,6 +869,41 @@
     renderQarz();
     renderUsers();
     renderOylar();
+    renderAvto();
+  }
+
+  /* ---- Avtomobil xarajatlari (bosh sahifa) ---- */
+  var accAvto = "Plastik";
+  function renderAvtoAcc(){
+    var el=document.getElementById("avtoAcc"); if(!el) return;
+    el.innerHTML =
+      '<button class="chip'+(accAvto==="Plastik"?" on":"")+'" onclick="pickAvtoAcc(\'Plastik\')">'+ms("credit_card",17)+' '+L("Plastik","Карта")+'</button>'+
+      '<button class="chip'+(accAvto==="Naqd"?" on":"")+'" onclick="pickAvtoAcc(\'Naqd\')">'+ms("payments",17)+' '+L("Naqd","Наличка")+'</button>';
+  }
+  function pickAvtoAcc(a){ accAvto=a; renderAvtoAcc(); }
+  function avtoQosh(){
+    var s=parseSum(val("avtoSum"));
+    if(s<=0){ if(tg) tg.showAlert(L("Summani kiriting.","Введите сумму.")); return; }
+    if(tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred("light");
+    call({action:"add", turi:"Chiqim", kategoriya:"Avtomobil", summa:s, izoh:val("avtoIzoh").trim(), hisob:accAvto}, function(){
+      var a=document.getElementById("avtoSum"), b=document.getElementById("avtoIzoh");
+      if(a) a.value=""; if(b) b.value="";
+    });
+  }
+  function renderAvto(){
+    var oyEl=document.getElementById("avtoOy"); if(!oyEl) return;
+    var oyV=(DATA.catChiqim && DATA.catChiqim["Avtomobil"]) || 0;
+    var jami=0; (DATA.oylar||[]).forEach(function(m){ if(m.cat && m.cat["Avtomobil"]) jami+=m.cat["Avtomobil"]; });
+    oyEl.textContent = amt(oyV, EYE.tx);
+    var jEl=document.getElementById("avtoJami"); if(jEl) jEl.textContent = amt(jami, EYE.tx);
+    renderAvtoAcc();
+    var tx=(DATA.tx||[]).filter(function(t){ return t.turi==="Chiqim" && t.kategoriya==="Avtomobil"; }).slice(0,5);
+    var lst=document.getElementById("avtoList"); if(!lst) return;
+    lst.innerHTML = tx.length ? tx.map(function(t){
+      return '<div class="tx"><div class="emo">'+ms("directions_car",20)+'</div>'+
+             '<div class="mid"><div class="k">'+amt(t.summa, EYE.tx)+(t.izoh?' <span class="d">'+esc(t.izoh)+'</span>':'')+'</div>'+
+             '<div class="d">'+esc(t.sana)+' · '+(t.hisob==="Naqd"?L("💵 Naqd","💵 Нал."):L("💳 Plastik","💳 Карта"))+'</div></div></div>';
+    }).join("") : '<div class="muted" style="font-size:13px;padding:6px 0">'+L("Hali avto xarajat yo'q.","Пока нет авто-расходов.")+'</div>';
   }
 
   function renderTejam(){
