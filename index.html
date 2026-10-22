@@ -129,6 +129,21 @@
       </div>
 
       <div class="card">
+        <div class="hd"><h3><span class="ms" style="font-size:18px">account_balance_wallet</span> <span data-i18n="hisoblar">Hisoblar</span></h3>
+          <div class="ic"><button class="iq" onclick="info('hisoblar')"><span class="ms" style="font-size:16px">info</span></button></div></div>
+        <div class="row">
+          <div class="tile"><div class="t-lbl">💳 <span data-i18n="plastik">Plastik</span></div><div class="t-val" id="balPlastik">—</div></div>
+          <div class="tile"><div class="t-lbl">💵 <span data-i18n="naqd">Naqd</span></div><div class="t-val" id="balNaqd">—</div></div>
+        </div>
+        <input id="yechSum" class="num" inputmode="decimal" data-ph="yech_ph" placeholder="Summa" style="margin-top:12px">
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button class="btn" style="flex:1" onclick="yechish('naqdga')"><span class="ms">south</span> <span data-i18n="btn_yechish">Plastikdan naqd</span></button>
+          <button class="btn" style="flex:1;background:var(--accent)" onclick="yechish('plastikka')"><span class="ms">north</span> <span data-i18n="btn_solish">Naqdni plastikka</span></button>
+        </div>
+        <div class="muted" style="font-size:12px;margin-top:8px" data-i18n="hisoblar_hint">Plastikdan naqd olsangiz — umumiy balans o'zgarmaydi, pul faqat Naqdga o'tadi.</div>
+      </div>
+
+      <div class="card">
         <div class="hd"><h3><span data-i18n="shu_oy">Shu oy</span> <span class="ms eye" id="eyeOy" onclick="toggleEye('oy')">visibility</span></h3>
           <div class="ic"><button class="iq" onclick="info('oy')"><span class="ms" style="font-size:16px">info</span></button></div></div>
         <div class="row">
@@ -182,6 +197,8 @@
       <div class="card">
         <div class="hd"><h3 data-i18n="yangi_chiqim">Yangi chiqim</h3><div class="ic"><button class="iq" onclick="info('yangi')"><span class="ms" style="font-size:16px">info</span></button></div></div>
         <div class="chips" id="chipsC"></div>
+        <div class="chips" id="accC" style="margin-top:8px"></div>
+        <input id="boshqaC" class="hidden" data-ph="boshqa_ph" placeholder="Nima uchun? (nomi)">
         <input id="summaC" class="num" inputmode="decimal" data-ph="summaC_ph" placeholder="Summa (masalan: 50 000 yoki 50k)">
         <input id="izohC" data-ph="izoh_ph" placeholder="Izoh (ixtiyoriy)">
         <button class="btn out" onclick="saqla('Chiqim')"><span class="ms">add</span> <span data-i18n="btn_chiqim_add">Chiqim qo'shish</span></button>
@@ -202,6 +219,8 @@
       <div class="card">
         <div class="hd"><h3 data-i18n="yangi_kirim">Yangi kirim</h3><div class="ic"><button class="iq" onclick="info('yangi')"><span class="ms" style="font-size:16px">info</span></button></div></div>
         <div class="chips" id="chipsK"></div>
+        <div class="chips" id="accK" style="margin-top:8px"></div>
+        <input id="boshqaK" class="hidden" data-ph="boshqa_ph" placeholder="Nima uchun? (nomi)">
         <input id="summaK" class="num" inputmode="decimal" data-ph="summaK_ph" placeholder="Summa (masalan: 3 000 000 yoki 3mln)">
         <input id="izohK" data-ph="izoh_ph" placeholder="Izoh (ixtiyoriy)">
         <button class="btn in" onclick="saqla('Kirim')"><span class="ms">add</span> <span data-i18n="btn_kirim_add">Kirim qo'shish</span></button>
@@ -359,6 +378,7 @@
   var INIT = tg ? tg.initData : "";
   var DATA = null, CUR = "Home";
   var sel = { Chiqim:"", Kirim:"" };
+  var acc = { Chiqim:"Plastik", Kirim:"Plastik" };   // hisob tanlovi (Plastik/Naqd)
   var PAL = ["#2fd27e","#3390ec","#ffab2e","#ff5a5f","#b06bff","#5ac8fa","#ffd60a","#64d2ff","#ff6482","#30d158","#a2845e","#8e8e93"];
   function colorFor(i){ return PAL[i % PAL.length]; }
 
@@ -376,7 +396,7 @@
       nav_qarz:"Qarz daftarchasi", nav_limit:"Limitlar", nav_sozlama:"Sozlamalar", nav_users:"Foydalanuvchilar",
       p_chiqim:"Chiqimlar", p_kirim:"Kirimlar", p_maqsad:"Maqsadlar", p_taqsim:"Byudjet taqsimoti",
       p_qarz:"Qarz daftarchasi", p_limit:"Limitlar", p_users:"Foydalanuvchilar",
-      yangi_chiqim:"Yangi chiqim", yangi_kirim:"Yangi kirim", izoh_ph:"Izoh (ixtiyoriy)",
+      yangi_chiqim:"Yangi chiqim", yangi_kirim:"Yangi kirim", izoh_ph:"Izoh (ixtiyoriy)", boshqa_ph:"Nima uchun? (nomi)",
       summaC_ph:"Summa (masalan: 50 000 yoki 50k)", summaK_ph:"Summa (masalan: 3 000 000 yoki 3mln)",
       btn_chiqim_add:"Chiqim qo'shish", btn_kirim_add:"Kirim qo'shish", diagramma:"Diagramma",
       barcha_chiqim:"Barcha chiqimlar", barcha_kirim:"Barcha kirimlar",
@@ -393,6 +413,9 @@
       tozalash_parol:"Tozalash paroli", oldpass_ph:"Eski parol (o'rnatilgan bo'lsa)", newpass_ph:"Yangi parol (bo'sh = o'chirish)", btn_parol_saqla:"Parolni saqlash",
       hammasini_t:"Hammasini tozalash", clearpass_ph:"Parol (o'rnatilgan bo'lsa)", btn_hammasini:"Hammasini tozalash",
       til_card:"Til / Язык", til_hint:"Interfeys va bot tili.",
+      hisoblar:"Hisoblar", plastik:"Plastik", naqd:"Naqd", yech_ph:"Summa (o'tkazma uchun)",
+      btn_yechish:"Plastikdan naqd", btn_solish:"Naqdni plastikka",
+      hisoblar_hint:"Plastikdan naqd olsangiz — umumiy balans o'zgarmaydi, pul faqat Naqd hisobiga o'tadi.",
       users_card:"Ruxsat berilganlar", users_stat:"Har bir odam (amaliyotlari)", users_add:"Yangi foydalanuvchi", uid_ph:"Telegram ID (raqam)", unom_ph:"Ism (ixtiyoriy)",
       ukun_ph:"Necha kun (bo'sh = cheksiz)", btn_user_add:"Qo'shish",
       users_hint:"Odam botga /start bossa — o'z ID sini ko'radi. Shu ID ni bu yerga kiriting. ❌ bosib istagan paytda olib tashlaysiz."
@@ -405,7 +428,7 @@
       nav_qarz:"Долги", nav_limit:"Лимиты", nav_sozlama:"Настройки", nav_users:"Пользователи",
       p_chiqim:"Расходы", p_kirim:"Доходы", p_maqsad:"Цели", p_taqsim:"Распределение бюджета",
       p_qarz:"Долги", p_limit:"Лимиты", p_users:"Пользователи",
-      yangi_chiqim:"Новый расход", yangi_kirim:"Новый доход", izoh_ph:"Комментарий (необязательно)",
+      yangi_chiqim:"Новый расход", yangi_kirim:"Новый доход", izoh_ph:"Комментарий (необязательно)", boshqa_ph:"На что? (название)",
       summaC_ph:"Сумма (например: 50 000 или 50k)", summaK_ph:"Сумма (например: 3 000 000 или 3mln)",
       btn_chiqim_add:"Добавить расход", btn_kirim_add:"Добавить доход", diagramma:"Диаграмма",
       barcha_chiqim:"Все расходы", barcha_kirim:"Все доходы",
@@ -422,6 +445,9 @@
       tozalash_parol:"Пароль очистки", oldpass_ph:"Старый пароль (если установлен)", newpass_ph:"Новый пароль (пусто = удалить)", btn_parol_saqla:"Сохранить пароль",
       hammasini_t:"Очистить всё", clearpass_ph:"Пароль (если установлен)", btn_hammasini:"Очистить всё",
       til_card:"Язык / Til", til_hint:"Язык интерфейса и бота.",
+      hisoblar:"Счета", plastik:"Карта", naqd:"Наличка", yech_ph:"Сумма (для перевода)",
+      btn_yechish:"С карты в наличные", btn_solish:"Наличные на карту",
+      hisoblar_hint:"Снятие наличных с карты не меняет общий баланс — деньги просто переходят на счёт Наличка.",
       users_card:"С доступом", users_stat:"По каждому человеку (операции)", users_add:"Новый пользователь", uid_ph:"Telegram ID (число)", unom_ph:"Имя (необязательно)",
       ukun_ph:"Сколько дней (пусто = бессрочно)", btn_user_add:"Добавить",
       users_hint:"Когда человек нажмёт /start в боте — он увидит свой ID. Введите этот ID сюда. Нажав ❌, можно отозвать доступ в любой момент."
@@ -444,6 +470,7 @@
     "Oylik":"payments","Levi":"savings","Qarz oldim":"south_west","Qarz berdim":"north_east",
     "Ovqatlanish":"restaurant","Taxi":"local_taxi","Avtobus":"directions_bus","Metro":"subway",
     "Kiyim-kechak":"checkroom","Bozor":"shopping_basket","Magazin":"storefront",
+    "Sigaret":"smoking_rooms","Apteka":"local_pharmacy","Non":"bakery_dining",
     "Komunalka":"bolt","Ijara":"home","Tejamdan":"savings","Boshqa":"category"
   };
   function catMs(k){ return CAT_MS[k] || "category"; }
@@ -515,7 +542,8 @@
       limit:"Kunlik va oylik sarf chegarasi. Byudjetda ajratilgan kategoriyalar kunlik limitga kirmaydi.",
       parol:"Hammasini tozalash paroli. O'zgartirishda eski parol kerak. Unutsangiz — botda /parol_tiklash.",
       tozalash:"BARCHA amaliyotni o'chirib balansni 0 qiladi. Qaytarib bo'lmaydi!",
-      users:"Botni boshqa odamlar ham ishlatishiga ruxsat berasiz. Har kimning ma'lumoti alohida. ID qo'shing yoki ❌ bilan oling. Kun qo'ysangiz — muddat tugagach avtomat o'chadi."
+      users:"Botni boshqa odamlar ham ishlatishiga ruxsat berasiz. Har kimning ma'lumoti alohida. ID qo'shing yoki ❌ bilan oling. Kun qo'ysangiz — muddat tugagach avtomat o'chadi.",
+      hisoblar:"Pulingiz ikki hisobda: 💳 Plastik va 💵 Naqd. Kirim/chiqim qo'shganda qaysi hisob ekanini tanlaysiz.\n«Plastikdan naqd» — plastikdan pul yechganingizda: Plastik kamayadi, Naqd ko'payadi, umumiy balans o'zgarmaydi."
     },
     ru:{
       balans:"Общий остаток — все доходы минус расходы.\n👁 можно скрыть или показать.",
@@ -528,7 +556,8 @@
       limit:"Дневной и месячный лимит расходов. Выделенные в бюджете категории не входят в дневной лимит.",
       parol:"Пароль для очистки всего. Для смены нужен старый пароль. Забыли — в боте /parol_tiklash.",
       tozalash:"Удаляет ВСЕ операции и обнуляет баланс. Необратимо!",
-      users:"Вы даёте доступ другим людям. У каждого свои данные. Добавьте ID или уберите кнопкой ❌. Если задать дни — доступ закроется автоматически по истечении срока."
+      users:"Вы даёте доступ другим людям. У каждого свои данные. Добавьте ID или уберите кнопкой ❌. Если задать дни — доступ закроется автоматически по истечении срока.",
+      hisoblar:"Деньги на двух счетах: 💳 Карта и 💵 Наличка. При добавлении дохода/расхода выбираете счёт.\n«С карты в наличные» — при снятии: Карта уменьшается, Наличка растёт, общий баланс не меняется."
     }
   };
   function info(k){ var t = (INFO[LANG]&&INFO[LANG][k]) || INFO.uz[k] || ""; if(tg) tg.showAlert(t); else alert(t); }
@@ -606,8 +635,30 @@
       h += '<button class="chip'+(sel[turi]===c?' on':'')+'" onclick="pick(\''+turi+'\',\''+c+'\')">'+ms(catMs(c),17)+' '+esc(catL(c))+'</button>';
     });
     document.getElementById(cont).innerHTML = h;
+    var bx = document.getElementById("boshqa"+(turi==="Kirim"?"K":"C"));
+    if(bx) bx.classList.toggle("hidden", sel[turi]!=="Boshqa");
   }
   function pick(turi,c){ sel[turi] = c; renderChips(turi); }
+
+  function renderAcc(){
+    [["C","Chiqim"],["K","Kirim"]].forEach(function(p){
+      var el = document.getElementById("acc"+p[0]); if(!el) return;
+      var t = p[1];
+      el.innerHTML =
+        '<button class="chip'+(acc[t]==="Plastik"?" on":"")+'" onclick="pickAcc(\''+t+'\',\'Plastik\')">💳 '+L("Plastik","Карта")+'</button>'+
+        '<button class="chip'+(acc[t]==="Naqd"?" on":"")+'" onclick="pickAcc(\''+t+'\',\'Naqd\')">💵 '+L("Naqd","Наличка")+'</button>';
+    });
+  }
+  function pickAcc(turi,a){ acc[turi]=a; renderAcc(); }
+  function yechish(yon){
+    var s = parseSum(val("yechSum"));
+    if(s<=0){ if(tg) tg.showAlert(L("Summani kiriting.","Введите сумму.")); return; }
+    if(tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred("light");
+    call({action:"yechish", yon:yon, summa:s}, function(){
+      var e=document.getElementById("yechSum"); if(e) e.value="";
+      if(tg) tg.showAlert(L("✅ O'tkazildi. Umumiy balans o'zgarmaydi.","✅ Переведено. Общий баланс не меняется."));
+    });
+  }
 
   function render(){
     document.getElementById("loading").classList.add("hidden");
@@ -618,6 +669,9 @@
 
     document.getElementById("balans").textContent = amt(DATA.balans, EYE.bal);
     document.getElementById("oy").textContent = DATA.oy;
+    var bpl=document.getElementById("balPlastik"), bnq=document.getElementById("balNaqd");
+    if(bpl) bpl.textContent = amt(DATA.plastik||0, EYE.bal);
+    if(bnq) bnq.textContent = amt(DATA.naqd||0, EYE.bal);
     document.getElementById("oyKirim").textContent = amt(DATA.oyKirim, EYE.oy);
     document.getElementById("oyChiqim").textContent = amt(DATA.oyChiqim, EYE.oy);
 
@@ -667,6 +721,7 @@
       : L("Parol o'rnatilmagan. Yangi parol qo'ying.","Пароль не установлен. Задайте новый.");
 
     renderChips("Chiqim"); renderChips("Kirim");
+    renderAcc();
     renderTxList("Chiqim"); renderTxList("Kirim");
     renderGoals();
     drawTaqsimFromData();
@@ -980,9 +1035,16 @@
     var summa = parseSum(val("summa"+id));
     if(summa<=0){ if(tg) tg.showAlert(L("Summani to'g'ri kiriting.","Введите сумму правильно.")); return; }
     var k = sel[turi] || "Boshqa", izoh = val("izoh"+id).trim();
+    if(k==="Boshqa"){
+      var nm = val("boshqa"+id).trim();
+      if(!nm){ if(tg) tg.showAlert(L("\"Boshqa\" uchun nomini yozing.","Напишите название для «Другое».")); return; }
+      k = nm.charAt(0).toUpperCase()+nm.slice(1);
+    }
     if(tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred("light");
-    call({action:"add", turi:turi, kategoriya:k, summa:summa, izoh:izoh}, function(){
-      document.getElementById("summa"+id).value=""; document.getElementById("izoh"+id).value=""; sel[turi]="";
+    call({action:"add", turi:turi, kategoriya:k, summa:summa, izoh:izoh, hisob:acc[turi]||"Plastik"}, function(){
+      document.getElementById("summa"+id).value=""; document.getElementById("izoh"+id).value="";
+      var bx=document.getElementById("boshqa"+id); if(bx){ bx.value=""; bx.classList.add("hidden"); }
+      sel[turi]=""; renderChips(turi);
     });
   }
   function saqlaLimit(){
