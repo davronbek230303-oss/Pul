@@ -190,8 +190,25 @@
   .apphead .uname{font-size:16px; font-weight:800; letter-spacing:-.2px}
   .hd-actions{display:flex; gap:9px}
   .iqr{width:43px; height:43px; border-radius:14px; border:1px solid var(--glass-bd); background:var(--glass); color:var(--text); display:flex; align-items:center; justify-content:center; cursor:pointer; backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); transition:transform .12s}
+  .iqr{position:relative}
   .iqr .ms{font-size:21px}
   .iqr:active{transform:scale(.92)}
+  .badge{position:absolute; top:-5px; right:-5px; min-width:18px; height:18px; padding:0 5px; border-radius:9px;
+      background:var(--red); color:#fff; font-size:11px; font-weight:800; display:flex; align-items:center; justify-content:center;
+      box-shadow:0 2px 6px rgba(0,0,0,.35); border:1.5px solid var(--card)}
+  /* habarnoma modal */
+  .modal{position:fixed; inset:0; z-index:90; background:rgba(0,0,0,.5); display:flex; align-items:flex-end; justify-content:center;
+      animation:fadeUp .2s ease; backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px)}
+  .modal .sheet{width:100%; max-width:560px; background:var(--glass-strong); border:1px solid var(--glass-bd); border-radius:24px 24px 0 0;
+      padding:16px 16px calc(20px + env(safe-area-inset-bottom)); max-height:80vh; overflow:auto;
+      backdrop-filter:blur(26px) saturate(1.5); -webkit-backdrop-filter:blur(26px) saturate(1.5); animation:sheetUp .28s cubic-bezier(.22,1,.36,1)}
+  @keyframes sheetUp{from{transform:translateY(100%)} to{transform:none}}
+  .sheet-h{display:flex; align-items:center; justify-content:space-between; margin-bottom:12px}
+  .sheet-h h3{font-size:17px; color:var(--text); text-transform:none; letter-spacing:-.2px}
+  .notif{display:flex; gap:11px; align-items:flex-start; padding:12px; border-radius:15px; background:var(--card2); border:1px solid var(--line); margin-bottom:9px; font-size:14px; line-height:1.4}
+  .notif .nic{font-size:19px; flex:0 0 auto}
+  .notif.warn{background:rgba(244,80,90,.1); border-color:rgba(244,80,90,.28)}
+  .notif.ok{background:rgba(31,199,125,.1); border-color:rgba(31,199,125,.26)}
   .hero2{position:relative; overflow:hidden; background:var(--grad); color:#fff; border-radius:26px; padding:22px 20px; margin-bottom:14px; box-shadow:var(--glow)}
   .hero2:before{content:""; position:absolute; width:230px; height:230px; right:-80px; top:-100px; border-radius:50%; background:rgba(255,255,255,.14)}
   .hero2:after{content:""; position:absolute; width:150px; height:150px; left:-55px; bottom:-95px; border-radius:50%; background:rgba(255,255,255,.08)}
@@ -239,7 +256,8 @@
         </div>
         <div class="hd-actions">
           <button class="iqr" onclick="toggleTheme()"><span class="ms" id="themeIco">dark_mode</span></button>
-          <button class="iqr" onclick="info('balans')"><span class="ms">notifications</span></button>
+          <button class="iqr" onclick="info('balans')"><span class="ms">info</span></button>
+          <button class="iqr" onclick="openNotif()"><span class="ms">notifications</span><span class="badge hidden" id="notifBadge">0</span></button>
         </div>
       </div>
 
@@ -549,7 +567,15 @@
         <input id="clearPass" type="password" data-ph="clearpass_ph" placeholder="Parol (o'rnatilgan bo'lsa)">
         <button class="clear" onclick="hammasini()"><span class="ms" style="font-size:18px;vertical-align:-4px">delete</span> <span data-i18n="btn_hammasini">Hammasini tozalash</span></button>
       </div>
-      <div class="muted" style="text-align:center;font-size:12px;margin:4px 0 6px">Pul bot · dizayn v12 (tejalgan pul tuzatildi) · 2026-10-22</div>
+      <div class="muted" style="text-align:center;font-size:12px;margin:4px 0 6px">Pul bot · dizayn v13 (habarnomalar · bell) · 2026-10-22</div>
+    </div>
+
+    <div class="modal hidden" id="notifModal" onclick="closeNotif(event)">
+      <div class="sheet">
+        <div class="sheet-h"><h3>🔔 <span data-i18n="habarlar">Habarnomalar</span></h3>
+          <button class="iqr" onclick="closeNotif()"><span class="ms">close</span></button></div>
+        <div id="notifList"></div>
+      </div>
     </div>
 
     <nav class="tabbar" id="tabbar">
@@ -617,7 +643,7 @@
   var T = {
     uz:{
       loading:"⏳ Yuklanmoqda…", bal_lbl:"Umumiy balans", shu_oy:"Shu oy", kirim:"Kirim", chiqim:"Chiqim",
-      salom:"Assalom 👋", app_name:"Mening pulim", otkazma:"O'tkazma",
+      salom:"Assalom 👋", app_name:"Mening pulim", otkazma:"O'tkazma", habarlar:"Habarnomalar",
       xarajat_stat:"Xarajatlar statistikasi", tejalgan:"Tejalgan pul", ogohlantirish:"Ogohlantirish",
       maqsad_holati:"Maqsadlar holati", bolimlar:"Bo'limlar",
       nav_chiqim:"Chiqimlar", nav_kirim:"Kirimlar", nav_maqsad:"Maqsadlar", nav_taqsim:"Byudjet taqsimoti",
@@ -658,7 +684,7 @@
     },
     ru:{
       loading:"⏳ Загрузка…", bal_lbl:"Общий баланс", shu_oy:"Этот месяц", kirim:"Доход", chiqim:"Расход",
-      salom:"Здравствуйте 👋", app_name:"Мои деньги", otkazma:"Перевод",
+      salom:"Здравствуйте 👋", app_name:"Мои деньги", otkazma:"Перевод", habarlar:"Уведомления",
       xarajat_stat:"Статистика расходов", tejalgan:"Сбережения", ogohlantirish:"Предупреждения",
       maqsad_holati:"Статус целей", bolimlar:"Разделы",
       nav_chiqim:"Расходы", nav_kirim:"Доходы", nav_maqsad:"Цели", nav_taqsim:"Распределение бюджета",
@@ -997,6 +1023,7 @@
 
     renderTejam();
     renderWarn();
+    updateBell();
     renderHomeGoals();
 
     var lkEl=document.getElementById("limKun"), loEl=document.getElementById("limOy");
@@ -1122,22 +1149,50 @@
     document.getElementById(cont).innerHTML = hh;
   }
 
-  function renderWarn(){
-    var w = [];
-    if(DATA.limitKun>0 && DATA.bugunLimit>DATA.limitKun) w.push(L("Bugun kunlik limitdan <b>","Сегодня дневной лимит превышен на <b>")+fmt(DATA.bugunLimit-DATA.limitKun)+L("</b> oshdingiz","</b>"));
-    if(DATA.limitOy>0 && DATA.oyChiqim>DATA.limitOy) w.push(L("Oylik byudjetdan <b>","Месячный бюджет превышен на <b>")+fmt(DATA.oyChiqim-DATA.limitOy)+L("</b> oshdi","</b>"));
+  // Barcha habarnomalarni yig'adi (limit/byudjet oshishi, kategoriya rejasi, maqsad muddati)
+  function buildNotifs(){
+    if(!DATA) return [];
+    var n=[];
+    if(DATA.limitKun>0 && DATA.bugunLimit>DATA.limitKun) n.push({t:"warn", ic:"⚠️", m:L("Bugun kunlik limitdan <b>","Сегодня дневной лимит превышен на <b>")+fmt(DATA.bugunLimit-DATA.limitKun)+L("</b> oshdingiz","</b>")});
+    if(DATA.limitOy>0 && DATA.oyChiqim>DATA.limitOy) n.push({t:"warn", ic:"⚠️", m:L("Oylik byudjetdan <b>","Месячный бюджет превышен на <b>")+fmt(DATA.oyChiqim-DATA.limitOy)+L("</b> oshdi","</b>")});
     var cat = DATA.catChiqim||{};
     (DATA.taqsim||[]).forEach(function(it){
       if(it.turi==="kat" && it.kat && it.summa>0){
         var sp = cat[it.kat]||0;
-        if(sp>it.summa) w.push(esc(it.nom)+L(" rejadan <b>"," — план превышен на <b>")+fmt(sp-it.summa)+L("</b> oshdi","</b>"));
+        if(sp>it.summa) n.push({t:"warn", ic:"⚠️", m:esc(it.nom)+L(" rejadan <b>"," — план превышен на <b>")+fmt(sp-it.summa)+L("</b> oshdi","</b>")});
       }
     });
-    var card = document.getElementById("warnCard");
-    if(!w.length){ card.classList.add("hidden"); return; }
-    card.classList.remove("hidden");
-    document.getElementById("warnList").innerHTML = w.map(function(x){return '<div class="w">⚠️ '+x+'</div>';}).join("");
+    (DATA.maqsadlar||[]).forEach(function(x){
+      var done = x.maqsad>0 && x.yiglangan>=x.maqsad;
+      if(!done){ var st=goalStatus(x,done); if(st.late) n.push({t:"warn", ic:"🎯", m:esc(x.nom)+": "+L("maqsad muddati o'tdi, ","срок цели прошёл, ")+fmt(x.maqsad-x.yiglangan)+L(" qoldi"," осталось")}); }
+    });
+    // limitga yaqinlashish (80%+) — ogohlantirish
+    if(DATA.limitKun>0 && DATA.bugunLimit<=DATA.limitKun && DATA.bugunLimit>=DATA.limitKun*0.8)
+      n.push({t:"warn", ic:"🔔", m:L("Kunlik limitga yaqinlashdingiz: <b>","Приближаетесь к дневному лимиту: <b>")+fmt(DATA.bugunLimit)+" / "+fmt(DATA.limitKun)+"</b>"});
+    return n;
   }
+  function renderWarn(){
+    var n = buildNotifs();
+    var card = document.getElementById("warnCard");
+    if(!n.length){ card.classList.add("hidden"); return; }
+    card.classList.remove("hidden");
+    document.getElementById("warnList").innerHTML = n.map(function(x){return '<div class="w">'+x.ic+' '+x.m+'</div>';}).join("");
+  }
+  function updateBell(){
+    var nb=document.getElementById("notifBadge"); if(!nb) return;
+    var c=buildNotifs().length;
+    nb.textContent = c>9?"9+":c; nb.classList.toggle("hidden", c<=0);
+  }
+  function openNotif(){
+    var list=buildNotifs();
+    var h = list.length
+      ? list.map(function(x){ return '<div class="notif '+(x.t||"")+'"><span class="nic">'+(x.ic||"🔔")+'</span><div>'+x.m+'</div></div>'; }).join("")
+      : '<div class="notif ok"><span class="nic">🎉</span><div>'+L("Hammasi joyida — yangi habar yo'q.","Всё в порядке — новых уведомлений нет.")+'</div></div>';
+    document.getElementById("notifList").innerHTML=h;
+    document.getElementById("notifModal").classList.remove("hidden");
+    if(tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred("light");
+  }
+  function closeNotif(e){ if(e && e.target && e.target.id!=="notifModal") return; document.getElementById("notifModal").classList.add("hidden"); }
 
   function renderHomeGoals(){
     var g = DATA.maqsadlar || [], h="";
