@@ -171,7 +171,7 @@
   @keyframes fadeUp{from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:none}}
   @keyframes popIn2{0%{opacity:0; transform:translateY(12px) scale(.98)} 100%{opacity:1; transform:none}}
   .page:not(.hidden){animation:fadeUp .24s ease}
-  .page:not(.hidden) > .card, .page:not(.hidden) > .banner, .page:not(.hidden) > .ptitle{animation:popIn2 .34s both ease}
+  .page:not(.hidden) > *{animation:popIn2 .36s both ease}
   .page:not(.hidden) > *:nth-child(2){animation-delay:.04s}
   .page:not(.hidden) > *:nth-child(3){animation-delay:.08s}
   .page:not(.hidden) > *:nth-child(4){animation-delay:.12s}
@@ -181,6 +181,39 @@
   .bar>i{transition:width .55s cubic-bezier(.22,1,.36,1)}
   .tabbar button:active{transform:scale(.9)}
   .card, .chip, .btn, .nav button, .tile.acc{will-change:transform}
+  /* bosh sahifa header + hero + hisob kartalari + tezkor amallar */
+  .apphead{display:flex; align-items:center; justify-content:space-between; margin:2px 2px 15px}
+  .apphead .user{display:flex; align-items:center; gap:11px}
+  .avatar{width:46px; height:46px; border-radius:15px; background:var(--grad); color:#fff; display:flex; align-items:center; justify-content:center; box-shadow:var(--glow)}
+  .avatar .ms{font-size:24px}
+  .apphead .hi{font-size:12px; color:var(--hint); font-weight:600}
+  .apphead .uname{font-size:16px; font-weight:800; letter-spacing:-.2px}
+  .hd-actions{display:flex; gap:9px}
+  .iqr{width:43px; height:43px; border-radius:14px; border:1px solid var(--glass-bd); background:var(--glass); color:var(--text); display:flex; align-items:center; justify-content:center; cursor:pointer; backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); transition:transform .12s}
+  .iqr .ms{font-size:21px}
+  .iqr:active{transform:scale(.92)}
+  .hero2{position:relative; overflow:hidden; background:var(--grad); color:#fff; border-radius:26px; padding:22px 20px; margin-bottom:14px; box-shadow:var(--glow)}
+  .hero2:before{content:""; position:absolute; width:230px; height:230px; right:-80px; top:-100px; border-radius:50%; background:rgba(255,255,255,.14)}
+  .hero2:after{content:""; position:absolute; width:150px; height:150px; left:-55px; bottom:-95px; border-radius:50%; background:rgba(255,255,255,.08)}
+  .hero2-top{display:flex; align-items:center; gap:8px; position:relative; opacity:.95; font-size:12px; letter-spacing:1px; text-transform:uppercase; font-weight:700}
+  .hero2 .bal{font-size:37px; font-weight:800; margin:9px 0 2px; position:relative; letter-spacing:-.7px; word-break:break-word}
+  .hero2-sub{position:relative; font-size:13px; opacity:.9}
+  .hero2-chip{position:absolute; right:18px; bottom:16px; font-size:44px; opacity:.26; animation:floaty 5s ease-in-out infinite}
+  @keyframes floaty{0%,100%{transform:translateY(0)} 50%{transform:translateY(-7px)}}
+  .accrow{display:flex; gap:11px; margin-bottom:14px}
+  .acccard{flex:1; position:relative; overflow:hidden; border-radius:20px; padding:15px; color:#fff; box-shadow:var(--shadow); min-width:0}
+  .acccard.plastik{background:linear-gradient(135deg,#4b55e6,#8b7bff)}
+  .acccard.naqd{background:linear-gradient(135deg,#0e9f6e,#19d3a2)}
+  .acccard:before{content:""; position:absolute; width:120px; height:120px; right:-45px; top:-45px; border-radius:50%; background:rgba(255,255,255,.13)}
+  .acccard-t{display:flex; align-items:center; gap:7px; font-size:13px; font-weight:700; opacity:.96; position:relative}
+  .acccard-t .ms{font-size:19px}
+  .acccard-v{font-size:19px; font-weight:800; margin-top:10px; letter-spacing:-.3px; word-break:break-word; position:relative}
+  .qa{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:14px}
+  .qa button{border:0; background:transparent; color:var(--text); display:flex; flex-direction:column; align-items:center; gap:8px; font-size:12px; font-weight:700; cursor:pointer; font-family:inherit}
+  .qa-i{width:56px; height:56px; border-radius:18px; display:flex; align-items:center; justify-content:center; border:1px solid var(--glass-bd); background:var(--glass); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); transition:transform .12s}
+  .qa button:active .qa-i{transform:scale(.9)}
+  .qa-i .ms{font-size:25px}
+  .qa-i.out{color:var(--red)} .qa-i.in{color:var(--green)} .qa-i.ac{color:var(--accent)} .qa-i.vi{color:var(--violet)}
   /* pastki tab-menyu */
   .tabbar{position:fixed; left:12px; right:12px; bottom:12px; z-index:60; display:flex; justify-content:space-around; gap:2px;
       background:var(--glass-strong); border:1px solid var(--glass-bd); border-radius:26px;
@@ -199,25 +232,43 @@
 
     <!-- ============ BOSH MENYU ============ -->
     <div id="pHome" class="page">
-      <div class="card hero">
-        <button class="iq" style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,.2);color:#fff" onclick="toggleTheme()"><span class="ms" id="themeIco" style="font-size:16px">dark_mode</span></button>
-        <button class="iq" style="position:absolute;top:12px;right:12px;background:rgba(255,255,255,.2);color:#fff" onclick="info('balans')"><span class="ms" style="font-size:16px">info</span></button>
-        <div class="lbl"><span data-i18n="bal_lbl">BALANS</span> <span class="ms eye" id="eyeBal" onclick="toggleEye('bal')" style="color:#fff">visibility</span></div>
-        <div class="bal" id="balans">—</div>
-        <div class="lbl" id="oy"></div>
+      <div class="apphead">
+        <div class="user">
+          <div class="avatar"><span class="ms">account_balance_wallet</span></div>
+          <div><div class="hi" id="greet" data-i18n="salom">Assalom 👋</div><div class="uname" data-i18n="app_name">Mening pulim</div></div>
+        </div>
+        <div class="hd-actions">
+          <button class="iqr" onclick="toggleTheme()"><span class="ms" id="themeIco">dark_mode</span></button>
+          <button class="iqr" onclick="info('balans')"><span class="ms">notifications</span></button>
+        </div>
       </div>
 
-      <div class="card">
-        <div class="hd"><h3><span class="ms" style="font-size:18px">account_balance_wallet</span> <span data-i18n="hisoblar">Hisoblar</span> <span class="ms eye" id="eyeHis" onclick="toggleEye('bal')">visibility</span></h3>
+      <div class="hero2">
+        <div class="hero2-top"><span data-i18n="bal_lbl">Umumiy balans</span> <span class="ms eye" id="eyeBal" onclick="toggleEye('bal')" style="color:#fff;opacity:.95">visibility</span></div>
+        <div class="bal" id="balans">—</div>
+        <div class="hero2-sub" id="oy"></div>
+        <span class="ms hero2-chip">account_balance_wallet</span>
+      </div>
+
+      <div class="accrow">
+        <div class="acccard plastik"><div class="acccard-t"><span class="ms">credit_card</span><span data-i18n="plastik">Plastik</span></div><div class="acccard-v" id="balPlastik">—</div></div>
+        <div class="acccard naqd"><div class="acccard-t"><span class="ms">payments</span><span data-i18n="naqd">Naqd</span></div><div class="acccard-v" id="balNaqd">—</div></div>
+      </div>
+
+      <div class="qa">
+        <button onclick="nav('Chiqim')"><span class="qa-i out"><span class="ms">trending_down</span></span><span data-i18n="tab_chiqim">Chiqim</span></button>
+        <button onclick="nav('Kirim')"><span class="qa-i in"><span class="ms">trending_up</span></span><span data-i18n="tab_kirim">Kirim</span></button>
+        <button onclick="nav('Oylar')"><span class="qa-i ac"><span class="ms">bar_chart</span></span><span data-i18n="tab_oylar">Oylar</span></button>
+        <button onclick="goTransfer()"><span class="qa-i vi"><span class="ms">swap_vert</span></span><span data-i18n="otkazma">O'tkazma</span></button>
+      </div>
+
+      <div class="card" id="transferCard">
+        <div class="hd"><h3><span class="ms" style="font-size:18px">swap_vert</span> <span data-i18n="otkazma">O'tkazma</span></h3>
           <div class="ic"><button class="iq" onclick="info('hisoblar')"><span class="ms" style="font-size:16px">info</span></button></div></div>
-        <div class="row">
-          <div class="tile acc"><span class="ni" style="background:rgba(51,144,236,.16)"><span class="ms" style="color:var(--accent)">credit_card</span></span><div class="t-lbl" data-i18n="plastik">Plastik</div><div class="t-val" id="balPlastik">—</div></div>
-          <div class="tile acc"><span class="ni" style="background:rgba(47,210,126,.16)"><span class="ms" style="color:var(--green)">payments</span></span><div class="t-lbl" data-i18n="naqd">Naqd</div><div class="t-val" id="balNaqd">—</div></div>
-        </div>
-        <input id="yechSum" class="num" inputmode="decimal" data-ph="yech_ph" placeholder="Summa" style="margin-top:12px">
-        <div style="display:flex;gap:8px;margin-top:8px">
+        <input id="yechSum" class="num" inputmode="decimal" data-ph="yech_ph" placeholder="Summa">
+        <div style="display:flex;gap:8px">
           <button class="btn" style="flex:1" onclick="yechish('naqdga')"><span class="ms">south</span> <span data-i18n="btn_yechish">Plastikdan naqd</span></button>
-          <button class="btn" style="flex:1;background:var(--accent)" onclick="yechish('plastikka')"><span class="ms">north</span> <span data-i18n="btn_solish">Naqdni plastikka</span></button>
+          <button class="btn" style="flex:1" onclick="yechish('plastikka')"><span class="ms">north</span> <span data-i18n="btn_solish">Naqdni plastikka</span></button>
         </div>
         <div class="muted" style="font-size:12px;margin-top:8px" data-i18n="hisoblar_hint">Plastikdan naqd olsangiz — umumiy balans o'zgarmaydi, pul faqat Naqdga o'tadi.</div>
       </div>
@@ -498,7 +549,7 @@
         <input id="clearPass" type="password" data-ph="clearpass_ph" placeholder="Parol (o'rnatilgan bo'lsa)">
         <button class="clear" onclick="hammasini()"><span class="ms" style="font-size:18px;vertical-align:-4px">delete</span> <span data-i18n="btn_hammasini">Hammasini tozalash</span></button>
       </div>
-      <div class="muted" style="text-align:center;font-size:12px;margin:4px 0 6px">Pul bot · dizayn v10 (glass · banner · animatsiya) · 2026-10-22</div>
+      <div class="muted" style="text-align:center;font-size:12px;margin:4px 0 6px">Pul bot · dizayn v11 (bank uslubi · header · count-up) · 2026-10-22</div>
     </div>
 
     <nav class="tabbar" id="tabbar">
@@ -520,6 +571,37 @@
   var acc = { Chiqim:"Plastik", Kirim:"Plastik" };   // hisob tanlovi (Plastik/Naqd)
   var PAL = ["#6366f1","#0ea5e9","#14b8a6","#f59e0b","#ef4444","#ec4899","#8b5cf6","#22c55e","#f97316","#06b6d4","#eab308","#64748b"];
   function colorFor(i){ return PAL[i % PAL.length]; }
+  // Raqamni silliq sanab chiqadigan animatsiya
+  function animateNum(id, target, show){
+    var el=document.getElementById(id); if(!el) return;
+    if(!show){ el.textContent=DOTS; el._v=0; return; }
+    target=Math.round(Number(target)||0);
+    var from=Number(el._v)||0;
+    if(from===target){ el.textContent=fmt(target); el._v=target; return; }
+    if(el._raf) cancelAnimationFrame(el._raf);
+    var start=null, dur=680;
+    function step(t){
+      if(start===null) start=t;
+      var p=Math.min(1,(t-start)/dur), e=1-Math.pow(1-p,3);
+      el.textContent=fmt(Math.round(from+(target-from)*e));
+      if(p<1){ el._raf=requestAnimationFrame(step); } else { el.textContent=fmt(target); el._v=target; el._raf=0; }
+    }
+    el._raf=requestAnimationFrame(step);
+  }
+  function setGreeting(){
+    var g=document.getElementById("greet"); if(!g) return;
+    var h=new Date().getHours();
+    var uz = h<6?"Xayrli tun 🌙":h<12?"Xayrli tong ☀️":h<18?"Xayrli kun 👋":"Xayrli kech 🌆";
+    var ru = h<6?"Доброй ночи 🌙":h<12?"Доброе утро ☀️":h<18?"Добрый день 👋":"Добрый вечер 🌆";
+    g.textContent=L(uz,ru);
+  }
+  function goTransfer(){
+    var el=document.getElementById("transferCard");
+    if(el){ try{ el.scrollIntoView({behavior:"smooth",block:"center"}); }catch(e){ el.scrollIntoView(); }
+      el.style.transition="box-shadow .3s"; el.style.boxShadow="0 0 0 2px var(--accent), var(--shadow)";
+      setTimeout(function(){ el.style.boxShadow=""; }, 900);
+      var s=document.getElementById("yechSum"); if(s) try{ s.focus(); }catch(e){} }
+  }
   // Limitga yaqinlashgan sari yashil -> sariq -> qizil (foizga qarab)
   function barFill(pct){
     var p = Math.max(0, Math.min(100, Number(pct)||0));
@@ -534,7 +616,8 @@
 
   var T = {
     uz:{
-      loading:"⏳ Yuklanmoqda…", bal_lbl:"BALANS", shu_oy:"Shu oy", kirim:"Kirim", chiqim:"Chiqim",
+      loading:"⏳ Yuklanmoqda…", bal_lbl:"Umumiy balans", shu_oy:"Shu oy", kirim:"Kirim", chiqim:"Chiqim",
+      salom:"Assalom 👋", app_name:"Mening pulim", otkazma:"O'tkazma",
       xarajat_stat:"Xarajatlar statistikasi", tejalgan:"Tejalgan pul", ogohlantirish:"Ogohlantirish",
       maqsad_holati:"Maqsadlar holati", bolimlar:"Bo'limlar",
       nav_chiqim:"Chiqimlar", nav_kirim:"Kirimlar", nav_maqsad:"Maqsadlar", nav_taqsim:"Byudjet taqsimoti",
@@ -574,7 +657,8 @@
       users_hint:"Odam botga /start bossa — o'z ID sini ko'radi. Shu ID ni bu yerga kiriting. ❌ bosib istagan paytda olib tashlaysiz."
     },
     ru:{
-      loading:"⏳ Загрузка…", bal_lbl:"БАЛАНС", shu_oy:"Этот месяц", kirim:"Доход", chiqim:"Расход",
+      loading:"⏳ Загрузка…", bal_lbl:"Общий баланс", shu_oy:"Этот месяц", kirim:"Доход", chiqim:"Расход",
+      salom:"Здравствуйте 👋", app_name:"Мои деньги", otkazma:"Перевод",
       xarajat_stat:"Статистика расходов", tejalgan:"Сбережения", ogohlantirish:"Предупреждения",
       maqsad_holati:"Статус целей", bolimlar:"Разделы",
       nav_chiqim:"Расходы", nav_kirim:"Доходы", nav_maqsad:"Цели", nav_taqsim:"Распределение бюджета",
@@ -872,13 +956,13 @@
     setEye("eyeBal", EYE.bal); setEye("eyeOy", EYE.oy); setEye("eyeHis", EYE.bal);
     setEye("eyeTxC", EYE.tx); setEye("eyeTxK", EYE.tx);
 
-    document.getElementById("balans").textContent = amt(DATA.balans, EYE.bal);
+    setGreeting();
+    animateNum("balans", DATA.balans, EYE.bal);
     document.getElementById("oy").textContent = DATA.oy;
-    var bpl=document.getElementById("balPlastik"), bnq=document.getElementById("balNaqd");
-    if(bpl) bpl.textContent = amt(DATA.plastik||0, EYE.bal);
-    if(bnq) bnq.textContent = amt(DATA.naqd||0, EYE.bal);
-    document.getElementById("oyKirim").textContent = amt(DATA.oyKirim, EYE.oy);
-    document.getElementById("oyChiqim").textContent = amt(DATA.oyChiqim, EYE.oy);
+    animateNum("balPlastik", DATA.plastik||0, EYE.bal);
+    animateNum("balNaqd", DATA.naqd||0, EYE.bal);
+    animateNum("oyKirim", DATA.oyKirim, EYE.oy);
+    animateNum("oyChiqim", DATA.oyChiqim, EYE.oy);
 
     // egaga foydalanuvchilar tugmasi
     var nu = document.getElementById("navUsers");
