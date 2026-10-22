@@ -4,21 +4,29 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>Mening pulim</title>
+<script>(function(){try{var t=localStorage.getItem('theme');if(t!=='light'&&t!=='dark'){t=(window.Telegram&&Telegram.WebApp&&Telegram.WebApp.colorScheme==='light')?'light':'dark';}document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg: var(--tg-theme-bg-color, #0e1621);
-    --card: var(--tg-theme-secondary-bg-color, #1b2633);
-    --card2: #223040;
-    --text: var(--tg-theme-text-color, #f3f6fa);
-    --hint: var(--tg-theme-hint-color, #8696a7);
-    --accent: var(--tg-theme-button-color, #3390ec);
-    --accent-text: var(--tg-theme-button-text-color, #ffffff);
+    --bg:#0e1621; --card:#1b2633; --card2:#223040; --text:#f3f6fa; --hint:#8696a7;
+    --accent:#3390ec; --accent-text:#ffffff;
     --green:#2fd27e; --red:#ff5a5f; --orange:#ffab2e; --violet:#b06bff;
     --line: rgba(255,255,255,.07);
+    --chip-bg:rgba(255,255,255,.03); --inp-bg:rgba(0,0,0,.18); --bar-bg:rgba(255,255,255,.08);
+    --iq-bg:rgba(255,255,255,.08); --emo-bg:rgba(255,255,255,.06);
+    --shadow:0 6px 20px rgba(0,0,0,.28);
+  }
+  :root[data-theme="light"]{
+    --bg:#eaeef4; --card:#ffffff; --card2:#f3f6fb; --text:#10203a; --hint:#64748b;
+    --accent:#2f7ff0; --accent-text:#ffffff;
+    --green:#17b26a; --red:#f0444b; --orange:#f59e0b; --violet:#8b5cf6;
+    --line: rgba(16,30,50,.10);
+    --chip-bg:rgba(16,30,50,.035); --inp-bg:rgba(16,30,50,.045); --bar-bg:rgba(16,30,50,.09);
+    --iq-bg:rgba(16,30,50,.06); --emo-bg:rgba(16,30,50,.05);
+    --shadow:0 6px 18px rgba(16,30,50,.08);
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
   body{margin:0; font-family:'Manrope',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
@@ -27,7 +35,7 @@
   .ms{font-family:'Material Symbols Rounded'; font-weight:normal; font-style:normal; font-size:20px;
       line-height:1; letter-spacing:normal; text-transform:none; display:inline-block; white-space:nowrap;
       direction:ltr; vertical-align:middle; -webkit-font-feature-settings:'liga'; -webkit-font-smoothing:antialiased}
-  .card{background:var(--card); border-radius:18px; padding:16px; margin-bottom:12px}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:18px; padding:16px; margin-bottom:12px; box-shadow:var(--shadow)}
   .hero{background:linear-gradient(135deg,#2f7ff0,#1560d0 55%,#123e8f); color:#fff; text-align:center; position:relative; overflow:hidden}
   .hero:before{content:"";position:absolute;width:220px;height:220px;right:-70px;top:-90px;border-radius:50%;background:rgba(255,255,255,.08)}
   .hero .lbl{opacity:.9; font-size:13px; letter-spacing:.3px; position:relative}
@@ -36,6 +44,11 @@
   .tile{flex:1; text-align:center; padding:10px}
   .tile .t-lbl{font-size:12px; color:var(--hint)}
   .tile .t-val{font-size:18px; font-weight:800; margin-top:4px}
+  .tile.acc{display:flex; flex-direction:column; align-items:center; gap:7px; background:var(--card2);
+        border:1px solid var(--line); border-radius:15px; padding:14px 8px}
+  .tile.acc .ni{width:38px; height:38px; border-radius:12px}
+  .tile.acc .ni .ms{font-size:21px}
+  .tile.acc .t-lbl{font-weight:600}
   .t-in{color:var(--green)} .t-out{color:var(--red)}
   h3{font-size:13px; margin:0; color:var(--hint); font-weight:700; text-transform:uppercase; letter-spacing:.5px}
   .ptitle{font-size:22px; font-weight:800; margin:2px 2px 16px; display:flex; align-items:center; gap:10px}
@@ -43,17 +56,21 @@
   .hd{display:flex; align-items:center; justify-content:space-between; margin:2px 2px 12px; gap:8px}
   .hd h3{display:flex; align-items:center; gap:8px}
   .ic{display:flex; gap:7px; align-items:center}
-  .iq{border:0; background:rgba(255,255,255,.08); color:var(--hint); min-width:30px; height:30px;
+  .iq{border:0; background:var(--iq-bg); color:var(--hint); min-width:30px; height:30px;
       border-radius:50%; font-size:14px; line-height:1; padding:0 7px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center}
   .iq:active{opacity:.6}
   .eye{cursor:pointer; opacity:.95; font-size:20px; vertical-align:middle}
   .chips{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px}
-  .chip{border:1px solid var(--line); background:rgba(255,255,255,.03); color:var(--text); padding:8px 13px;
-        border-radius:22px; font-size:14px; font-weight:600; display:inline-flex; align-items:center; gap:6px; cursor:pointer}
+  .chip{position:relative; border:1px solid var(--line); background:var(--chip-bg); color:var(--text); padding:8px 13px;
+        border-radius:22px; font-size:14px; font-weight:600; display:inline-flex; align-items:center; gap:6px; cursor:pointer; transition:background .12s,border-color .12s}
   .chip .ms{font-size:17px; color:var(--hint)}
   .chip.on{background:var(--accent); color:var(--accent-text); border-color:var(--accent)}
   .chip.on .ms{color:#fff}
-  input,select{width:100%; border:1px solid var(--line); background:rgba(0,0,0,.18); color:var(--text);
+  .chip.cust{padding-right:30px}
+  .chip .chipx{position:absolute; right:7px; top:50%; transform:translateY(-50%); width:18px; height:18px; border-radius:50%;
+        background:var(--iq-bg); color:var(--hint); font-size:13px; line-height:18px; text-align:center; font-weight:700}
+  .chip.on .chipx{background:rgba(255,255,255,.28); color:#fff}
+  input,select{width:100%; border:1px solid var(--line); background:var(--inp-bg); color:var(--text);
         padding:13px; border-radius:13px; font-size:16px; margin-bottom:10px; outline:none; font-family:inherit; font-weight:600}
   input::placeholder{color:var(--hint); font-weight:500}
   .link-btn{width:100%; border:0; background:transparent; color:var(--accent); padding:10px; font-size:14px; font-weight:700; cursor:pointer}
@@ -64,11 +81,11 @@
   .bar-row{margin-bottom:11px}
   .bar-top{display:flex; justify-content:space-between; font-size:14px; margin-bottom:5px; gap:8px; align-items:center}
   .bar-top .ms{font-size:17px; color:var(--hint)}
-  .bar{height:9px; background:rgba(255,255,255,.08); border-radius:7px; overflow:hidden}
+  .bar{height:9px; background:var(--bar-bg); border-radius:7px; overflow:hidden}
   .bar>i{display:block; height:100%; border-radius:7px; background:var(--accent)}
   .tx{display:flex; align-items:center; gap:12px; padding:11px 0; border-bottom:1px solid var(--line)}
   .tx:last-child{border-bottom:0}
-  .tx .emo{width:38px; height:38px; border-radius:11px; background:rgba(255,255,255,.06); display:flex; align-items:center; justify-content:center}
+  .tx .emo{width:38px; height:38px; border-radius:11px; background:var(--emo-bg); display:flex; align-items:center; justify-content:center}
   .tx .emo .ms{font-size:20px; color:var(--text)}
   .tx .mid{flex:1; min-width:0}
   .tx .mid .k{font-weight:700}
@@ -122,6 +139,7 @@
     <!-- ============ BOSH MENYU ============ -->
     <div id="pHome" class="page">
       <div class="card hero">
+        <button class="iq" style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,.2);color:#fff" onclick="toggleTheme()"><span class="ms" id="themeIco" style="font-size:16px">dark_mode</span></button>
         <button class="iq" style="position:absolute;top:12px;right:12px;background:rgba(255,255,255,.2);color:#fff" onclick="info('balans')"><span class="ms" style="font-size:16px">info</span></button>
         <div class="lbl"><span data-i18n="bal_lbl">BALANS</span> <span class="ms eye" id="eyeBal" onclick="toggleEye('bal')" style="color:#fff">visibility</span></div>
         <div class="bal" id="balans">—</div>
@@ -129,11 +147,11 @@
       </div>
 
       <div class="card">
-        <div class="hd"><h3><span class="ms" style="font-size:18px">account_balance_wallet</span> <span data-i18n="hisoblar">Hisoblar</span></h3>
+        <div class="hd"><h3><span class="ms" style="font-size:18px">account_balance_wallet</span> <span data-i18n="hisoblar">Hisoblar</span> <span class="ms eye" id="eyeHis" onclick="toggleEye('bal')">visibility</span></h3>
           <div class="ic"><button class="iq" onclick="info('hisoblar')"><span class="ms" style="font-size:16px">info</span></button></div></div>
         <div class="row">
-          <div class="tile"><div class="t-lbl">💳 <span data-i18n="plastik">Plastik</span></div><div class="t-val" id="balPlastik">—</div></div>
-          <div class="tile"><div class="t-lbl">💵 <span data-i18n="naqd">Naqd</span></div><div class="t-val" id="balNaqd">—</div></div>
+          <div class="tile acc"><span class="ni" style="background:rgba(51,144,236,.16)"><span class="ms" style="color:var(--accent)">credit_card</span></span><div class="t-lbl" data-i18n="plastik">Plastik</div><div class="t-val" id="balPlastik">—</div></div>
+          <div class="tile acc"><span class="ni" style="background:rgba(47,210,126,.16)"><span class="ms" style="color:var(--green)">payments</span></span><div class="t-lbl" data-i18n="naqd">Naqd</div><div class="t-val" id="balNaqd">—</div></div>
         </div>
         <input id="yechSum" class="num" inputmode="decimal" data-ph="yech_ph" placeholder="Summa" style="margin-top:12px">
         <div style="display:flex;gap:8px;margin-top:8px">
@@ -185,6 +203,7 @@
           <button onclick="nav('Taqsim')"><span class="ni" style="background:rgba(51,144,236,.16)"><span class="ms" style="color:var(--accent)">donut_small</span></span><span data-i18n="nav_taqsim">Byudjet taqsimoti</span></button>
           <button onclick="nav('Qarz')"><span class="ni" style="background:rgba(255,171,46,.16)"><span class="ms" style="color:var(--orange)">receipt_long</span></span><span data-i18n="nav_qarz">Qarz daftarchasi</span></button>
           <button onclick="nav('Limit')"><span class="ni" style="background:rgba(90,200,250,.16)"><span class="ms" style="color:#5ac8fa">tune</span></span><span data-i18n="nav_limit">Limitlar</span></button>
+          <button onclick="nav('Oylar')"><span class="ni" style="background:rgba(51,144,236,.16)"><span class="ms" style="color:var(--accent)">bar_chart</span></span><span data-i18n="nav_oylar">Oylik hisobotlar</span></button>
           <button id="navUsers" class="hidden" onclick="nav('Users')"><span class="ni" style="background:rgba(176,107,255,.16)"><span class="ms" style="color:var(--violet)">group</span></span><span data-i18n="nav_users">Foydalanuvchilar</span></button>
           <button onclick="nav('Sozlama')" style="grid-column:1 / span 2; flex-direction:row; align-items:center; gap:12px"><span class="ni" style="background:rgba(255,255,255,.08)"><span class="ms">settings</span></span><span data-i18n="nav_sozlama">Sozlamalar</span></button>
         </div>
@@ -324,6 +343,19 @@
       </div>
     </div>
 
+    <!-- ============ OYLIK HISOBOTLAR ============ -->
+    <div id="pOylar" class="page hidden">
+      <div class="ptitle"><span class="ms" style="color:var(--accent)">bar_chart</span> <span data-i18n="p_oylar">Oylik hisobotlar</span></div>
+      <div class="card">
+        <div class="hd"><h3><span class="ms" style="font-size:18px">bar_chart</span> <span data-i18n="oylik_chiqim">Oylik chiqimlar</span></h3><div class="ic"><button class="iq" onclick="info('oylar')"><span class="ms" style="font-size:16px">info</span></button></div></div>
+        <div id="oylarBar"></div>
+      </div>
+      <div class="card">
+        <div class="hd"><h3 data-i18n="oylar_royxat">Oylar bo'yicha</h3></div>
+        <div id="oylarList"></div>
+      </div>
+    </div>
+
     <!-- ============ FOYDALANUVCHILAR (faqat egasi) ============ -->
     <div id="pUsers" class="page hidden">
       <div class="ptitle"><span class="ms" style="color:var(--violet)">group</span> <span data-i18n="p_users">Foydalanuvchilar</span></div>
@@ -348,6 +380,14 @@
     <!-- ============ SOZLAMALAR ============ -->
     <div id="pSozlama" class="page hidden">
       <div class="ptitle"><span class="ms">settings</span> <span data-i18n="nav_sozlama">Sozlamalar</span></div>
+      <div class="card">
+        <div class="hd"><h3 data-i18n="mavzu_card">Ko'rinish</h3></div>
+        <div class="langrow">
+          <button class="chip" id="thDark" onclick="applyTheme('dark')"><span class="ms" style="font-size:17px">dark_mode</span> <span data-i18n="tungi">Tungi</span></button>
+          <button class="chip" id="thLight" onclick="applyTheme('light')"><span class="ms" style="font-size:17px">light_mode</span> <span data-i18n="kunduzgi">Kunduzgi</span></button>
+        </div>
+        <div class="muted" style="font-size:12px;margin-top:8px" data-i18n="mavzu_hint">Qorong'u yoki yorug' rejim.</div>
+      </div>
       <div class="card">
         <div class="hd"><h3 data-i18n="til_card">Til / Язык</h3></div>
         <div class="langrow">
@@ -393,9 +433,11 @@
       xarajat_stat:"Xarajatlar statistikasi", tejalgan:"Tejalgan pul", ogohlantirish:"Ogohlantirish",
       maqsad_holati:"Maqsadlar holati", bolimlar:"Bo'limlar",
       nav_chiqim:"Chiqimlar", nav_kirim:"Kirimlar", nav_maqsad:"Maqsadlar", nav_taqsim:"Byudjet taqsimoti",
-      nav_qarz:"Qarz daftarchasi", nav_limit:"Limitlar", nav_sozlama:"Sozlamalar", nav_users:"Foydalanuvchilar",
+      nav_qarz:"Qarz daftarchasi", nav_limit:"Limitlar", nav_oylar:"Oylik hisobotlar", nav_sozlama:"Sozlamalar", nav_users:"Foydalanuvchilar",
       p_chiqim:"Chiqimlar", p_kirim:"Kirimlar", p_maqsad:"Maqsadlar", p_taqsim:"Byudjet taqsimoti",
       p_qarz:"Qarz daftarchasi", p_limit:"Limitlar", p_users:"Foydalanuvchilar",
+      p_oylar:"Oylik hisobotlar", oylik_chiqim:"Oylik chiqimlar", oylar_royxat:"Oylar bo'yicha",
+      mavzu_card:"Ko'rinish", tungi:"Tungi", kunduzgi:"Kunduzgi", mavzu_hint:"Qorong'u yoki yorug' rejim.",
       yangi_chiqim:"Yangi chiqim", yangi_kirim:"Yangi kirim", izoh_ph:"Izoh (ixtiyoriy)", boshqa_ph:"Nima uchun? (nomi)",
       summaC_ph:"Summa (masalan: 50 000 yoki 50k)", summaK_ph:"Summa (masalan: 3 000 000 yoki 3mln)",
       btn_chiqim_add:"Chiqim qo'shish", btn_kirim_add:"Kirim qo'shish", diagramma:"Diagramma",
@@ -425,9 +467,11 @@
       xarajat_stat:"Статистика расходов", tejalgan:"Сбережения", ogohlantirish:"Предупреждения",
       maqsad_holati:"Статус целей", bolimlar:"Разделы",
       nav_chiqim:"Расходы", nav_kirim:"Доходы", nav_maqsad:"Цели", nav_taqsim:"Распределение бюджета",
-      nav_qarz:"Долги", nav_limit:"Лимиты", nav_sozlama:"Настройки", nav_users:"Пользователи",
+      nav_qarz:"Долги", nav_limit:"Лимиты", nav_oylar:"Отчёты по месяцам", nav_sozlama:"Настройки", nav_users:"Пользователи",
       p_chiqim:"Расходы", p_kirim:"Доходы", p_maqsad:"Цели", p_taqsim:"Распределение бюджета",
       p_qarz:"Долги", p_limit:"Лимиты", p_users:"Пользователи",
+      p_oylar:"Отчёты по месяцам", oylik_chiqim:"Расходы по месяцам", oylar_royxat:"По месяцам",
+      mavzu_card:"Оформление", tungi:"Тёмная", kunduzgi:"Светлая", mavzu_hint:"Тёмный или светлый режим.",
       yangi_chiqim:"Новый расход", yangi_kirim:"Новый доход", izoh_ph:"Комментарий (необязательно)", boshqa_ph:"На что? (название)",
       summaC_ph:"Сумма (например: 50 000 или 50k)", summaK_ph:"Сумма (например: 3 000 000 или 3mln)",
       btn_chiqim_add:"Добавить расход", btn_kirim_add:"Добавить доход", diagramma:"Диаграмма",
@@ -477,6 +521,27 @@
   function ms(n, sz, col){ return '<span class="ms"'+((sz||col)?(' style="'+(sz?('font-size:'+sz+'px;'):'')+(col?('color:'+col):'')+'"'):'')+'>'+n+'</span>'; }
 
   if (tg) { tg.ready(); tg.expand(); }
+
+  /* ---- Mavzu (tungi / kunduzgi) ---- */
+  function applyTheme(t){
+    if(t!=='light' && t!=='dark') t='dark';
+    document.documentElement.setAttribute('data-theme', t);
+    try{ localStorage.setItem('theme', t); }catch(e){}
+    var ico=document.getElementById('themeIco'); if(ico) ico.textContent = (t==='light'?'light_mode':'dark_mode');
+    var d=document.getElementById('thDark'), l=document.getElementById('thLight');
+    if(d) d.classList.toggle('on', t==='dark');
+    if(l) l.classList.toggle('on', t==='light');
+  }
+  function toggleTheme(){
+    var cur = document.documentElement.getAttribute('data-theme')||'dark';
+    applyTheme(cur==='light'?'dark':'light');
+    if(tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+  }
+  (function(){
+    var t=null; try{ t=localStorage.getItem('theme'); }catch(e){}
+    if(t!=='light' && t!=='dark') t = (tg && tg.colorScheme==='light') ? 'light' : 'dark';
+    applyTheme(t);
+  })();
 
   /* ---- Sahifalar ---- */
   function nav(p){
@@ -543,7 +608,8 @@
       parol:"Hammasini tozalash paroli. O'zgartirishda eski parol kerak. Unutsangiz — botda /parol_tiklash.",
       tozalash:"BARCHA amaliyotni o'chirib balansni 0 qiladi. Qaytarib bo'lmaydi!",
       users:"Botni boshqa odamlar ham ishlatishiga ruxsat berasiz. Har kimning ma'lumoti alohida. ID qo'shing yoki ❌ bilan oling. Kun qo'ysangiz — muddat tugagach avtomat o'chadi.",
-      hisoblar:"Pulingiz ikki hisobda: 💳 Plastik va 💵 Naqd. Kirim/chiqim qo'shganda qaysi hisob ekanini tanlaysiz.\n«Plastikdan naqd» — plastikdan pul yechganingizda: Plastik kamayadi, Naqd ko'payadi, umumiy balans o'zgarmaydi."
+      hisoblar:"Pulingiz ikki hisobda: 💳 Plastik va 💵 Naqd. Kirim/chiqim qo'shganda qaysi hisob ekanini tanlaysiz.\n«Plastikdan naqd» — plastikdan pul yechganingizda: Plastik kamayadi, Naqd ko'payadi, umumiy balans o'zgarmaydi.",
+      oylar:"Har oy bo'yicha hisobot. Grafikda qaysi oyda qancha sarflaganingiz ko'rinadi. Oyni bossangiz — kirim/chiqim/balans va nimalaga ko'p sarflaganingiz (diagramma) chiqadi.\nMalumot har oy avtomat alohida yig'iladi — tozalashga hojat yo'q."
     },
     ru:{
       balans:"Общий остаток — все доходы минус расходы.\n👁 можно скрыть или показать.",
@@ -557,7 +623,8 @@
       parol:"Пароль для очистки всего. Для смены нужен старый пароль. Забыли — в боте /parol_tiklash.",
       tozalash:"Удаляет ВСЕ операции и обнуляет баланс. Необратимо!",
       users:"Вы даёте доступ другим людям. У каждого свои данные. Добавьте ID или уберите кнопкой ❌. Если задать дни — доступ закроется автоматически по истечении срока.",
-      hisoblar:"Деньги на двух счетах: 💳 Карта и 💵 Наличка. При добавлении дохода/расхода выбираете счёт.\n«С карты в наличные» — при снятии: Карта уменьшается, Наличка растёт, общий баланс не меняется."
+      hisoblar:"Деньги на двух счетах: 💳 Карта и 💵 Наличка. При добавлении дохода/расхода выбираете счёт.\n«С карты в наличные» — при снятии: Карта уменьшается, Наличка растёт, общий баланс не меняется.",
+      oylar:"Отчёт по каждому месяцу. На графике видно, сколько в каком месяце потрачено. Нажмите на месяц — доход/расход/баланс и на что ушло больше всего (диаграмма).\nДанные по месяцам собираются автоматически — очищать ничего не нужно."
     }
   };
   function info(k){ var t = (INFO[LANG]&&INFO[LANG][k]) || INFO.uz[k] || ""; if(tg) tg.showAlert(t); else alert(t); }
@@ -626,27 +693,41 @@
   }
 
   /* ---- chiplar ---- */
+  function jsq(s){ return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
   function renderChips(turi){
     if(!DATA) return;
     var cats = (turi==="Kirim") ? DATA.kirimKat : DATA.chiqimKat;
+    var cust = (DATA.customKat && DATA.customKat[turi]) || [];
+    var custLow = cust.map(function(x){ return String(x).toLowerCase(); });
     var cont = (turi==="Kirim") ? "chipsK" : "chipsC";
     var h = "";
     cats.forEach(function(c){
-      h += '<button class="chip'+(sel[turi]===c?' on':'')+'" onclick="pick(\''+turi+'\',\''+c+'\')">'+ms(catMs(c),17)+' '+esc(catL(c))+'</button>';
+      var isCust = custLow.indexOf(String(c).toLowerCase())>=0;
+      h += '<button class="chip'+(sel[turi]===c?' on':'')+(isCust?' cust':'')+'" onclick="pick(\''+turi+'\',\''+jsq(c)+'\')">'+
+           ms(catMs(c),17)+' '+esc(catL(c))+
+           (isCust?('<span class="chipx" onclick="katDel(event,\''+turi+'\',\''+jsq(c)+'\')">×</span>'):'')+'</button>';
     });
     document.getElementById(cont).innerHTML = h;
     var bx = document.getElementById("boshqa"+(turi==="Kirim"?"K":"C"));
     if(bx) bx.classList.toggle("hidden", sel[turi]!=="Boshqa");
   }
   function pick(turi,c){ sel[turi] = c; renderChips(turi); }
+  function katDel(ev, turi, nom){
+    if(ev){ ev.stopPropagation(); ev.preventDefault(); }
+    var go = function(){ if(sel[turi]===nom) sel[turi]=""; call({action:"katdel", turi:turi, nom:nom}); };
+    var msg = L("«"+nom+"» tugmasi o'chirilsinmi? Eski yozuvlar o'z joyida qoladi.",
+                "Удалить кнопку «"+nom+"»? Старые записи останутся.");
+    if(tg && tg.showConfirm) tg.showConfirm(msg, function(ok){ if(ok) go(); });
+    else if(confirm(msg)) go();
+  }
 
   function renderAcc(){
     [["C","Chiqim"],["K","Kirim"]].forEach(function(p){
       var el = document.getElementById("acc"+p[0]); if(!el) return;
       var t = p[1];
       el.innerHTML =
-        '<button class="chip'+(acc[t]==="Plastik"?" on":"")+'" onclick="pickAcc(\''+t+'\',\'Plastik\')">💳 '+L("Plastik","Карта")+'</button>'+
-        '<button class="chip'+(acc[t]==="Naqd"?" on":"")+'" onclick="pickAcc(\''+t+'\',\'Naqd\')">💵 '+L("Naqd","Наличка")+'</button>';
+        '<button class="chip'+(acc[t]==="Plastik"?" on":"")+'" onclick="pickAcc(\''+t+'\',\'Plastik\')">'+ms("credit_card",17)+' '+L("Plastik","Карта")+'</button>'+
+        '<button class="chip'+(acc[t]==="Naqd"?" on":"")+'" onclick="pickAcc(\''+t+'\',\'Naqd\')">'+ms("payments",17)+' '+L("Naqd","Наличка")+'</button>';
     });
   }
   function pickAcc(turi,a){ acc[turi]=a; renderAcc(); }
@@ -664,7 +745,7 @@
     document.getElementById("loading").classList.add("hidden");
     document.getElementById("app").classList.remove("hidden");
 
-    setEye("eyeBal", EYE.bal); setEye("eyeOy", EYE.oy);
+    setEye("eyeBal", EYE.bal); setEye("eyeOy", EYE.oy); setEye("eyeHis", EYE.bal);
     setEye("eyeTxC", EYE.tx); setEye("eyeTxK", EYE.tx);
 
     document.getElementById("balans").textContent = amt(DATA.balans, EYE.bal);
@@ -727,6 +808,7 @@
     drawTaqsimFromData();
     renderQarz();
     renderUsers();
+    renderOylar();
   }
 
   function renderTejam(){
@@ -1014,6 +1096,43 @@
     });
     var es = document.getElementById("usersStat");
     if(es) es.innerHTML = hs || '<div class="muted" style="padding:4px 0">'+L("Ma'lumot yo'q.","Нет данных.")+'</div>';
+  }
+
+  /* ---- Oylik hisobotlar ---- */
+  var OYNOM = {
+    uz:["Yanvar","Fevral","Mart","Aprel","May","Iyun","Iyul","Avgust","Sentyabr","Oktyabr","Noyabr","Dekabr"],
+    ru:["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"]
+  };
+  function oyNom(k){ var p=String(k||"").split("-"); var mi=(Number(p[1])||1)-1; var arr=OYNOM[LANG]||OYNOM.uz; return (arr[mi]||p[1]||"")+" "+(p[0]||""); }
+  function renderOylar(){
+    var box = document.getElementById("oylarBar"); if(!box) return;
+    var lst = document.getElementById("oylarList");
+    var oylar = DATA.oylar || [];
+    if(!oylar.length){
+      box.innerHTML = '<div class="muted" style="text-align:center;padding:16px 0">'+L("Hali ma'lumot yo'q","Пока нет данных")+'</div>';
+      if(lst) lst.innerHTML = ""; return;
+    }
+    var mx = 0; oylar.forEach(function(m){ if(m.chiqim>mx) mx=m.chiqim; });
+    var asc = oylar.slice().reverse();   // eskidan yangiga
+    box.innerHTML = asc.map(function(m){
+      var pct = mx>0 ? Math.round(m.chiqim/mx*100) : 0;
+      return '<div style="margin-bottom:10px"><div class="bar-top"><span>'+esc(oyNom(m.oy))+'</span><span>'+amt(m.chiqim, EYE.tx)+'</span></div>'+
+             '<div class="bar"><i style="width:'+pct+'%;background:var(--red)"></i></div></div>';
+    }).join("");
+    if(lst) lst.innerHTML = oylar.map(function(m){
+      var top = Object.keys(m.cat||{}).sort(function(a,b){return m.cat[b]-m.cat[a];});
+      var topTxt = top.length ? (catL(top[0])+(top[1]?", "+catL(top[1]):"")) : "—";
+      return '<details style="border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px">'+
+        '<summary style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:8px">'+
+          '<b>'+esc(oyNom(m.oy))+'</b>'+
+          '<span class="d" style="font-size:13px">➖ '+amt(m.chiqim, EYE.tx)+'</span></summary>'+
+        '<div class="kv" style="margin-top:8px"><span class="muted">'+L("Kirim","Доход")+'</span><span style="color:var(--green)">'+amt(m.kirim, EYE.tx)+'</span></div>'+
+        '<div class="kv"><span class="muted">'+L("Chiqim","Расход")+'</span><span style="color:var(--red)">'+amt(m.chiqim, EYE.tx)+'</span></div>'+
+        '<div class="kv"><span class="muted">'+L("Balans","Баланс")+'</span><span>'+amt(m.balans, EYE.tx)+'</span></div>'+
+        '<div class="kv"><span class="muted">'+L("Eng ko'p","Больше всего")+'</span><span>'+esc(topTxt)+'</span></div>'+
+        '<div style="margin-top:10px">'+donutHTML(catSegs(m.cat||{}), L("Chiqim","Расход"), amt(m.chiqim, EYE.tx), EYE.tx)+'</div>'+
+        '</details>';
+    }).join("");
   }
   function userAdd(){
     var id = val("uId").replace(/\D/g,""), nom = val("uNom").trim(), kun = val("uKun").replace(/\D/g,"");
