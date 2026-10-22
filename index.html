@@ -208,30 +208,41 @@
   .tabbar button:active{transform:scale(.9)}
   .card, .chip, .btn, .nav button, .tile.acc{will-change:transform}
   /* --- micro-interaction animatsiyalari --- */
-  @keyframes iBreathe{0%,100%{transform:scale(1)} 50%{transform:scale(1.09)}}
-  @keyframes iFloat{0%,100%{transform:translateY(0) rotate(0)} 50%{transform:translateY(-3px) rotate(4deg)}}
-  @keyframes iBell{0%,82%,100%{transform:rotate(0)} 85%{transform:rotate(16deg)} 88%{transform:rotate(-14deg)} 91%{transform:rotate(10deg)} 94%{transform:rotate(-6deg)} 97%{transform:rotate(3deg)}}
-  /* tab bosilganda — har bo'limga xos animatsiya */
   @keyframes tabPop{0%{transform:scale(.55) translateY(3px)} 45%{transform:scale(1.32) translateY(-5px)} 68%{transform:scale(.9) translateY(1px)} 100%{transform:scale(1) translateY(0)}}
-  @keyframes drawDown{0%{transform:translateY(-10px); opacity:.15} 65%{transform:translateY(4px)} 100%{transform:translateY(0); opacity:1}}
-  @keyframes drawUp{0%{transform:translateY(10px); opacity:.15} 65%{transform:translateY(-4px)} 100%{transform:translateY(0); opacity:1}}
   @keyframes gearSpin{to{transform:rotate(360deg)}}
   @keyframes barRise{0%{transform:scaleY(.08)} 62%{transform:scaleY(1.2)} 100%{transform:scaleY(1)}}
+  @keyframes drawPath{from{stroke-dashoffset:1} to{stroke-dashoffset:0}}
   @keyframes dotIn{0%{transform:translateX(-50%) scale(0); opacity:0} 60%{transform:translateX(-50%) scale(1.5)} 100%{transform:translateX(-50%) scale(1); opacity:1}}
-  /* dizayndagi dumaloqlar (fon nuri + kartalardagi aylanalar) harakati */
+  /* periodik (~5s da bir qisqa harakat — qo'ng'iroqdek) */
+  @keyframes pPulse{0%,80%,100%{transform:scale(1)} 88%{transform:scale(1.2)} 94%{transform:scale(.96)}}
+  @keyframes pFloat{0%,78%,100%{transform:translateY(0)} 86%{transform:translateY(-4px)} 93%{transform:translateY(1px)}}
+  @keyframes pSlide{0%,74%,100%{transform:translateX(0)} 83%{transform:translateX(3px)} 91%{transform:translateX(-3px)}}
+  @keyframes pBell{0%,80%,100%{transform:rotate(0)} 84%{transform:rotate(16deg)} 88%{transform:rotate(-13deg)} 92%{transform:rotate(9deg)} 96%{transform:rotate(-4deg)}}
+  @keyframes drawLoop{0%{stroke-dashoffset:1} 10%{stroke-dashoffset:0} 100%{stroke-dashoffset:0}}
+  @keyframes drawLoop2{0%,5%{stroke-dashoffset:1} 17%{stroke-dashoffset:0} 100%{stroke-dashoffset:0}}
+  @keyframes barLoop{0%{transform:scaleY(.1)} 7%{transform:scaleY(1.2)} 13%{transform:scaleY(1)} 100%{transform:scaleY(1)}}
+  @keyframes dRotate{to{transform:rotate(360deg)}}
+  /* dizayndagi dumaloqlar */
   @keyframes aurora{0%{transform:translate(0,0) scale(1)} 33%{transform:translate(3%,2%) scale(1.08)} 66%{transform:translate(-2%,3%) scale(1.04)} 100%{transform:translate(0,0) scale(1)}}
   @keyframes orbit{0%{transform:translate(0,0) rotate(0)} 50%{transform:translate(-14px,12px) rotate(180deg)} 100%{transform:translate(0,0) rotate(360deg)}}
   @keyframes orbit2{0%{transform:translate(0,0)} 50%{transform:translate(12px,-10px)} 100%{transform:translate(0,0)}}
+  /* chizilgan SVG ikonka */
+  .dico{width:24px; height:24px; fill:none; stroke:currentColor; stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round; display:inline-block; vertical-align:middle}
+  .dico path{stroke-dasharray:1; stroke-dashoffset:0}
+  .qa-i .dico{width:27px; height:27px}
+  /* 3-ustunli (bar) ikonka */
+  .tbars{display:inline-flex; align-items:flex-end; gap:2.5px; height:24px}
+  .tbars i{width:4px; border-radius:2px 2px 0 0; background:currentColor; display:block; transform-origin:bottom}
+  .tbars i:nth-child(1){height:11px} .tbars i:nth-child(2){height:19px} .tbars i:nth-child(3){height:14px}
+  .qa-i .tbars{height:27px} .qa-i .tbars i{width:5px} .qa-i .tbars i:nth-child(1){height:13px} .qa-i .tbars i:nth-child(2){height:23px} .qa-i .tbars i:nth-child(3){height:17px}
   .tabbar .ms{transition:color .2s}
-  .tabbar button .ms, .tabbar .tbars{height:24px; display:inline-flex; justify-content:center}
+  .tabbar button .ms, .tabbar .tbars, .tabbar .dico{height:24px; display:inline-flex; justify-content:center}
   .tabbar button .ms{align-items:center}
-  .tabbar .tbars{align-items:flex-end; gap:2.5px}
-  .tabbar .tbars i{width:4px; border-radius:2px 2px 0 0; background:currentColor; display:block; transform-origin:bottom}
-  .tabbar .tbars i:nth-child(1){height:11px} .tabbar .tbars i:nth-child(2){height:19px} .tabbar .tbars i:nth-child(3){height:14px}
+  /* tab tap — har bo'limga xos */
   .tabbar button.a-pop .ms{animation:tabPop .52s cubic-bezier(.34,1.56,.64,1)}
-  .tabbar button.a-down .ms{animation:drawDown .6s cubic-bezier(.34,1.4,.64,1)}
-  .tabbar button.a-up .ms{animation:drawUp .6s cubic-bezier(.34,1.4,.64,1)}
   .tabbar button.a-spin .ms{animation:gearSpin .8s cubic-bezier(.4,0,.2,1)}
+  .tabbar button.a-down .dico path, .tabbar button.a-up .dico path{animation:drawPath .5s ease both}
+  .tabbar button.a-down .dico .p2, .tabbar button.a-up .dico .p2{animation-delay:.22s}
   .tabbar button.a-bars .tbars i{animation:barRise .5s ease both}
   .tabbar button.a-bars .tbars i:nth-child(2){animation-delay:.13s}
   .tabbar button.a-bars .tbars i:nth-child(3){animation-delay:.26s}
@@ -239,36 +250,51 @@
   .tabbar button.on::after{content:""; position:absolute; bottom:-3px; left:50%; width:5px; height:5px; border-radius:50%;
       background:var(--accent); box-shadow:0 0 8px var(--accent); animation:dotIn .45s cubic-bezier(.34,1.56,.64,1) both}
   @media (prefers-reduced-motion: no-preference){
+    /* fon + karta dumaloqlari */
     body::before{animation:aurora 22s ease-in-out infinite}
     .hero2:before{animation:orbit 26s linear infinite}
     .hero2:after{animation:orbit2 16s ease-in-out infinite}
     .acccard:before{animation:orbit2 14s ease-in-out infinite}
-    .hero2-chip{animation:iFloat 5s ease-in-out infinite; display:inline-block}
-    .qa-i .ms{animation:iBreathe 3.6s ease-in-out infinite; display:inline-block}
-    .qa button:nth-child(2) .qa-i .ms{animation-delay:.5s}
-    .qa button:nth-child(3) .qa-i .ms{animation-delay:1s}
-    .qa button:nth-child(4) .qa-i .ms{animation-delay:1.5s}
-    .acccard-t .ms{animation:iFloat 4.4s ease-in-out infinite; display:inline-block}
+    /* donut doimiy aylanadi (markaz matni qimirlamaydi) */
+    .donut2 svg{animation:donutIn .75s cubic-bezier(.22,1,.36,1), dRotate 26s 1s linear infinite}
+    /* bosh sahifa tezkor amallar — periodik chizilish/ko'tarilish */
+    .qa button:nth-child(1) .dico path{animation:drawLoop 5s ease infinite}
+    .qa button:nth-child(1) .dico .p2{animation:drawLoop2 5s ease infinite}
+    .qa button:nth-child(2) .dico path{animation:drawLoop 5s ease infinite .35s}
+    .qa button:nth-child(2) .dico .p2{animation:drawLoop2 5s ease infinite .35s}
+    .qa button:nth-child(3) .tbars i{animation:barLoop 5s ease infinite .8s}
+    .qa button:nth-child(3) .tbars i:nth-child(2){animation-delay:.95s}
+    .qa button:nth-child(3) .tbars i:nth-child(3){animation-delay:1.1s}
+    .qa button:nth-child(4) .dico path{animation:drawLoop 5s ease infinite 1.2s}
+    .qa button:nth-child(4) .dico .p1b, .qa button:nth-child(4) .dico .p2b{animation:drawLoop2 5s ease infinite 1.2s}
+    /* qolgan ikonkalar — har ~5s qisqa harakat, galma-gal */
+    .hero2-chip{animation:pFloat 5s ease-in-out infinite; display:inline-block}
+    .acccard-t .ms{animation:pFloat 5s ease-in-out infinite; display:inline-block}
     .acccard.naqd .acccard-t .ms{animation-delay:.8s}
-    .avatar .ms{animation:iFloat 5s ease-in-out infinite; display:inline-block}
-    .ni .ms{animation:iBreathe 4s ease-in-out infinite}
-    .nav button:nth-child(2n) .ni .ms{animation-delay:.6s}
-    .nav button:nth-child(3n) .ni .ms{animation-delay:1.2s}
-    .hd-actions .iqr:last-child .ms{animation:iBell 5s ease-in-out infinite; transform-origin:50% 15%; display:inline-block}
-    .hd-actions .iqr:not(:last-child) .ms{animation:iFloat 5.5s ease-in-out infinite; display:inline-block}
-    .badge{animation:iBreathe 1.8s ease-in-out infinite}
-    /* qolgan ikonkalar */
-    .hd h3 .ms{animation:iFloat 4.6s ease-in-out infinite; display:inline-block}
-    .ptitle .ms{animation:iFloat 4.4s ease-in-out infinite; display:inline-block}
-    .tbtn .tbi .ms:first-child, .tbtn .tbi .ms:last-child{animation:iBreathe 3.4s ease-in-out infinite}
-    .tbtn.b .tbi .ms{animation-delay:.4s}
-    .tx .emo .ms{animation:iBreathe 4s ease-in-out infinite; display:inline-block}
-    .tx:nth-child(2n) .emo .ms{animation-delay:.5s} .tx:nth-child(3n) .emo .ms{animation-delay:1s}
-    .lg .dot{animation:iBreathe 2.8s ease-in-out infinite}
-    .lg:nth-child(2n) .dot{animation-delay:.4s} .lg:nth-child(3n) .dot{animation-delay:.8s}
+    .avatar .ms{animation:pFloat 5s ease-in-out infinite .4s; display:inline-block}
+    .ni .ms{animation:pPulse 5s ease-in-out infinite}
+    .nav button:nth-child(2n) .ni .ms{animation:pSlide 5s ease-in-out infinite .5s}
+    .nav button:nth-child(3n) .ni .ms{animation-delay:1s}
+    .nav button:nth-child(4n) .ni .ms{animation-delay:1.5s}
+    .hd-actions .iqr:last-child .ms{animation:pBell 5s ease-in-out infinite; transform-origin:50% 15%; display:inline-block}
+    .hd-actions .iqr:not(:last-child) .ms{animation:pFloat 5s ease-in-out infinite .6s; display:inline-block}
+    .badge{animation:pPulse 2.2s ease-in-out infinite}
+    .hd h3 .ms{animation:pFloat 5s ease-in-out infinite; display:inline-block}
+    .hd:nth-of-type(2n) h3 .ms{animation-delay:.7s}
+    .ptitle .ms{animation:pFloat 5s ease-in-out infinite; display:inline-block}
+    .tbtn .tbi .ms{animation:pPulse 5s ease-in-out infinite; display:inline-block}
+    .tbtn.b .tbi .ms{animation-delay:.5s}
+    .tx .emo .ms{animation:pPulse 5s ease-in-out infinite; display:inline-block}
+    .tx:nth-child(2n) .emo .ms{animation-delay:.6s} .tx:nth-child(3n) .emo .ms{animation-delay:1.2s}
+    .lg .dot{animation:pPulse 5s ease-in-out infinite}
+    .lg:nth-child(2n) .dot{animation-delay:.5s} .lg:nth-child(3n) .dot{animation-delay:1s}
     .bar>i::after{animation:barShine 2.8s ease-in-out infinite}
-    .qmark{animation:iFloat 6s ease-in-out infinite; display:inline-block}
+    .qmark{animation:pFloat 6s ease-in-out infinite; display:inline-block}
+    #themeIco.spin{animation:gearSpin .6s ease}
+    .twcur{animation:blink 1s step-end infinite}
   }
+  @keyframes blink{50%{opacity:0}}
+  .twcur{color:var(--accent); font-weight:400; margin-left:1px}
   /* bosh sahifa header + hero + hisob kartalari + tezkor amallar */
   .apphead{display:flex; align-items:center; justify-content:space-between; margin:2px 2px 15px}
   .apphead .user{display:flex; align-items:center; gap:11px}
@@ -364,10 +390,10 @@
       </div>
 
       <div class="qa">
-        <button onclick="nav('Chiqim')"><span class="qa-i out"><span class="ms">trending_down</span></span><span data-i18n="tab_chiqim">Chiqim</span></button>
-        <button onclick="nav('Kirim')"><span class="qa-i in"><span class="ms">trending_up</span></span><span data-i18n="tab_kirim">Kirim</span></button>
-        <button onclick="nav('Oylar')"><span class="qa-i ac"><span class="ms">bar_chart</span></span><span data-i18n="tab_oylar">Oylar</span></button>
-        <button onclick="goTransfer()"><span class="qa-i vi"><span class="ms">swap_vert</span></span><span data-i18n="otkazma">O'tkazma</span></button>
+        <button onclick="nav('Chiqim')"><span class="qa-i out"><svg class="dico" viewBox="0 0 24 24"><path class="p1" pathLength="1" d="M12 3V17.5"/><path class="p2" pathLength="1" d="M6 11.5 12 17.8 18 11.5"/></svg></span><span data-i18n="tab_chiqim">Chiqim</span></button>
+        <button onclick="nav('Kirim')"><span class="qa-i in"><svg class="dico" viewBox="0 0 24 24"><path class="p1" pathLength="1" d="M12 21V6.5"/><path class="p2" pathLength="1" d="M6 12.5 12 6.2 18 12.5"/></svg></span><span data-i18n="tab_kirim">Kirim</span></button>
+        <button onclick="nav('Oylar')"><span class="qa-i ac"><span class="tbars"><i></i><i></i><i></i></span></span><span data-i18n="tab_oylar">Oylar</span></button>
+        <button onclick="goTransfer()"><span class="qa-i vi"><svg class="dico" viewBox="0 0 24 24"><path class="p1" pathLength="1" d="M8 21V5"/><path class="p1b" pathLength="1" d="M4.5 9 8 4.5 11.5 9"/><path class="p2" pathLength="1" d="M16 3V19"/><path class="p2b" pathLength="1" d="M12.5 15 16 19.5 19.5 15"/></svg></span><span data-i18n="otkazma">O'tkazma</span></button>
       </div>
 
       <div class="card" id="transferCard">
@@ -667,7 +693,7 @@
         <input id="clearPass" type="password" data-ph="clearpass_ph" placeholder="Parol (o'rnatilgan bo'lsa)">
         <button class="clear" onclick="hammasini()"><span class="ms" style="font-size:18px;vertical-align:-4px">delete</span> <span data-i18n="btn_hammasini">Hammasini tozalash</span></button>
       </div>
-      <div class="muted" style="text-align:center;font-size:12px;margin:4px 0 6px">Pul bot · dizayn v20 (har tabga xos animatsiya) · 2026-10-22</div>
+      <div class="muted" style="text-align:center;font-size:12px;margin:4px 0 6px">Pul bot · dizayn v21 (chizilgan ikonlar · donut aylanishi · typewriter) · 2026-10-22</div>
     </div>
 
     <div class="modal hidden" id="notifModal" onclick="closeNotif(event)">
@@ -680,8 +706,8 @@
 
     <nav class="tabbar" id="tabbar">
       <button data-tab="Home" onclick="nav('Home')"><span class="ms">home</span><span data-i18n="tab_home">Asosiy</span></button>
-      <button data-tab="Chiqim" onclick="nav('Chiqim')"><span class="ms">trending_down</span><span data-i18n="tab_chiqim">Chiqim</span></button>
-      <button data-tab="Kirim" onclick="nav('Kirim')"><span class="ms">trending_up</span><span data-i18n="tab_kirim">Kirim</span></button>
+      <button data-tab="Chiqim" onclick="nav('Chiqim')"><svg class="dico" viewBox="0 0 24 24"><path class="p1" pathLength="1" d="M12 3V17.5"/><path class="p2" pathLength="1" d="M6 11.5 12 17.8 18 11.5"/></svg><span data-i18n="tab_chiqim">Chiqim</span></button>
+      <button data-tab="Kirim" onclick="nav('Kirim')"><svg class="dico" viewBox="0 0 24 24"><path class="p1" pathLength="1" d="M12 21V6.5"/><path class="p2" pathLength="1" d="M6 12.5 12 6.2 18 12.5"/></svg><span data-i18n="tab_kirim">Kirim</span></button>
       <button data-tab="Oylar" onclick="nav('Oylar')"><span class="tbars"><i></i><i></i><i></i></span><span data-i18n="tab_oylar">Oylar</span></button>
       <button data-tab="Sozlama" onclick="nav('Sozlama')"><span class="ms">settings</span><span data-i18n="tab_sozlama">Sozlama</span></button>
     </nav>
@@ -854,7 +880,8 @@
     if(t!=='light' && t!=='dark') t='dark';
     document.documentElement.setAttribute('data-theme', t);
     try{ localStorage.setItem('theme', t); }catch(e){}
-    var ico=document.getElementById('themeIco'); if(ico) ico.textContent = (t==='light'?'light_mode':'dark_mode');
+    var ico=document.getElementById('themeIco');
+    if(ico){ ico.textContent = (t==='light'?'light_mode':'dark_mode'); ico.classList.remove('spin'); void ico.offsetWidth; ico.classList.add('spin'); }
     var d=document.getElementById('thDark'), l=document.getElementById('thLight');
     if(d) d.classList.toggle('on', t==='dark');
     if(l) l.classList.toggle('on', t==='light');
@@ -1165,12 +1192,30 @@
     {u:"Boylik — ko'p narsaga ega bo'lish emas, kam narsaga muhtoj bo'lishdir.", r:"Богатство — не в обилии, а в умении довольствоваться малым.", a:"Seneka"},
     {u:"Byudjet — bu pulingizga qayerga ketishini aytishdir, keyin uni qidirib yurmaslik.", r:"Бюджет — это когда вы указываете деньгам, куда идти, а не ищете, куда они делись.", a:"Dave Ramsey"}
   ];
+  var _twTimer=null, _twIdx=Math.floor(Date.now()/86400000)%6;
   function renderQuote(){
     var el=document.getElementById("quoteText"); if(!el) return;
-    var day=Math.floor(Date.now()/86400000);
-    var q=QUOTES[((day%QUOTES.length)+QUOTES.length)%QUOTES.length];
-    el.textContent = L(q.u, q.r);
-    document.getElementById("quoteAuth").textContent = "— "+q.a;
+    if(_twTimer) return;          // allaqachon yozilyapti
+    twType();
+  }
+  function twType(){
+    var el=document.getElementById("quoteText"), au=document.getElementById("quoteAuth");
+    if(!el){ _twTimer=null; return; }
+    var q=QUOTES[((_twIdx%QUOTES.length)+QUOTES.length)%QUOTES.length];
+    var full=L(q.u,q.r), i=0;
+    if(au) au.textContent="— "+q.a;
+    (function type(){
+      el.innerHTML = esc(full.slice(0,i)) + '<span class="twcur">|</span>';
+      if(i<full.length){ i++; _twTimer=setTimeout(type, 45); }
+      else { _twTimer=setTimeout(twErase, 2800); }
+    })();
+    function twErase(){
+      (function del(){
+        el.innerHTML = esc(full.slice(0,i)) + '<span class="twcur">|</span>';
+        if(i>0){ i--; _twTimer=setTimeout(del, 20); }
+        else { _twIdx++; _twTimer=setTimeout(twType, 450); }
+      })();
+    }
   }
   function renderBanner(){
     var img=document.getElementById("bannerImg"), ph=document.getElementById("bannerPh");
