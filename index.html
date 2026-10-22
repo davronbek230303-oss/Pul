@@ -199,6 +199,7 @@
   /* habarnoma modal */
   .modal{position:fixed; inset:0; z-index:90; background:rgba(0,0,0,.5); display:flex; align-items:flex-end; justify-content:center;
       animation:fadeUp .2s ease; backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px)}
+  .modal.hidden{display:none}
   .modal .sheet{width:100%; max-width:560px; background:var(--glass-strong); border:1px solid var(--glass-bd); border-radius:24px 24px 0 0;
       padding:16px 16px calc(20px + env(safe-area-inset-bottom)); max-height:80vh; overflow:auto;
       backdrop-filter:blur(26px) saturate(1.5); -webkit-backdrop-filter:blur(26px) saturate(1.5); animation:sheetUp .28s cubic-bezier(.22,1,.36,1)}
@@ -567,7 +568,7 @@
         <input id="clearPass" type="password" data-ph="clearpass_ph" placeholder="Parol (o'rnatilgan bo'lsa)">
         <button class="clear" onclick="hammasini()"><span class="ms" style="font-size:18px;vertical-align:-4px">delete</span> <span data-i18n="btn_hammasini">Hammasini tozalash</span></button>
       </div>
-      <div class="muted" style="text-align:center;font-size:12px;margin:4px 0 6px">Pul bot · dizayn v13 (habarnomalar · bell) · 2026-10-22</div>
+      <div class="muted" style="text-align:center;font-size:12px;margin:4px 0 6px">Pul bot · dizayn v14 (habarnoma yopilishi tuzatildi) · 2026-10-22</div>
     </div>
 
     <div class="modal hidden" id="notifModal" onclick="closeNotif(event)">
