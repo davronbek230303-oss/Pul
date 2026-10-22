@@ -549,7 +549,7 @@
         <input id="clearPass" type="password" data-ph="clearpass_ph" placeholder="Parol (o'rnatilgan bo'lsa)">
         <button class="clear" onclick="hammasini()"><span class="ms" style="font-size:18px;vertical-align:-4px">delete</span> <span data-i18n="btn_hammasini">Hammasini tozalash</span></button>
       </div>
-      <div class="muted" style="text-align:center;font-size:12px;margin:4px 0 6px">Pul bot · dizayn v11 (bank uslubi · header · count-up) · 2026-10-22</div>
+      <div class="muted" style="text-align:center;font-size:12px;margin:4px 0 6px">Pul bot · dizayn v12 (tejalgan pul tuzatildi) · 2026-10-22</div>
     </div>
 
     <nav class="tabbar" id="tabbar">
@@ -1096,7 +1096,12 @@
             '<div class="kv"><span class="muted">'+L("Yig'ilgan (limitdan ortgan)","Накоплено (сверх лимита)")+'</span><span>'+fmt(t.yigildi)+'</span></div>'+
             '<div class="kv"><span class="muted">'+L("Tejamdan ishlatilgan","Потрачено из сбережений")+'</span><span>'+fmt(t.ishlatildi)+'</span></div>';
     if(DATA.limitOy>0) h += '<div class="kv"><span class="muted">'+L("Oylik byudjet qoldig'i","Остаток мес. бюджета")+'</span><span>'+fmt(DATA.oyByudjetQoldi||0)+'</span></div>';
-    h += '<div class="muted" style="font-size:12px;margin-top:8px">💡 '+L("Ishlatish: Chiqim → <b>Tejamdan</b> kategoriyasi (kunlik limitga ta'sir qilmaydi).","Использовать: Расход → категория <b>«Из сбережений»</b> (не влияет на дневной лимит).")+'</div>';
+    var oyl = t.oylar||[];
+    if(oyl.length){
+      h += '<div class="muted" style="font-size:12px;margin:12px 0 4px;font-weight:700">'+L("Oylar bo'yicha tejalgan","Накоплено по месяцам")+'</div>';
+      h += oyl.map(function(m){ return '<div class="kv"><span class="muted">'+esc(oyNom(m.oy))+'</span><span style="color:var(--green);font-weight:700">+'+fmt(m.summa)+'</span></div>'; }).join("");
+    }
+    h += '<div class="muted" style="font-size:12px;margin-top:10px">💡 '+L("Har kuni limitdan kam sarflasangizgina ortig'i shu yerga yig'iladi. Ishlatish: Chiqim → <b>Tejamdan</b>.","Накапливается только если за день потратили меньше лимита. Использовать: Расход → <b>«Из сбережений»</b>.")+'</div>';
     document.getElementById("tejamBox").innerHTML = h;
   }
 
