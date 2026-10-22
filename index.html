@@ -452,7 +452,7 @@
         <input id="clearPass" type="password" data-ph="clearpass_ph" placeholder="Parol (o'rnatilgan bo'lsa)">
         <button class="clear" onclick="hammasini()"><span class="ms" style="font-size:18px;vertical-align:-4px">delete</span> <span data-i18n="btn_hammasini">Hammasini tozalash</span></button>
       </div>
-      <div class="muted" style="text-align:center;font-size:12px;margin:4px 0 6px">Pul bot · dizayn v8 (indigo · Revolut uslubi) · 2026-10-22</div>
+      <div class="muted" style="text-align:center;font-size:12px;margin:4px 0 6px">Pul bot · dizayn v9 (limit: yashil→qizil) · 2026-10-22</div>
     </div>
 
     <nav class="tabbar" id="tabbar">
@@ -474,6 +474,12 @@
   var acc = { Chiqim:"Plastik", Kirim:"Plastik" };   // hisob tanlovi (Plastik/Naqd)
   var PAL = ["#6366f1","#0ea5e9","#14b8a6","#f59e0b","#ef4444","#ec4899","#8b5cf6","#22c55e","#f97316","#06b6d4","#eab308","#64748b"];
   function colorFor(i){ return PAL[i % PAL.length]; }
+  // Limitga yaqinlashgan sari yashil -> sariq -> qizil (foizga qarab)
+  function barFill(pct){
+    var p = Math.max(0, Math.min(100, Number(pct)||0));
+    var h = 140 - 140*(p/100);   // 140=yashil, 0=qizil
+    return 'linear-gradient(90deg, hsl(140,68%,46%), hsl('+Math.round(h)+',80%,48%))';
+  }
 
   /* ================= TIL ================= */
   var LANG = "uz";
@@ -830,16 +836,16 @@
 
     var lo = DATA.limitOy, oyEl = document.getElementById("oyByudjet");
     if(lo>0){
-      var opct = Math.min(100, Math.round(DATA.oyChiqim/lo*100)), oover = DATA.oyChiqim>lo;
+      var orat = DATA.oyChiqim/lo*100, opct = Math.min(100, Math.round(orat)), oover = DATA.oyChiqim>lo;
       oyEl.innerHTML = '<div class="bar-top"><span>'+L("Oylik byudjet","Месячный бюджет")+'</span><span>'+fmt(DATA.oyChiqim)+' / '+fmt(lo)+'</span></div>'+
-        '<div class="bar"><i style="width:'+opct+'%;background:'+(oover?'var(--red)':'var(--green)')+'"></i></div>';
+        '<div class="bar"><i style="width:'+opct+'%;background:'+(oover?'var(--red)':barFill(orat))+'"></i></div>';
     } else { oyEl.innerHTML=''; }
 
     var lk = DATA.limitKun, bl = DATA.bugunLimit, bugunEl = document.getElementById("bugunBox");
     if(lk>0){
-      var bpct = Math.min(100, Math.round(bl/lk*100)), bover = bl>lk;
+      var brat = bl/lk*100, bpct = Math.min(100, Math.round(brat)), bover = bl>lk;
       bugunEl.innerHTML = '<div class="bar-top"><span>'+L("Bugun (limitga kiradi)","Сегодня (в лимите)")+'</span><span>'+fmt(bl)+' / '+fmt(lk)+'</span></div>'+
-        '<div class="bar"><i style="width:'+bpct+'%;background:'+(bover?'var(--red)':'var(--green)')+'"></i></div>'+
+        '<div class="bar"><i style="width:'+bpct+'%;background:'+(bover?'var(--red)':barFill(brat))+'"></i></div>'+
         '<div class="muted" style="font-size:12px;margin-top:6px">'+(bover?('⚠️ '+L("Limitdan ","Превышение на ")+fmt(bl-lk)+L(" oshdingiz","")):( L("Qoldi: ","Остаток: ")+fmt(lk-bl)))+'</div>';
     } else {
       bugunEl.innerHTML = '<div class="bar-top"><span>'+L("Bugun sarflangan","Потрачено сегодня")+'</span><span>'+fmt(bl)+'</span></div>'+
