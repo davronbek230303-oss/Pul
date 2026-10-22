@@ -37,6 +37,7 @@
     --blob1:rgba(91,99,240,.2); --blob2:rgba(139,123,255,.16); --blob3:rgba(20,184,166,.1);
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+  html,body{overflow-x:hidden; max-width:100%}
   body{margin:0; font-family:'Manrope',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
        background:var(--bg); color:var(--text); padding:14px 14px 104px; font-size:15px; font-weight:500}
   body::before{content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
@@ -114,7 +115,9 @@
   .bar-top{display:flex; justify-content:space-between; font-size:14px; margin-bottom:6px; gap:8px; align-items:center; font-weight:600}
   .bar-top .ms{font-size:17px; color:var(--hint)}
   .bar{height:10px; background:var(--bar-bg); border-radius:8px; overflow:hidden}
-  .bar>i{display:block; height:100%; border-radius:8px; background:var(--grad)}
+  .bar>i{position:relative; display:block; height:100%; border-radius:8px; background:var(--grad); overflow:hidden}
+  .bar>i::after{content:""; position:absolute; top:0; left:0; width:40%; height:100%;
+      background:linear-gradient(100deg, transparent, rgba(255,255,255,.4), transparent); transform:translateX(-120%)}
   .tx{display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid var(--line)}
   .tx:last-child{border-bottom:0}
   .tx .emo{width:40px; height:40px; border-radius:13px; background:var(--emo-bg); display:flex; align-items:center; justify-content:center}
@@ -144,15 +147,22 @@
   /* diagramma (donut) */
   .chartwrap{display:flex; flex-direction:column; align-items:center; gap:16px}
   .donut2{position:relative; width:190px; height:190px; flex:0 0 auto}
-  .donut2 svg{width:100%; height:100%; display:block; animation:popIn .4s ease; overflow:visible}
+  .donut2 svg{width:100%; height:100%; display:block; animation:donutIn .75s cubic-bezier(.22,1,.36,1); overflow:visible}
+  .donut2 .seg{transition:stroke-width .2s}
+  @keyframes donutIn{0%{opacity:0; transform:rotate(-160deg) scale(.4)} 100%{opacity:1; transform:rotate(0) scale(1)}}
   .donut2 .track{fill:none; stroke:var(--bar-bg); stroke-width:13}
   .donut2 .seg{fill:none; stroke-width:13; stroke-linecap:round; filter:drop-shadow(0 2px 5px rgba(0,0,0,.22))}
   .dc{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center}
   .dc .l{font-size:11px; color:var(--hint); text-transform:uppercase; letter-spacing:.6px; font-weight:700}
   .dc .v{font-size:19px; font-weight:800; margin-top:3px; letter-spacing:-.3px}
   @keyframes popIn{from{opacity:0; transform:scale(.88)} to{opacity:1; transform:scale(1)}}
+  @keyframes lgIn{from{opacity:0; transform:translateX(-10px)} to{opacity:1; transform:none}}
+  @keyframes barShine{0%{transform:translateX(-120%)} 60%,100%{transform:translateX(320%)}}
   .legend{width:100%; margin-top:4px}
   .lg{display:flex; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid var(--line)}
+  .lg{animation:lgIn .45s both cubic-bezier(.22,1,.36,1)}
+  .lg:nth-child(2){animation-delay:.06s} .lg:nth-child(3){animation-delay:.12s} .lg:nth-child(4){animation-delay:.18s}
+  .lg:nth-child(5){animation-delay:.24s} .lg:nth-child(6){animation-delay:.3s} .lg:nth-child(n+7){animation-delay:.36s}
   .lg:last-child{border-bottom:0}
   .lg .dot{width:11px; height:11px; border-radius:4px; flex:0 0 auto}
   .lg .ln{flex:0 0 auto; max-width:38%; min-width:0; font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
@@ -201,15 +211,30 @@
   @keyframes iBreathe{0%,100%{transform:scale(1)} 50%{transform:scale(1.09)}}
   @keyframes iFloat{0%,100%{transform:translateY(0) rotate(0)} 50%{transform:translateY(-3px) rotate(4deg)}}
   @keyframes iBell{0%,82%,100%{transform:rotate(0)} 85%{transform:rotate(16deg)} 88%{transform:rotate(-14deg)} 91%{transform:rotate(10deg)} 94%{transform:rotate(-6deg)} 97%{transform:rotate(3deg)}}
-  /* tab bosilganda — prujinali sakrash (spring overshoot) */
+  /* tab bosilganda — har bo'limga xos animatsiya */
   @keyframes tabPop{0%{transform:scale(.55) translateY(3px)} 45%{transform:scale(1.32) translateY(-5px)} 68%{transform:scale(.9) translateY(1px)} 100%{transform:scale(1) translateY(0)}}
+  @keyframes drawDown{0%{transform:translateY(-10px); opacity:.15} 65%{transform:translateY(4px)} 100%{transform:translateY(0); opacity:1}}
+  @keyframes drawUp{0%{transform:translateY(10px); opacity:.15} 65%{transform:translateY(-4px)} 100%{transform:translateY(0); opacity:1}}
+  @keyframes gearSpin{to{transform:rotate(360deg)}}
+  @keyframes barRise{0%{transform:scaleY(.08)} 62%{transform:scaleY(1.2)} 100%{transform:scaleY(1)}}
   @keyframes dotIn{0%{transform:translateX(-50%) scale(0); opacity:0} 60%{transform:translateX(-50%) scale(1.5)} 100%{transform:translateX(-50%) scale(1); opacity:1}}
   /* dizayndagi dumaloqlar (fon nuri + kartalardagi aylanalar) harakati */
   @keyframes aurora{0%{transform:translate(0,0) scale(1)} 33%{transform:translate(3%,2%) scale(1.08)} 66%{transform:translate(-2%,3%) scale(1.04)} 100%{transform:translate(0,0) scale(1)}}
   @keyframes orbit{0%{transform:translate(0,0) rotate(0)} 50%{transform:translate(-14px,12px) rotate(180deg)} 100%{transform:translate(0,0) rotate(360deg)}}
   @keyframes orbit2{0%{transform:translate(0,0)} 50%{transform:translate(12px,-10px)} 100%{transform:translate(0,0)}}
   .tabbar .ms{transition:color .2s}
-  .tabbar .ms.tapped{animation:tabPop .52s cubic-bezier(.34,1.56,.64,1)}
+  .tabbar button .ms, .tabbar .tbars{height:24px; display:inline-flex; justify-content:center}
+  .tabbar button .ms{align-items:center}
+  .tabbar .tbars{align-items:flex-end; gap:2.5px}
+  .tabbar .tbars i{width:4px; border-radius:2px 2px 0 0; background:currentColor; display:block; transform-origin:bottom}
+  .tabbar .tbars i:nth-child(1){height:11px} .tabbar .tbars i:nth-child(2){height:19px} .tabbar .tbars i:nth-child(3){height:14px}
+  .tabbar button.a-pop .ms{animation:tabPop .52s cubic-bezier(.34,1.56,.64,1)}
+  .tabbar button.a-down .ms{animation:drawDown .6s cubic-bezier(.34,1.4,.64,1)}
+  .tabbar button.a-up .ms{animation:drawUp .6s cubic-bezier(.34,1.4,.64,1)}
+  .tabbar button.a-spin .ms{animation:gearSpin .8s cubic-bezier(.4,0,.2,1)}
+  .tabbar button.a-bars .tbars i{animation:barRise .5s ease both}
+  .tabbar button.a-bars .tbars i:nth-child(2){animation-delay:.13s}
+  .tabbar button.a-bars .tbars i:nth-child(3){animation-delay:.26s}
   .tabbar button.on{position:relative}
   .tabbar button.on::after{content:""; position:absolute; bottom:-3px; left:50%; width:5px; height:5px; border-radius:50%;
       background:var(--accent); box-shadow:0 0 8px var(--accent); animation:dotIn .45s cubic-bezier(.34,1.56,.64,1) both}
@@ -230,7 +255,19 @@
     .nav button:nth-child(2n) .ni .ms{animation-delay:.6s}
     .nav button:nth-child(3n) .ni .ms{animation-delay:1.2s}
     .hd-actions .iqr:last-child .ms{animation:iBell 5s ease-in-out infinite; transform-origin:50% 15%; display:inline-block}
+    .hd-actions .iqr:not(:last-child) .ms{animation:iFloat 5.5s ease-in-out infinite; display:inline-block}
     .badge{animation:iBreathe 1.8s ease-in-out infinite}
+    /* qolgan ikonkalar */
+    .hd h3 .ms{animation:iFloat 4.6s ease-in-out infinite; display:inline-block}
+    .ptitle .ms{animation:iFloat 4.4s ease-in-out infinite; display:inline-block}
+    .tbtn .tbi .ms:first-child, .tbtn .tbi .ms:last-child{animation:iBreathe 3.4s ease-in-out infinite}
+    .tbtn.b .tbi .ms{animation-delay:.4s}
+    .tx .emo .ms{animation:iBreathe 4s ease-in-out infinite; display:inline-block}
+    .tx:nth-child(2n) .emo .ms{animation-delay:.5s} .tx:nth-child(3n) .emo .ms{animation-delay:1s}
+    .lg .dot{animation:iBreathe 2.8s ease-in-out infinite}
+    .lg:nth-child(2n) .dot{animation-delay:.4s} .lg:nth-child(3n) .dot{animation-delay:.8s}
+    .bar>i::after{animation:barShine 2.8s ease-in-out infinite}
+    .qmark{animation:iFloat 6s ease-in-out infinite; display:inline-block}
   }
   /* bosh sahifa header + hero + hisob kartalari + tezkor amallar */
   .apphead{display:flex; align-items:center; justify-content:space-between; margin:2px 2px 15px}
@@ -292,7 +329,8 @@
       display:flex; flex-direction:column; align-items:center; gap:3px; font-size:11px; font-weight:700; font-family:inherit; transition:color .14s}
   .tabbar button .ms{font-size:24px}
   .tabbar button.on{color:var(--accent)}
-  .tabbar button.on .ms{filter:drop-shadow(0 4px 10px rgba(10,151,176,.5))}
+  .tabbar button.on .ms{filter:drop-shadow(0 4px 10px rgba(91,99,240,.5))}
+  .tabbar button.on .tbars i{box-shadow:0 3px 8px rgba(91,99,240,.45)}
 </style>
 </head>
 <body>
@@ -629,7 +667,7 @@
         <input id="clearPass" type="password" data-ph="clearpass_ph" placeholder="Parol (o'rnatilgan bo'lsa)">
         <button class="clear" onclick="hammasini()"><span class="ms" style="font-size:18px;vertical-align:-4px">delete</span> <span data-i18n="btn_hammasini">Hammasini tozalash</span></button>
       </div>
-      <div class="muted" style="text-align:center;font-size:12px;margin:4px 0 6px">Pul bot · dizayn v18 (tab spring · iqtibos) · 2026-10-22</div>
+      <div class="muted" style="text-align:center;font-size:12px;margin:4px 0 6px">Pul bot · dizayn v20 (har tabga xos animatsiya) · 2026-10-22</div>
     </div>
 
     <div class="modal hidden" id="notifModal" onclick="closeNotif(event)">
@@ -644,7 +682,7 @@
       <button data-tab="Home" onclick="nav('Home')"><span class="ms">home</span><span data-i18n="tab_home">Asosiy</span></button>
       <button data-tab="Chiqim" onclick="nav('Chiqim')"><span class="ms">trending_down</span><span data-i18n="tab_chiqim">Chiqim</span></button>
       <button data-tab="Kirim" onclick="nav('Kirim')"><span class="ms">trending_up</span><span data-i18n="tab_kirim">Kirim</span></button>
-      <button data-tab="Oylar" onclick="nav('Oylar')"><span class="ms">bar_chart</span><span data-i18n="tab_oylar">Oylar</span></button>
+      <button data-tab="Oylar" onclick="nav('Oylar')"><span class="tbars"><i></i><i></i><i></i></span><span data-i18n="tab_oylar">Oylar</span></button>
       <button data-tab="Sozlama" onclick="nav('Sozlama')"><span class="ms">settings</span><span data-i18n="tab_sozlama">Sozlama</span></button>
     </nav>
 
@@ -840,10 +878,12 @@
     var el = document.getElementById('p'+p);
     if(el) el.classList.remove('hidden');
     var tb = document.querySelectorAll('.tabbar button');
+    var ANIM = {Home:"a-pop", Chiqim:"a-down", Kirim:"a-up", Oylar:"a-bars", Sozlama:"a-spin"};
     for(var j=0;j<tb.length;j++){
-      var on = tb[j].getAttribute('data-tab')===p;
+      var dt = tb[j].getAttribute('data-tab'), on = dt===p;
       tb[j].classList.toggle('on', on);
-      if(on){ var ic=tb[j].querySelector('.ms'); if(ic){ ic.classList.remove('tapped'); void ic.offsetWidth; ic.classList.add('tapped'); } }
+      tb[j].classList.remove("a-pop","a-down","a-up","a-bars","a-spin");
+      if(on){ void tb[j].offsetWidth; tb[j].classList.add(ANIM[dt]||"a-pop"); }
     }
     if(tg && tg.HapticFeedback && tg.HapticFeedback.selectionChanged) try{ tg.HapticFeedback.selectionChanged(); }catch(e){}
     try{ window.scrollTo(0,0); }catch(e){}
