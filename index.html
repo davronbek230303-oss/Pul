@@ -99,6 +99,17 @@
   .btn.out{background:linear-gradient(135deg,#ff5a52,#e11d10); box-shadow:0 10px 26px rgba(225,29,16,.32)}
   .btn.in{background:linear-gradient(135deg,#3ddc5e,#15a82f); box-shadow:0 10px 26px rgba(21,168,47,.3)}
   .btn:active{transform:scale(.98); opacity:.92}
+  /* o'tkazma (ixcham) tugmalari */
+  .trow{display:flex; gap:10px}
+  .tbtn{flex:1; min-width:0; border:1px solid var(--glass-bd); background:var(--card2); color:var(--text); border-radius:16px;
+      padding:12px 8px; cursor:pointer; font-family:inherit; font-weight:700; font-size:12px; line-height:1.25; text-align:center;
+      display:flex; flex-direction:column; align-items:center; gap:7px; transition:transform .12s}
+  .tbtn:active{transform:scale(.96)}
+  .tbtn .tbi{display:flex; align-items:center; gap:3px; padding:7px 10px; border-radius:12px; background:var(--glass); border:1px solid var(--glass-bd)}
+  .tbtn .tbi .ms{font-size:17px}
+  .tbtn .tbi .arr{font-size:13px; color:var(--hint)}
+  .tbtn.a .tbi .ms:first-child{color:var(--accent)} .tbtn.a .tbi .ms:last-child{color:var(--green)}
+  .tbtn.b .tbi .ms:first-child{color:var(--green)} .tbtn.b .tbi .ms:last-child{color:var(--accent)}
   .bar-row{margin-bottom:11px}
   .bar-top{display:flex; justify-content:space-between; font-size:14px; margin-bottom:6px; gap:8px; align-items:center; font-weight:600}
   .bar-top .ms{font-size:17px; color:var(--hint)}
@@ -285,9 +296,13 @@
         <div class="hd"><h3><span class="ms" style="font-size:18px">swap_vert</span> <span data-i18n="otkazma">O'tkazma</span></h3>
           <div class="ic"><button class="iq" onclick="info('hisoblar')"><span class="ms" style="font-size:16px">info</span></button></div></div>
         <input id="yechSum" class="num" inputmode="decimal" data-ph="yech_ph" placeholder="Summa">
-        <div style="display:flex;gap:8px">
-          <button class="btn" style="flex:1" onclick="yechish('naqdga')"><span class="ms">south</span> <span data-i18n="btn_yechish">Plastikdan naqd</span></button>
-          <button class="btn" style="flex:1" onclick="yechish('plastikka')"><span class="ms">north</span> <span data-i18n="btn_solish">Naqdni plastikka</span></button>
+        <div class="trow">
+          <button class="tbtn a" onclick="yechish('naqdga')">
+            <span class="tbi"><span class="ms">credit_card</span><span class="ms arr">east</span><span class="ms">payments</span></span>
+            <span data-i18n="btn_yechish">Plastikdan naqd</span></button>
+          <button class="tbtn b" onclick="yechish('plastikka')">
+            <span class="tbi"><span class="ms">payments</span><span class="ms arr">east</span><span class="ms">credit_card</span></span>
+            <span data-i18n="btn_solish">Naqdni plastikka</span></button>
         </div>
         <div class="muted" style="font-size:12px;margin-top:8px" data-i18n="hisoblar_hint">Plastikdan naqd olsangiz — umumiy balans o'zgarmaydi, pul faqat Naqdga o'tadi.</div>
       </div>
@@ -568,7 +583,7 @@
         <input id="clearPass" type="password" data-ph="clearpass_ph" placeholder="Parol (o'rnatilgan bo'lsa)">
         <button class="clear" onclick="hammasini()"><span class="ms" style="font-size:18px;vertical-align:-4px">delete</span> <span data-i18n="btn_hammasini">Hammasini tozalash</span></button>
       </div>
-      <div class="muted" style="text-align:center;font-size:12px;margin:4px 0 6px">Pul bot · dizayn v14 (habarnoma yopilishi tuzatildi) · 2026-10-22</div>
+      <div class="muted" style="text-align:center;font-size:12px;margin:4px 0 6px">Pul bot · dizayn v15 (o'tkazma tugmalari ixcham) · 2026-10-22</div>
     </div>
 
     <div class="modal hidden" id="notifModal" onclick="closeNotif(event)">
