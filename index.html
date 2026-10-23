@@ -151,7 +151,7 @@
   .donut2 .seg{transition:stroke-width .2s}
   @keyframes donutIn{0%{opacity:0; transform:rotate(-160deg) scale(.4)} 100%{opacity:1; transform:rotate(0) scale(1)}}
   .donut2 .track{fill:none; stroke:var(--bar-bg); stroke-width:13}
-  .donut2 .seg{fill:none; stroke-width:13; stroke-linecap:round; filter:drop-shadow(0 2px 5px rgba(0,0,0,.22))}
+  .donut2 .seg{fill:none; stroke-width:10; stroke-linecap:round; filter:drop-shadow(0 2px 5px rgba(0,0,0,.22))}
   .dc{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center}
   .dc .l{font-size:11px; color:var(--hint); text-transform:uppercase; letter-spacing:.6px; font-weight:700}
   .dc .v{font-size:19px; font-weight:800; margin-top:3px; letter-spacing:-.3px}
@@ -913,7 +913,7 @@
         <input id="clearPass" type="password" data-ph="clearpass_ph" placeholder="Parol (o'rnatilgan bo'lsa)">
         <button class="clear" onclick="hammasini()"><span class="ms" style="font-size:18px;vertical-align:-4px">delete</span> <span data-i18n="btn_hammasini">Hammasini tozalash</span></button>
       </div>
-      <div class="muted" style="text-align:center;font-size:12px;margin:4px 0 6px">Pul bot · dizayn v31.6 (diagramma yumaloq chet · orqa halqa olib tashlandi) · 2026-10-23</div>
+      <div class="muted" style="text-align:center;font-size:12px;margin:4px 0 6px">Pul bot · dizayn v31.7 (diagramma Apple uslubi · klaviatura menyuni ko'tarmaydi) · 2026-10-23</div>
     </div>
 
     <div class="modal hidden" id="notifModal" onclick="closeNotif(event)">
@@ -1357,6 +1357,29 @@
     if(isTextInput(a) && !isTextInput(e.target)){ try{ a.blur(); }catch(err){} }
   }, true);
 
+  // Klaviatura ochilsa tab menyu ko'tarilmasin: VisualViewport bilan aniqlab, pastga (klaviatura ortiga) suramiz.
+  (function(){
+    var _tb=null; function bar(){ return _tb || (_tb=document.querySelector('.tabbar')); }
+    var maxH = (window.visualViewport ? window.visualViewport.height : (window.innerHeight||800));
+    var raf=0;
+    function upd(){
+      raf=0;
+      var h = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+      if(h > maxH) maxH = h;                 // eng katta (klaviatura yopiq) balandlikni eslab qolamiz
+      var kb = maxH - h;                     // klaviatura balandligi (taxminan)
+      var b = bar(); if(!b) return;
+      if(kb > 120){ b.style.opacity='0'; b.style.pointerEvents='none'; b.style.transform='translateY('+(kb+40)+'px)'; }
+      else { b.style.opacity=''; b.style.pointerEvents=''; b.style.transform=''; }
+    }
+    function sched(){ if(!raf) raf=requestAnimationFrame(upd); }
+    if(window.visualViewport){
+      window.visualViewport.addEventListener('resize', sched);
+      window.visualViewport.addEventListener('scroll', sched);
+    }
+    window.addEventListener('resize', sched);
+    window.addEventListener('orientationchange', function(){ maxH=0; setTimeout(sched,300); });
+  })();
+
   var INFO = {
     uz:{
       balans:"Umumiy qoldiq — barcha kirimlardan chiqimlar ayirilgani.\n👁 bosib yashirish yoki ko'rsatish mumkin.",
@@ -1448,7 +1471,7 @@
     segs = (segs||[]).filter(function(s){return (Number(s.value)||0)>0;});
     var total = segs.reduce(function(s,x){return s+(Number(x.value)||0);},0);
     if(total<=0) return '<div class="muted" style="text-align:center;padding:16px 0">'+L("Hali ma'lumot yo'q","Пока нет данных")+'</div>';
-    var R=52, C=2*Math.PI*R, sw=13, one=(segs.length===1), visGap=(one?0:4), acc=0, arcs="";
+    var R=52, C=2*Math.PI*R, sw=10, one=(segs.length===1), visGap=(one?0:3), acc=0, arcs="";
     segs.forEach(function(s){
       var len=(s.value/total)*C;
       // yumaloq uch uchun stroke eni (sw) + ko'rinadigan bo'shliq joyini qoldiramiz
