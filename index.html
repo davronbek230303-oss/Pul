@@ -424,10 +424,44 @@
   .switch .sl::before{content:""; position:absolute; width:22px; height:22px; left:3px; top:3px; background:#fff; border-radius:50%; transition:.2s}
   .switch input:checked + .sl{background:var(--accent)}
   .switch input:checked + .sl::before{transform:translateX(20px)}
+
+  /* ===== Yuklanish ekrani (loader) ===== */
+  #loading.center{min-height:82vh; display:flex; align-items:center; justify-content:center; padding:20px}
+  .loader{display:flex; flex-direction:column; align-items:center; gap:18px}
+  .loader-coin{position:relative; width:92px; height:92px; display:flex; align-items:center; justify-content:center}
+  .loader-coin::before{content:""; position:absolute; inset:0; border-radius:50%;
+    background:conic-gradient(from 0deg, transparent 0 18%, var(--accent) 55%, var(--accent2) 78%, transparent 100%);
+    -webkit-mask:radial-gradient(farthest-side, transparent calc(100% - 7px), #000 calc(100% - 6px));
+            mask:radial-gradient(farthest-side, transparent calc(100% - 7px), #000 calc(100% - 6px));
+    animation:ldSpin 1s linear infinite}
+  .loader-coin::after{content:""; position:absolute; inset:14px; border-radius:50%;
+    background:radial-gradient(circle at 30% 25%, var(--card2), var(--card));
+    box-shadow:0 8px 22px rgba(91,99,240,.25)}
+  .loader-coin .ms{position:relative; z-index:1; font-size:40px;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+    animation:ldPulse 1.6s ease-in-out infinite}
+  .loader-name{font-size:19px; font-weight:800; letter-spacing:.3px;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent}
+  .loader-txt{display:flex; align-items:center; color:var(--hint); font-size:14px; font-weight:600}
+  .loader-dots{display:inline-flex; gap:5px; margin-left:7px}
+  .loader-dots i{width:7px; height:7px; border-radius:50%; background:var(--accent); display:inline-block; animation:ldDot .9s ease-in-out infinite}
+  .loader-dots i:nth-child(2){animation-delay:.15s}
+  .loader-dots i:nth-child(3){animation-delay:.3s}
+  @keyframes ldSpin{to{transform:rotate(360deg)}}
+  @keyframes ldPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.14)}}
+  @keyframes ldDot{0%,60%,100%{transform:translateY(0); opacity:.4}30%{transform:translateY(-7px); opacity:1}}
 </style>
 </head>
 <body>
-  <div id="loading" class="center" data-i18n="loading">⏳ Yuklanmoqda…</div>
+  <div id="loading" class="center">
+    <div class="loader">
+      <div class="loader-coin"><span class="ms">account_balance_wallet</span></div>
+      <div class="loader-name" data-i18n="app_name">Mening pulim</div>
+      <div class="loader-txt"><span data-i18n="loading">Yuklanmoqda</span><span class="loader-dots"><i></i><i></i><i></i></span></div>
+    </div>
+  </div>
   <div id="app" class="hidden">
 
     <!-- ============ BOSH MENYU ============ -->
@@ -879,7 +913,7 @@
         <input id="clearPass" type="password" data-ph="clearpass_ph" placeholder="Parol (o'rnatilgan bo'lsa)">
         <button class="clear" onclick="hammasini()"><span class="ms" style="font-size:18px;vertical-align:-4px">delete</span> <span data-i18n="btn_hammasini">Hammasini tozalash</span></button>
       </div>
-      <div class="muted" style="text-align:center;font-size:12px;margin:4px 0 6px">Pul bot · dizayn v30 (Seyf so'm+dollar alohida · klaviatura tuzatildi · iqtibos ramkasi) · 2026-10-23</div>
+      <div class="muted" style="text-align:center;font-size:12px;margin:4px 0 6px">Pul bot · dizayn v31 (yangi yuklanish animatsiyasi) · 2026-10-23</div>
     </div>
 
     <div class="modal hidden" id="notifModal" onclick="closeNotif(event)">
@@ -964,7 +998,7 @@
 
   var T = {
     uz:{
-      loading:"⏳ Yuklanmoqda…", bal_lbl:"Umumiy balans", shu_oy:"Shu oy", kirim:"Kirim", chiqim:"Chiqim",
+      loading:"Yuklanmoqda", bal_lbl:"Umumiy balans", shu_oy:"Shu oy", kirim:"Kirim", chiqim:"Chiqim",
       salom:"Assalom 👋", app_name:"Mening pulim", otkazma:"O'tkazma", habarlar:"Habarnomalar",
       xarajat_stat:"Xarajatlar statistikasi", tejalgan:"Tejalgan pul", ogohlantirish:"Ogohlantirish",
       maqsad_holati:"Maqsadlar holati", bolimlar:"Bo'limlar",
@@ -1022,7 +1056,7 @@
       users_hint:"Odam botga /start bossa — o'z ID sini ko'radi. Shu ID ni bu yerga kiriting. ❌ bosib istagan paytda olib tashlaysiz."
     },
     ru:{
-      loading:"⏳ Загрузка…", bal_lbl:"Общий баланс", shu_oy:"Этот месяц", kirim:"Доход", chiqim:"Расход",
+      loading:"Загрузка", bal_lbl:"Общий баланс", shu_oy:"Этот месяц", kirim:"Доход", chiqim:"Расход",
       salom:"Здравствуйте 👋", app_name:"Мои деньги", otkazma:"Перевод", habarlar:"Уведомления",
       xarajat_stat:"Статистика расходов", tejalgan:"Сбережения", ogohlantirish:"Предупреждения",
       maqsad_holati:"Статус целей", bolimlar:"Разделы",
