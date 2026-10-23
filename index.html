@@ -388,6 +388,7 @@
       background:rgba(47,210,126,.16); color:var(--green)}
   .usdcard .ut{font-size:12px; color:var(--hint); font-weight:700}
   .usdcard .uv{font-size:15px; font-weight:800}
+  .usdcard .us{font-size:11px; color:var(--hint); font-weight:600; margin-top:2px}
   /* ---- Seyf ---- */
   .seyfbal{text-align:center; padding:8px 0 4px}
   .seyfbal .sv{font-size:28px; font-weight:800; letter-spacing:-.5px}
@@ -456,7 +457,7 @@
 
       <div class="usdcard" id="usdCard" style="display:none">
         <span class="ui"><span class="ms">attach_money</span></span>
-        <div><div class="ut" data-i18n="usd_lbl">Dollar kursi (CBU)</div><div class="uv" id="usdVal">—</div></div>
+        <div><div class="ut" data-i18n="usd_lbl">Dollar kursi</div><div class="uv" id="usdVal">—</div><div class="us" id="usdSrc"></div></div>
       </div>
 
       <div class="qa">
@@ -653,9 +654,10 @@
         <div class="pinwrap">
           <span class="pico"><span class="ms">lock</span></span>
           <div class="ltitle" data-i18n="seyf_locked">Seyf qulflangan</div>
-          <input id="seyfPinIn" class="pinin" type="password" inputmode="numeric" maxlength="4" data-ph="pin_ph" placeholder="••••">
+          <input id="seyfPinIn" class="pinin" type="password" inputmode="numeric" maxlength="6" data-ph="pin_ph" placeholder="••••••">
           <div class="lerr" id="seyfPinErr"></div>
           <button class="btn" onclick="seyfUnlock()"><span class="ms">lock_open</span> <span data-i18n="seyf_open">Ochish</span></button>
+          <button class="link-btn" id="seyfBioBtn" onclick="seyfBioAuth()" style="display:none"><span class="ms" style="vertical-align:-4px">fingerprint</span> <span data-i18n="seyf_bio_open">Face ID bilan ochish</span></button>
         </div>
       </div>
 
@@ -695,10 +697,14 @@
 
         <div class="card">
           <div class="hd"><h3><span class="ms" style="font-size:18px">pin</span> <span data-i18n="seyf_pin_card">Seyf PIN kodi</span></h3></div>
-          <input id="seyfOldPin" type="password" inputmode="numeric" maxlength="4" data-ph="old_pin_ph" placeholder="Eski PIN (o'rnatilgan bo'lsa)">
-          <input id="seyfNewPin" type="password" inputmode="numeric" maxlength="4" data-ph="new_pin_ph" placeholder="Yangi 4 xonali PIN (bo'sh = o'chirish)">
+          <input id="seyfOldPin" type="password" inputmode="numeric" maxlength="6" data-ph="old_pin_ph" placeholder="Eski PIN (o'rnatilgan bo'lsa)">
+          <input id="seyfNewPin" type="password" inputmode="numeric" maxlength="6" data-ph="new_pin_ph" placeholder="Yangi 6 xonali PIN (bo'sh = o'chirish)">
           <button class="btn" onclick="seyfPinSave()"><span class="ms">key</span> <span data-i18n="seyf_pin_saqla">PIN saqlash</span></button>
-          <div class="muted" style="font-size:12px;margin-top:8px" data-i18n="seyf_pin_hint">4 xonali PIN seyfni himoyalaydi.</div>
+          <div class="locktog" id="seyfBioBox" style="display:none">
+            <span class="lt-l" data-i18n="seyf_bio">Face ID bilan ochish</span>
+            <label class="switch"><input type="checkbox" id="seyfBioTog" onchange="seyfBioToggle(this.checked)"><span class="sl"></span></label>
+          </div>
+          <div class="muted" style="font-size:12px;margin-top:8px" data-i18n="seyf_pin_hint">6 xonali PIN seyfni himoyalaydi.</div>
         </div>
       </div>
     </div>
@@ -874,7 +880,7 @@
         <input id="clearPass" type="password" data-ph="clearpass_ph" placeholder="Parol (o'rnatilgan bo'lsa)">
         <button class="clear" onclick="hammasini()"><span class="ms" style="font-size:18px;vertical-align:-4px">delete</span> <span data-i18n="btn_hammasini">Hammasini tozalash</span></button>
       </div>
-      <div class="muted" style="text-align:center;font-size:12px;margin:4px 0 6px">Pul bot · dizayn v28 (tez ochiladi — ortiqcha so'rovlar olib tashlandi · dollar · Seyf · app qulfi) · 2026-10-23</div>
+      <div class="muted" style="text-align:center;font-size:12px;margin:4px 0 6px">Pul bot · dizayn v29 (kurs manbasi+sana · Seyf Face ID · chiqsa qulflanadi · PIN 6 xonali) · 2026-10-23</div>
     </div>
 
     <div class="modal hidden" id="notifModal" onclick="closeNotif(event)">
@@ -978,12 +984,12 @@
       dollar_ayir:"Dollar ayirboshlash", dollar_qaysi:"Qaysi hisob bilan?",
       dol_pl_usd:"Plastikdan $ ga", dol_nq_usd:"Naqddan $ ga", dol_usd_pl:"$ dan Plastikka", dol_usd_nq:"$ dan Naqdga",
       nav_seyf:"Seyf", p_seyf:"Seyf",
-      seyf_locked:"Seyf qulflangan", seyf_open:"Ochish", pin_ph:"••••",
+      seyf_locked:"Seyf qulflangan", seyf_open:"Ochish", pin_ph:"••••••", seyf_bio:"Face ID bilan ochish", seyf_bio_open:"Face ID bilan ochish",
       seyf_jami:"Seyf + Maqsadlar jamg'armasi", seyf_sof:"Seyf", maqsad_jam:"Maqsadlar",
       seyf_amal:"Pul qo'shish / olish", seyf_qosh:"➕ Qo'shish", seyf_ol:"➖ Olish", btn_saqla:"Saqlash",
       summa_ph:"Summa", seyf_tarix:"Seyf tarixi", maqsadlar_jamg:"Maqsadlar jamg'armasi",
-      seyf_pin_card:"Seyf PIN kodi", seyf_pin_saqla:"PIN saqlash", seyf_pin_hint:"4 xonali PIN seyfni himoyalaydi.",
-      old_pin_ph:"Eski PIN (o'rnatilgan bo'lsa)", new_pin_ph:"Yangi 4 xonali PIN (bo'sh = o'chirish)",
+      seyf_pin_card:"Seyf PIN kodi", seyf_pin_saqla:"PIN saqlash", seyf_pin_hint:"6 xonali PIN seyfni himoyalaydi.",
+      old_pin_ph:"Eski PIN (o'rnatilgan bo'lsa)", new_pin_ph:"Yangi 6 xonali PIN (bo'sh = o'chirish)",
       applock_card:"Ilovani qulflash", applock_desc:"Yoqilsa — ilovani har ochganda parol yoki Face ID so'raladi (shu qurilmada saqlanadi).",
       applock_on:"Qulfni yoqish", applock_save:"Parolni saqlash", applock_bio:"Face ID / barmoq izi",
       applock_pin_ph:"Yangi parol (4-6 raqam)", applock_pin2_ph:"Parolni takrorlang",
@@ -1035,12 +1041,12 @@
       dollar_ayir:"Обмен долларов", dollar_qaysi:"С каким счётом?",
       dol_pl_usd:"С карты в $", dol_nq_usd:"С налички в $", dol_usd_pl:"$ на карту", dol_usd_nq:"$ в наличные",
       nav_seyf:"Сейф", p_seyf:"Сейф",
-      seyf_locked:"Сейф заблокирован", seyf_open:"Открыть", pin_ph:"••••",
+      seyf_locked:"Сейф заблокирован", seyf_open:"Открыть", pin_ph:"••••••", seyf_bio:"Открывать по Face ID", seyf_bio_open:"Открыть по Face ID",
       seyf_jami:"Сейф + накопления целей", seyf_sof:"Сейф", maqsad_jam:"Цели",
       seyf_amal:"Добавить / снять деньги", seyf_qosh:"➕ Добавить", seyf_ol:"➖ Снять", btn_saqla:"Сохранить",
       summa_ph:"Сумма", seyf_tarix:"История сейфа", maqsadlar_jamg:"Накопления целей",
-      seyf_pin_card:"PIN-код сейфа", seyf_pin_saqla:"Сохранить PIN", seyf_pin_hint:"4-значный PIN защищает сейф.",
-      old_pin_ph:"Старый PIN (если установлен)", new_pin_ph:"Новый 4-значный PIN (пусто = удалить)",
+      seyf_pin_card:"PIN-код сейфа", seyf_pin_saqla:"Сохранить PIN", seyf_pin_hint:"6-значный PIN защищает сейф.",
+      old_pin_ph:"Старый PIN (если установлен)", new_pin_ph:"Новый 6-значный PIN (пусто = удалить)",
       applock_card:"Блокировка приложения", applock_desc:"Если включено — при каждом открытии спросит пароль или Face ID (хранится на этом устройстве).",
       applock_on:"Включить блокировку", applock_save:"Сохранить пароль", applock_bio:"Face ID / отпечаток",
       applock_pin_ph:"Новый пароль (4-6 цифр)", applock_pin2_ph:"Повторите пароль",
@@ -1135,7 +1141,7 @@
       tb[j].classList.remove("a-pop","a-down","a-up","a-bars","a-spin");
       if(on){ void tb[j].offsetWidth; tb[j].classList.add(ANIM[dt]||"a-pop"); }
     }
-    if(p==='Seyf') seyfEnter();
+    if(p==='Seyf') seyfEnter(); else seyfLockOnLeave();
     if(tg && tg.HapticFeedback && tg.HapticFeedback.selectionChanged) try{ tg.HapticFeedback.selectionChanged(); }catch(e){}
     try{ window.scrollTo(0,0); }catch(e){}
     if(tg && tg.BackButton){ if(p==="Home") tg.BackButton.hide(); else tg.BackButton.show(); }
@@ -1173,16 +1179,24 @@
   /* ---- valyuta (som / $) ---- */
   var _unit = {};   // input id -> 'som' | 'usd'
   var _usdFallback=0, _usdCbu=0, _usdFetching=false, _usdLazied=false;
+  var _usdCbuInfo={src:"",date:""}, _usdFbInfo={src:"",date:""};
   // ustuvorlik: CBU (yangi) > backend kesh > brauzer fallback
   function usdRate(){
     if(_usdCbu>0) return _usdCbu;
     if(DATA && Number(DATA.usd)>0) return Number(DATA.usd);
     return _usdFallback>0 ? _usdFallback : 0;
   }
+  // kursning manbasi va sanasi (ko'rsatilayotgan qiymatga mos)
+  function usdInfo(){
+    if(_usdCbu>0) return _usdCbuInfo;
+    if(DATA && Number(DATA.usd)>0) return (DATA.usdInfo||{src:"",date:""});
+    if(_usdFallback>0) return _usdFbInfo;
+    return {src:"",date:""};
+  }
   // backenddan CBU kursini ALOHIDA oladi (app yuklanishini bloklamaydi)
   function usdLazy(){
     if(_usdLazied) return; _usdLazied=true;
-    apiRaw({action:"usd"}, function(j){ if(j && j.ok && Number(j.usd)>0){ _usdCbu=Number(j.usd); renderUsd(); } });
+    apiRaw({action:"usd"}, function(j){ if(j && j.ok && Number(j.usd)>0){ _usdCbu=Number(j.usd); _usdCbuInfo={src:j.src||"Markaziy bank (CBU)", date:j.date||""}; renderUsd(); } });
   }
   // backend bermasa — to'g'ridan-to'g'ri brauzerdan (CORS ochiq, bepul, kalitsiz)
   function usdFetchFallback(){
@@ -1191,7 +1205,13 @@
     fetch("https://open.er-api.com/v6/latest/USD").then(function(r){return r.json();}).then(function(j){
       _usdFetching=false;
       var rate = j && j.rates && Number(j.rates.UZS);
-      if(rate>0){ _usdFallback=Math.round(rate); renderUsd(); }
+      if(rate>0){
+        _usdFallback=Math.round(rate);
+        var dt="";
+        try{ var u=j.time_last_update_unix; if(u) dt=new Date(u*1000).toLocaleDateString("ru-RU"); }catch(e){}
+        _usdFbInfo={src:"exchangerate-api.com", date:dt};
+        renderUsd();
+      }
     }).catch(function(){ _usdFetching=false; });
   }
   function curUnit(id){ return _unit[id]==='usd' ? 'usd' : 'som'; }
@@ -1232,9 +1252,11 @@
   function renderUsd(){
     var c=document.getElementById("usdCard"); if(!c) return;
     c.style.display="flex";              // bosh menyuda DOIM ko'rinadi
-    var r=usdRate(), v=document.getElementById("usdVal");
-    if(r>0){ if(v) v.textContent = "1$ = "+grp(r)+" so'm"; }
-    else { if(v) v.textContent = L("yuklanmoqda…","загрузка…"); usdFetchFallback(); }
+    var r=usdRate(), v=document.getElementById("usdVal"), sEl=document.getElementById("usdSrc");
+    if(r>0){
+      if(v) v.textContent = "1$ = "+grp(r)+" so'm";
+      if(sEl){ var inf=usdInfo(); var parts=[]; if(inf.src) parts.push(L("Manba: ","Источник: ")+inf.src); if(inf.date) parts.push(inf.date); sEl.textContent = parts.join(" · "); }
+    } else { if(v) v.textContent = L("yuklanmoqda…","загрузка…"); if(sEl) sEl.textContent=""; usdFetchFallback(); }
     // ochiq toggle preview'larini yangilash
     for(var id in _unit) updUnitPrev(id);
   }
@@ -1850,6 +1872,7 @@
     } else {
       lock.classList.remove("hidden"); main.classList.add("hidden");
     }
+    seyfBioSync();
   }
   function seyfFetch(){
     SEYF.loaded=true;
@@ -1865,10 +1888,16 @@
     if(!pinBor){ SEYF.unlocked=true; if(!SEYF.loaded) seyfFetch(); }
     else if(SEYF.unlocked && !SEYF.loaded){ seyfFetch(); }
     renderSeyf();
+    // qulflangan bo'lsa va Face ID yoqilgan bo'lsa — darhol so'raymiz
+    if(pinBor && !SEYF.unlocked && lsGet('seyf_bio')==='1'){ var pi=document.getElementById("seyfPinIn"); if(pi) pi.value=""; setTimeout(seyfBioAuth, 300); }
+  }
+  // Seyfdan chiqqanda darhol qulflash (keyin qaytganda PIN/Face ID so'raydi)
+  function seyfLockOnLeave(){
+    if(DATA && DATA.seyf && DATA.seyf.pinBor){ SEYF.unlocked=false; SEYF.loaded=false; renderSeyf(); }
   }
   function seyfUnlock(){
     var pin=val("seyfPinIn").trim();
-    if(!/^\d{4}$/.test(pin)){ var e0=document.getElementById("seyfPinErr"); if(e0) e0.textContent=L("4 xonali PIN kiriting","Введите 4-значный PIN"); return; }
+    if(!/^\d{4,6}$/.test(pin)){ var e0=document.getElementById("seyfPinErr"); if(e0) e0.textContent=L("6 xonali PIN kiriting","Введите 6-значный PIN"); return; }
     apiRaw({action:"seyfunlock", pin:pin}, function(j){
       if(j.ok){ SEYF.pin=pin; SEYF.unlocked=true; SEYF.loaded=true; SEYF.balans=j.balans||0; SEYF.tx=j.tx||[];
         var pe=document.getElementById("seyfPinErr"); if(pe) pe.textContent=""; var pi=document.getElementById("seyfPinIn"); if(pi) pi.value="";
@@ -1901,7 +1930,7 @@
   }
   function seyfPinSave(){
     var eski=val("seyfOldPin").trim(), yangi=val("seyfNewPin").trim();
-    if(yangi && !/^\d{4}$/.test(yangi)){ if(tg) tg.showAlert(L("PIN 4 ta raqam bo'lishi kerak.","PIN должен быть из 4 цифр.")); return; }
+    if(yangi && !/^\d{6}$/.test(yangi)){ if(tg) tg.showAlert(L("PIN 6 ta raqam bo'lishi kerak.","PIN должен быть из 6 цифр.")); return; }
     apiRaw({action:"seyfpin", eski:eski, yangi:yangi}, function(j){
       if(j.ok){
         document.getElementById("seyfOldPin").value=""; document.getElementById("seyfNewPin").value="";
@@ -1911,8 +1940,46 @@
         renderSeyf();
       }
       else if(j.error==="eski_pin"){ if(tg) tg.showAlert(L("Eski PIN noto'g'ri.","Старый PIN неверный.")); }
-      else if(j.error==="pin_format"){ if(tg) tg.showAlert(L("PIN 4 ta raqam bo'lishi kerak.","PIN должен быть из 4 цифр.")); }
+      else if(j.error==="pin_format"){ if(tg) tg.showAlert(L("PIN 6 ta raqam bo'lishi kerak.","PIN должен быть из 6 цифр.")); }
     });
+  }
+  // Seyf uchun Face ID (Telegram biometrik token'ida PIN saqlanadi)
+  function seyfBioAuth(){
+    var b=bioMgr(); if(!b) return;
+    var go=function(){ try{ b.authenticate({reason:L("Seyfni ochish","Открыть сейф")}, function(ok, token){
+      if(ok && token){ SEYF.pin=token; SEYF.loaded=false; seyfFetch(); }
+      else if(ok && !token){ if(tg) tg.showAlert(L("Face ID saqlanmagan. Avval PIN bilan kiring.","Face ID не сохранён. Войдите по PIN.")); }
+    }); }catch(e){} };
+    if(b.isInited) go(); else try{ b.init(go); }catch(e){}
+  }
+  function seyfBioToggle(on){
+    var cb=document.getElementById("seyfBioTog");
+    if(on){
+      if(!/^\d{4,6}$/.test(SEYF.pin||"")){ if(cb) cb.checked=false; if(tg) tg.showAlert(L("Avval Seyfga PIN bilan kiring.","Сначала войдите в сейф по PIN.")); return; }
+      var b=bioMgr();
+      if(!b){ if(cb) cb.checked=false; if(tg) tg.showAlert(L("Bu qurilmada Face ID yo'q.","Face ID недоступен на этом устройстве.")); return; }
+      var save=function(){ try{ b.updateBiometricToken(SEYF.pin, function(applied){
+          if(applied){ lsSet('seyf_bio','1'); if(tg) tg.showAlert(L("✅ Seyf uchun Face ID yoqildi.","✅ Face ID для сейфа включён.")); seyfBioSync(); }
+          else { if(cb) cb.checked=false; }
+        }); }catch(e){ if(cb) cb.checked=false; } };
+      var req=function(){ if(b.isAccessGranted) save(); else try{ b.requestAccess({reason:L("Seyf uchun Face ID","Face ID для сейфа")}, function(ok){ if(ok) save(); else if(cb) cb.checked=false; }); }catch(e){ if(cb) cb.checked=false; } };
+      if(b.isInited) req(); else try{ b.init(req); }catch(e){ if(cb) cb.checked=false; }
+    } else {
+      var b2=bioMgr(); if(b2){ try{ b2.updateBiometricToken("", function(){}); }catch(e){} }
+      lsDel('seyf_bio');
+    }
+  }
+  function seyfBioSync(){
+    var btn=document.getElementById("seyfBioBtn"), box=document.getElementById("seyfBioBox"), tog=document.getElementById("seyfBioTog");
+    var en = lsGet('seyf_bio')==='1';
+    var show=function(){
+      var ok = bioReady();
+      if(btn) btn.style.display = (en && ok) ? "inline-flex" : "none";
+      if(box) box.style.display = ok ? "flex" : "none";
+      if(tog) tog.checked = en;
+    };
+    var b=bioMgr();
+    if(b && !b.isInited){ try{ b.init(show); }catch(e){ if(btn) btn.style.display="none"; if(box) box.style.display="none"; } } else show();
   }
   function renderSeyfList(){
     var el=document.getElementById("seyfList"); if(!el) return;
