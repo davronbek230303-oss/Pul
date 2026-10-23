@@ -427,6 +427,7 @@
 
   /* ===== Yuklanish ekrani (loader) ===== */
   #loading.center{min-height:82vh; display:flex; align-items:center; justify-content:center; padding:20px}
+  #loading.hidden{display:none}
   .loader{display:flex; flex-direction:column; align-items:center; gap:18px}
   .loader-coin{position:relative; width:92px; height:92px; display:flex; align-items:center; justify-content:center}
   .loader-coin::before{content:""; position:absolute; inset:0; border-radius:50%;
@@ -913,7 +914,7 @@
         <input id="clearPass" type="password" data-ph="clearpass_ph" placeholder="Parol (o'rnatilgan bo'lsa)">
         <button class="clear" onclick="hammasini()"><span class="ms" style="font-size:18px;vertical-align:-4px">delete</span> <span data-i18n="btn_hammasini">Hammasini tozalash</span></button>
       </div>
-      <div class="muted" style="text-align:center;font-size:12px;margin:4px 0 6px">Pul bot · dizayn v31 (yangi yuklanish animatsiyasi) · 2026-10-23</div>
+      <div class="muted" style="text-align:center;font-size:12px;margin:4px 0 6px">Pul bot · dizayn v31.2 (diagramma ranglari orasida bo'shliq) · 2026-10-23</div>
     </div>
 
     <div class="modal hidden" id="notifModal" onclick="closeNotif(event)">
@@ -1451,7 +1452,7 @@
     segs = (segs||[]).filter(function(s){return (Number(s.value)||0)>0;});
     var total = segs.reduce(function(s,x){return s+(Number(x.value)||0);},0);
     if(total<=0) return '<div class="muted" style="text-align:center;padding:16px 0">'+L("Hali ma'lumot yo'q","Пока нет данных")+'</div>';
-    var R=52, C=2*Math.PI*R, gap=(segs.length>1?3:0), acc=0, arcs="";
+    var R=52, C=2*Math.PI*R, gap=(segs.length>1?16:0), acc=0, arcs="";
     segs.forEach(function(s){
       var len=(s.value/total)*C, seg=Math.max(len-gap,0.6);
       var dash=seg.toFixed(2)+' '+(C-seg).toFixed(2), off=(-acc).toFixed(2); acc+=len;
