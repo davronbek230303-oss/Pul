@@ -2,7 +2,7 @@
 <html lang="uz">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, interactive-widget=overlays-content">
 <title>Mening pulim</title>
 <script>(function(){try{var t=localStorage.getItem('theme');if(t!=='light'&&t!=='dark'){t=(window.Telegram&&Telegram.WebApp&&Telegram.WebApp.colorScheme==='light')?'light':'dark';}document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -366,16 +366,14 @@
   .tabbar{position:fixed; left:12px; right:12px; bottom:12px; z-index:60; display:flex; justify-content:space-around; gap:2px;
       background:var(--glass-strong); border:1px solid var(--glass-bd); border-radius:26px;
       padding:9px 6px calc(9px + env(safe-area-inset-bottom)); box-shadow:0 12px 34px rgba(0,0,0,.34);
-      backdrop-filter:blur(22px) saturate(1.5); -webkit-backdrop-filter:blur(22px) saturate(1.5);
-      transition:transform .24s cubic-bezier(.22,1,.36,1), opacity .18s ease; will-change:transform}
+      backdrop-filter:blur(22px) saturate(1.5); -webkit-backdrop-filter:blur(22px) saturate(1.5)}
   .tabbar button{flex:1; border:0; background:transparent; color:var(--hint); cursor:pointer; padding:3px 2px;
       display:flex; flex-direction:column; align-items:center; gap:3px; font-size:11px; font-weight:700; font-family:inherit; transition:color .14s}
   .tabbar button .ms{font-size:24px}
   .tabbar button.on{color:var(--accent)}
   .tabbar button.on .ms{filter:drop-shadow(0 4px 10px rgba(91,99,240,.5))}
   .tabbar button.on .tbars i{box-shadow:0 3px 8px rgba(91,99,240,.45)}
-  /* klaviatura ochiq bo'lsa — tab menyu silliq pastga suriladi (tepaga ko'tarilmasin, flicker bo'lmasin) */
-  body.kbopen .tabbar{transform:translateY(calc(100% + 26px)); opacity:0; pointer-events:none}
+  /* klaviatura ustma-ust qoplaydi (overlays-content) — tab menyu joyida qoladi, hech narsa sakramaydi */
 
   /* ---- valyuta (som/$) toggle ---- */
   .amt{display:flex; align-items:stretch; gap:8px; margin-bottom:10px}
@@ -915,7 +913,7 @@
         <input id="clearPass" type="password" data-ph="clearpass_ph" placeholder="Parol (o'rnatilgan bo'lsa)">
         <button class="clear" onclick="hammasini()"><span class="ms" style="font-size:18px;vertical-align:-4px">delete</span> <span data-i18n="btn_hammasini">Hammasini tozalash</span></button>
       </div>
-      <div class="muted" style="text-align:center;font-size:12px;margin:4px 0 6px">Pul bot · dizayn v31.4 (klaviatura ochilganda tab menyu silliq surilishi) · 2026-10-23</div>
+      <div class="muted" style="text-align:center;font-size:12px;margin:4px 0 6px">Pul bot · dizayn v31.5 (klaviatura ustma-ust qoplaydi · layout qimirlamaydi) · 2026-10-23</div>
     </div>
 
     <div class="modal hidden" id="notifModal" onclick="closeNotif(event)">
@@ -1351,12 +1349,8 @@
     if(e.target && e.target.classList && e.target.classList.contains('num')) liveFmt(e.target);
   });
 
-  /* ---- Klaviatura: tab menyu joyida qolsin + tashqariga bossa yopilsin ---- */
+  /* ---- Klaviatura: ustma-ust qoplaydi (layoutga tegmaydi) + tashqariga bossa yopilsin ---- */
   function isTextInput(el){ return !!el && (el.tagName==='INPUT' || el.tagName==='TEXTAREA'); }
-  document.addEventListener('focusin', function(e){ if(isTextInput(e.target)) document.body.classList.add('kbopen'); });
-  document.addEventListener('focusout', function(){
-    setTimeout(function(){ if(!isTextInput(document.activeElement)) document.body.classList.remove('kbopen'); }, 120);
-  });
   // input/textarea'dan tashqariga bosilsa — klaviaturani yopadi (fokusni olib tashlaydi)
   document.addEventListener('pointerdown', function(e){
     var a=document.activeElement;
