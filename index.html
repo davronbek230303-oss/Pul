@@ -874,7 +874,7 @@
         <input id="clearPass" type="password" data-ph="clearpass_ph" placeholder="Parol (o'rnatilgan bo'lsa)">
         <button class="clear" onclick="hammasini()"><span class="ms" style="font-size:18px;vertical-align:-4px">delete</span> <span data-i18n="btn_hammasini">Hammasini tozalash</span></button>
       </div>
-      <div class="muted" style="text-align:center;font-size:12px;margin:4px 0 6px">Pul bot · dizayn v27 (dollar ayirboshlash + hisob · dollar kursi · Seyf+PIN · app qulfi) · 2026-10-23</div>
+      <div class="muted" style="text-align:center;font-size:12px;margin:4px 0 6px">Pul bot · dizayn v28 (tez ochiladi — ortiqcha so'rovlar olib tashlandi · dollar · Seyf · app qulfi) · 2026-10-23</div>
     </div>
 
     <div class="modal hidden" id="notifModal" onclick="closeNotif(event)">
@@ -1135,6 +1135,7 @@
       tb[j].classList.remove("a-pop","a-down","a-up","a-bars","a-spin");
       if(on){ void tb[j].offsetWidth; tb[j].classList.add(ANIM[dt]||"a-pop"); }
     }
+    if(p==='Seyf') seyfEnter();
     if(tg && tg.HapticFeedback && tg.HapticFeedback.selectionChanged) try{ tg.HapticFeedback.selectionChanged(); }catch(e){}
     try{ window.scrollTo(0,0); }catch(e){}
     if(tg && tg.BackButton){ if(p==="Home") tg.BackButton.hide(); else tg.BackButton.show(); }
@@ -1233,7 +1234,7 @@
     c.style.display="flex";              // bosh menyuda DOIM ko'rinadi
     var r=usdRate(), v=document.getElementById("usdVal");
     if(r>0){ if(v) v.textContent = "1$ = "+grp(r)+" so'm"; }
-    else { if(v) v.textContent = L("yuklanmoqda…","загрузка…"); usdFetchFallback(); usdLazy(); }
+    else { if(v) v.textContent = L("yuklanmoqda…","загрузка…"); usdFetchFallback(); }
     // ochiq toggle preview'larini yangilash
     for(var id in _unit) updUnitPrev(id);
   }
@@ -1840,7 +1841,6 @@
     if(!pinBor) SEYF.unlocked = true;
     if(SEYF.unlocked){
       lock.classList.add("hidden"); main.classList.remove("hidden");
-      if(!SEYF.loaded){ seyfFetch(); }
       var goalsSum=(DATA.maqsadlar||[]).reduce(function(s,x){return s+(Number(x.yiglangan)||0);},0);
       var bal=Number(SEYF.balans)||0;
       var t=document.getElementById("seyfTotal"); if(t) t.textContent=fmt(bal+goalsSum);
@@ -1857,6 +1857,14 @@
       if(j.ok){ SEYF.unlocked=true; SEYF.balans=j.balans||0; SEYF.tx=j.tx||[]; renderSeyf(); }
       else if(j.error==="pin"){ SEYF.unlocked=false; SEYF.loaded=false; renderSeyf(); }
     });
+  }
+  // Seyf bo'limi ochilganda — ma'lumotni faqat shunda yuklaymiz (boot'ni sekinlashtirmaslik uchun)
+  function seyfEnter(){
+    if(!DATA || !DATA.seyf) return;
+    var pinBor = !!DATA.seyf.pinBor;
+    if(!pinBor){ SEYF.unlocked=true; if(!SEYF.loaded) seyfFetch(); }
+    else if(SEYF.unlocked && !SEYF.loaded){ seyfFetch(); }
+    renderSeyf();
   }
   function seyfUnlock(){
     var pin=val("seyfPinIn").trim();
@@ -2277,6 +2285,8 @@
   } else {
     nav('Home');
     call({action:"data"});
+    // CBU aniq kursini fonda, kech yangilaymiz (ochilishni sekinlashtirmaydi)
+    setTimeout(function(){ try{ usdLazy(); }catch(e){} }, 4000);
   }
 </script>
 </body>
