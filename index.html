@@ -178,7 +178,7 @@
   .langrow{display:flex; gap:10px}
   .langrow .chip{flex:1; justify-content:center; font-size:15px; padding:13px}
   /* iqtibos (sitata) */
-  .quote{position:relative; padding:18px 18px 16px 20px; overflow:hidden}
+  .quote{position:relative; padding:18px 18px 16px 20px; overflow:hidden; min-height:150px; box-sizing:border-box; display:flex; flex-direction:column; justify-content:center}
   .quote .qmark{position:absolute; right:12px; top:8px; font-size:46px; color:var(--accent); opacity:.22}
   .quote .qtext{font-size:14.5px; font-style:italic; line-height:1.55; font-weight:600; position:relative}
   .quote .qauth{margin-top:10px; font-size:12px; color:var(--accent); font-weight:800; letter-spacing:.2px}
@@ -373,6 +373,8 @@
   .tabbar button.on{color:var(--accent)}
   .tabbar button.on .ms{filter:drop-shadow(0 4px 10px rgba(91,99,240,.5))}
   .tabbar button.on .tbars i{box-shadow:0 3px 8px rgba(91,99,240,.45)}
+  /* klaviatura ochiq bo'lsa — tab menyu yashirinadi (tepaga ko'tarilib xalaqit bermasligi uchun) */
+  body.kbopen .tabbar{display:none !important}
 
   /* ---- valyuta (som/$) toggle ---- */
   .amt{display:flex; align-items:stretch; gap:8px; margin-bottom:10px}
@@ -663,14 +665,11 @@
 
       <div id="seyfMain" class="hidden">
         <div class="card">
-          <div class="seyfbal">
-            <div class="sv" id="seyfTotal">—</div>
-            <div class="sl" data-i18n="seyf_jami">Seyf + Maqsadlar jamg'armasi</div>
+          <div class="row">
+            <div class="tile"><div class="t-lbl" data-i18n="seyf_som_lbl">Seyf · so'm</div><div class="t-val t-in" id="seyfBalSom">—</div></div>
+            <div class="tile"><div class="t-lbl" data-i18n="seyf_usd_lbl">Seyf · dollar</div><div class="t-val" id="seyfBalUsd">$—</div></div>
           </div>
-          <div class="row" style="margin-top:6px">
-            <div class="tile"><div class="t-lbl" data-i18n="seyf_sof">Seyf</div><div class="t-val t-in" id="seyfBal">—</div></div>
-            <div class="tile"><div class="t-lbl" data-i18n="maqsad_jam">Maqsadlar</div><div class="t-val" id="seyfGoals">—</div></div>
-          </div>
+          <div class="tile acc" style="margin-top:8px;width:auto"><div class="t-lbl" data-i18n="maqsad_jam">Maqsadlar jamg'armasi</div><div class="t-val" id="seyfGoals">—</div></div>
         </div>
 
         <div class="card">
@@ -880,7 +879,7 @@
         <input id="clearPass" type="password" data-ph="clearpass_ph" placeholder="Parol (o'rnatilgan bo'lsa)">
         <button class="clear" onclick="hammasini()"><span class="ms" style="font-size:18px;vertical-align:-4px">delete</span> <span data-i18n="btn_hammasini">Hammasini tozalash</span></button>
       </div>
-      <div class="muted" style="text-align:center;font-size:12px;margin:4px 0 6px">Pul bot · dizayn v29 (kurs manbasi+sana · Seyf Face ID · chiqsa qulflanadi · PIN 6 xonali) · 2026-10-23</div>
+      <div class="muted" style="text-align:center;font-size:12px;margin:4px 0 6px">Pul bot · dizayn v30 (Seyf so'm+dollar alohida · klaviatura tuzatildi · iqtibos ramkasi) · 2026-10-23</div>
     </div>
 
     <div class="modal hidden" id="notifModal" onclick="closeNotif(event)">
@@ -985,7 +984,8 @@
       dol_pl_usd:"Plastikdan $ ga", dol_nq_usd:"Naqddan $ ga", dol_usd_pl:"$ dan Plastikka", dol_usd_nq:"$ dan Naqdga",
       nav_seyf:"Seyf", p_seyf:"Seyf",
       seyf_locked:"Seyf qulflangan", seyf_open:"Ochish", pin_ph:"••••••", seyf_bio:"Face ID bilan ochish", seyf_bio_open:"Face ID bilan ochish",
-      seyf_jami:"Seyf + Maqsadlar jamg'armasi", seyf_sof:"Seyf", maqsad_jam:"Maqsadlar",
+      seyf_jami:"Seyf + Maqsadlar jamg'armasi", seyf_sof:"Seyf", maqsad_jam:"Maqsadlar jamg'armasi",
+      seyf_som_lbl:"Seyf · so'm", seyf_usd_lbl:"Seyf · dollar",
       seyf_amal:"Pul qo'shish / olish", seyf_qosh:"➕ Qo'shish", seyf_ol:"➖ Olish", btn_saqla:"Saqlash",
       summa_ph:"Summa", seyf_tarix:"Seyf tarixi", maqsadlar_jamg:"Maqsadlar jamg'armasi",
       seyf_pin_card:"Seyf PIN kodi", seyf_pin_saqla:"PIN saqlash", seyf_pin_hint:"6 xonali PIN seyfni himoyalaydi.",
@@ -1042,7 +1042,8 @@
       dol_pl_usd:"С карты в $", dol_nq_usd:"С налички в $", dol_usd_pl:"$ на карту", dol_usd_nq:"$ в наличные",
       nav_seyf:"Сейф", p_seyf:"Сейф",
       seyf_locked:"Сейф заблокирован", seyf_open:"Открыть", pin_ph:"••••••", seyf_bio:"Открывать по Face ID", seyf_bio_open:"Открыть по Face ID",
-      seyf_jami:"Сейф + накопления целей", seyf_sof:"Сейф", maqsad_jam:"Цели",
+      seyf_jami:"Сейф + накопления целей", seyf_sof:"Сейф", maqsad_jam:"Накопления целей",
+      seyf_som_lbl:"Сейф · сум", seyf_usd_lbl:"Сейф · доллар",
       seyf_amal:"Добавить / снять деньги", seyf_qosh:"➕ Добавить", seyf_ol:"➖ Снять", btn_saqla:"Сохранить",
       summa_ph:"Сумма", seyf_tarix:"История сейфа", maqsadlar_jamg:"Накопления целей",
       seyf_pin_card:"PIN-код сейфа", seyf_pin_saqla:"Сохранить PIN", seyf_pin_hint:"6-значный PIN защищает сейф.",
@@ -1313,6 +1314,18 @@
   document.addEventListener('input', function(e){
     if(e.target && e.target.classList && e.target.classList.contains('num')) liveFmt(e.target);
   });
+
+  /* ---- Klaviatura: tab menyu joyida qolsin + tashqariga bossa yopilsin ---- */
+  function isTextInput(el){ return !!el && (el.tagName==='INPUT' || el.tagName==='TEXTAREA'); }
+  document.addEventListener('focusin', function(e){ if(isTextInput(e.target)) document.body.classList.add('kbopen'); });
+  document.addEventListener('focusout', function(){
+    setTimeout(function(){ if(!isTextInput(document.activeElement)) document.body.classList.remove('kbopen'); }, 120);
+  });
+  // input/textarea'dan tashqariga bosilsa — klaviaturani yopadi (fokusni olib tashlaydi)
+  document.addEventListener('pointerdown', function(e){
+    var a=document.activeElement;
+    if(isTextInput(a) && !isTextInput(e.target)){ try{ a.blur(); }catch(err){} }
+  }, true);
 
   var INFO = {
     uz:{
@@ -1854,7 +1867,7 @@
   }
 
   /* ---- SEYF (jamg'arma qulfi) ---- */
-  var SEYF = { unlocked:false, loaded:false, pin:"", yon:"kirim", balans:0, tx:[] };
+  var SEYF = { unlocked:false, loaded:false, pin:"", yon:"kirim", som:0, usd:0, tx:[] };
   function renderSeyf(){
     if(!DATA || !DATA.seyf) return;
     var lock=document.getElementById("seyfLock"), main=document.getElementById("seyfMain");
@@ -1864,9 +1877,8 @@
     if(SEYF.unlocked){
       lock.classList.add("hidden"); main.classList.remove("hidden");
       var goalsSum=(DATA.maqsadlar||[]).reduce(function(s,x){return s+(Number(x.yiglangan)||0);},0);
-      var bal=Number(SEYF.balans)||0;
-      var t=document.getElementById("seyfTotal"); if(t) t.textContent=fmt(bal+goalsSum);
-      var b=document.getElementById("seyfBal"); if(b) b.textContent=fmt(bal);
+      var bs=document.getElementById("seyfBalSom"); if(bs) bs.textContent=fmt(Number(SEYF.som)||0);
+      var bu=document.getElementById("seyfBalUsd"); if(bu) bu.textContent="$"+grp(Math.round(Number(SEYF.usd)||0));
       var g=document.getElementById("seyfGoals"); if(g) g.textContent=fmt(goalsSum);
       renderSeyfList(); renderSeyfGoals();
     } else {
@@ -1877,7 +1889,7 @@
   function seyfFetch(){
     SEYF.loaded=true;
     apiRaw({action:"seyfunlock", pin:SEYF.pin}, function(j){
-      if(j.ok){ SEYF.unlocked=true; SEYF.balans=j.balans||0; SEYF.tx=j.tx||[]; renderSeyf(); }
+      if(j.ok){ SEYF.unlocked=true; SEYF.som=j.som||0; SEYF.usd=j.usd||0; SEYF.tx=j.tx||[]; renderSeyf(); }
       else if(j.error==="pin"){ SEYF.unlocked=false; SEYF.loaded=false; renderSeyf(); }
     });
   }
@@ -1899,7 +1911,7 @@
     var pin=val("seyfPinIn").trim();
     if(!/^\d{4,6}$/.test(pin)){ var e0=document.getElementById("seyfPinErr"); if(e0) e0.textContent=L("6 xonali PIN kiriting","Введите 6-значный PIN"); return; }
     apiRaw({action:"seyfunlock", pin:pin}, function(j){
-      if(j.ok){ SEYF.pin=pin; SEYF.unlocked=true; SEYF.loaded=true; SEYF.balans=j.balans||0; SEYF.tx=j.tx||[];
+      if(j.ok){ SEYF.pin=pin; SEYF.unlocked=true; SEYF.loaded=true; SEYF.som=j.som||0; SEYF.usd=j.usd||0; SEYF.tx=j.tx||[];
         var pe=document.getElementById("seyfPinErr"); if(pe) pe.textContent=""; var pi=document.getElementById("seyfPinIn"); if(pi) pi.value="";
         if(tg && tg.HapticFeedback && tg.HapticFeedback.notificationOccurred) tg.HapticFeedback.notificationOccurred("success");
         renderSeyf();
@@ -1915,15 +1927,16 @@
     if(a) a.classList.toggle("on", y==="kirim"); if(r) r.classList.toggle("on", y==="chiqim");
   }
   function seyfAdd(){
-    var s=amtSom("seyfSum");
-    if(s<=0){ if(tg) tg.showAlert(L("Summani kiriting.","Введите сумму.")); return; }
-    apiRaw({action:"seyfadd", pin:SEYF.pin, yon:SEYF.yon, summa:s, izoh:val("seyfIzoh").trim()}, function(j){
-      if(j.ok){ SEYF.balans=j.balans||0; SEYF.tx=j.tx||[];
+    var raw=parseSum(val("seyfSum"));
+    if(raw<=0){ if(tg) tg.showAlert(L("Summani kiriting.","Введите сумму.")); return; }
+    var valyuta = curUnit("seyfSum")==='usd' ? 'usd' : 'som';
+    apiRaw({action:"seyfadd", pin:SEYF.pin, yon:SEYF.yon, valyuta:valyuta, summa:raw, izoh:val("seyfIzoh").trim()}, function(j){
+      if(j.ok){ SEYF.som=j.som||0; SEYF.usd=j.usd||0; SEYF.tx=j.tx||[];
         document.getElementById("seyfSum").value=""; document.getElementById("seyfIzoh").value=""; resetUnit("seyfSum");
         if(tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred("light");
         renderSeyf();
       }
-      else if(j.error==="kam"){ if(tg) tg.showAlert(L("Seyfda yetarli pul yo'q.","В сейфе недостаточно денег.")); }
+      else if(j.error==="kam"){ if(tg) tg.showAlert(L("Seyfda bu valyutada yetarli pul yo'q.","В сейфе недостаточно денег в этой валюте.")); }
       else if(j.error==="pin"){ if(tg) tg.showAlert(L("PIN noto'g'ri.","Неверный PIN.")); SEYF.unlocked=false; SEYF.loaded=false; renderSeyf(); }
       else if(j.error==="summa"){ if(tg) tg.showAlert(L("Summani to'g'ri kiriting.","Введите сумму правильно.")); }
     });
@@ -1986,10 +1999,11 @@
     var tx=SEYF.tx||[];
     if(!tx.length){ el.innerHTML='<div class="muted" style="text-align:center;padding:12px 0">'+L("Hali yozuv yo'q","Пока нет записей")+'</div>'; return; }
     el.innerHTML = tx.map(function(x){
-      var pos=(Number(x.summa)||0)>=0;
-      return '<div class="seyf-row"><div><div class="si">'+(x.izoh?esc(x.izoh):(pos?L("Qo'shildi","Добавлено"):L("Olindi","Снято")))+'</div>'+
+      var pos=(Number(x.summa)||0)>=0, amtAbs=Math.abs(Number(x.summa)||0);
+      var disp=(x.valyuta==='usd') ? ('$'+grp(Math.round(amtAbs))) : fmt(amtAbs);
+      return '<div class="seyf-row"><div><div class="si">'+(x.izoh?esc(x.izoh):(pos?L("Qo'shildi","Добавлено"):L("Olindi","Снято")))+(x.valyuta==='usd'?' · $':'')+'</div>'+
         '<div class="muted" style="font-size:12px">'+esc(x.sana||"")+'</div></div>'+
-        '<div class="sa '+(pos?'pos':'neg')+'">'+(pos?'+':'−')+fmt(Math.abs(Number(x.summa)||0))+'</div></div>';
+        '<div class="sa '+(pos?'pos':'neg')+'">'+(pos?'+':'−')+disp+'</div></div>';
     }).join("");
   }
   function renderSeyfGoals(){
