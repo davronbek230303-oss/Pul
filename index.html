@@ -351,6 +351,7 @@
   .acccard{flex:1; position:relative; overflow:hidden; border-radius:20px; padding:15px; color:#fff; box-shadow:var(--shadow); min-width:0}
   .acccard.plastik{background:linear-gradient(135deg,#4b55e6,#8b7bff)}
   .acccard.naqd{background:linear-gradient(135deg,#0e9f6e,#19d3a2)}
+  .acccard.dollar{background:linear-gradient(135deg,#b7791f,#f0b429)}
   .acccard:before{content:""; position:absolute; width:120px; height:120px; right:-45px; top:-45px; border-radius:50%; background:rgba(255,255,255,.13)}
   .acccard-t{display:flex; align-items:center; gap:7px; font-size:13px; font-weight:700; opacity:.96; position:relative}
   .acccard-t .ms{font-size:19px}
@@ -450,6 +451,7 @@
       <div class="accrow">
         <div class="acccard plastik"><div class="acccard-t"><span class="ms">credit_card</span><span data-i18n="plastik">Plastik</span></div><div class="acccard-v" id="balPlastik">—</div></div>
         <div class="acccard naqd"><div class="acccard-t"><span class="ms">payments</span><span data-i18n="naqd">Naqd</span></div><div class="acccard-v" id="balNaqd">—</div></div>
+        <div class="acccard dollar hidden" id="dolCard"><div class="acccard-t"><span class="ms">attach_money</span><span data-i18n="dollar">Dollar</span></div><div class="acccard-v" id="balDollar">—</div></div>
       </div>
 
       <div class="usdcard" id="usdCard" style="display:none">
@@ -477,6 +479,32 @@
             <span data-i18n="btn_solish">Naqdni plastikka</span></button>
         </div>
         <div class="muted" style="font-size:12px;margin-top:8px" data-i18n="hisoblar_hint">Plastikdan naqd olsangiz — umumiy balans o'zgarmaydi, pul faqat Naqdga o'tadi.</div>
+      </div>
+
+      <div class="card" id="dolExCard">
+        <div class="hd"><h3><span class="ms" style="font-size:18px">currency_exchange</span> <span data-i18n="dollar_ayir">Dollar ayirboshlash</span></h3>
+          <div class="ic"><button class="iq" onclick="info('dollar')"><span class="ms" style="font-size:16px">info</span></button></div></div>
+        <div class="muted" id="dolHold" style="font-size:13px;margin-bottom:8px"></div>
+        <input id="dolSum" class="num curinp" inputmode="decimal" data-ph="summa_ph" placeholder="Summa">
+        <div class="muted" style="font-size:12px;margin:2px 2px 8px" data-i18n="dollar_qaysi">Qaysi hisob bilan?</div>
+        <div class="trow">
+          <button class="tbtn a" onclick="dolDo('olish','Plastik')">
+            <span class="tbi"><span class="ms">credit_card</span><span class="ms arr">east</span><span class="ms">attach_money</span></span>
+            <span data-i18n="dol_pl_usd">Plastikdan $ ga</span></button>
+          <button class="tbtn a" onclick="dolDo('olish','Naqd')">
+            <span class="tbi"><span class="ms">payments</span><span class="ms arr">east</span><span class="ms">attach_money</span></span>
+            <span data-i18n="dol_nq_usd">Naqddan $ ga</span></button>
+        </div>
+        <div class="trow" style="margin-top:8px">
+          <button class="tbtn b" onclick="dolDo('qaytarish','Plastik')">
+            <span class="tbi"><span class="ms">attach_money</span><span class="ms arr">east</span><span class="ms">credit_card</span></span>
+            <span data-i18n="dol_usd_pl">$ dan Plastikka</span></button>
+          <button class="tbtn b" onclick="dolDo('qaytarish','Naqd')">
+            <span class="tbi"><span class="ms">attach_money</span><span class="ms arr">east</span><span class="ms">payments</span></span>
+            <span data-i18n="dol_usd_nq">$ dan Naqdga</span></button>
+        </div>
+        <div class="muted" style="font-size:12px;margin-top:8px" id="dolRateHint"></div>
+        <div id="dolList" style="margin-top:8px"></div>
       </div>
 
       <div class="banner" id="bannerCard" onclick="bannerClick()">
@@ -846,7 +874,7 @@
         <input id="clearPass" type="password" data-ph="clearpass_ph" placeholder="Parol (o'rnatilgan bo'lsa)">
         <button class="clear" onclick="hammasini()"><span class="ms" style="font-size:18px;vertical-align:-4px">delete</span> <span data-i18n="btn_hammasini">Hammasini tozalash</span></button>
       </div>
-      <div class="muted" style="text-align:center;font-size:12px;margin:4px 0 6px">Pul bot · dizayn v25 (dollar kursi · Seyf+PIN · valyuta toggle · app qulfi) · 2026-10-23</div>
+      <div class="muted" style="text-align:center;font-size:12px;margin:4px 0 6px">Pul bot · dizayn v27 (dollar ayirboshlash + hisob · dollar kursi · Seyf+PIN · app qulfi) · 2026-10-23</div>
     </div>
 
     <div class="modal hidden" id="notifModal" onclick="closeNotif(event)">
@@ -946,7 +974,10 @@
       banner_desc:"Bosh sahifadagi banner uchun rasm tanlang (faqat shu qurilmada saqlanadi).", banner_pick:"Rasm tanlash", banner_remove:"Rasmni olib tashlash",
       iqtibos_card:"Iqtibos", iqtibos_desc:"O'z iqtiboslaringizni qo'shing — bosh sahifada ular aylanib ko'rsatiladi (shu qurilmada saqlanadi).",
       iqtibos_text_ph:"Iqtibos matni", iqtibos_auth_ph:"Muallif (ixtiyoriy)", iqtibos_add:"Qo'shish",
-      usd_lbl:"Dollar kursi (CBU)", nav_seyf:"Seyf", p_seyf:"Seyf",
+      usd_lbl:"Dollar kursi", dollar:"Dollar",
+      dollar_ayir:"Dollar ayirboshlash", dollar_qaysi:"Qaysi hisob bilan?",
+      dol_pl_usd:"Plastikdan $ ga", dol_nq_usd:"Naqddan $ ga", dol_usd_pl:"$ dan Plastikka", dol_usd_nq:"$ dan Naqdga",
+      nav_seyf:"Seyf", p_seyf:"Seyf",
       seyf_locked:"Seyf qulflangan", seyf_open:"Ochish", pin_ph:"••••",
       seyf_jami:"Seyf + Maqsadlar jamg'armasi", seyf_sof:"Seyf", maqsad_jam:"Maqsadlar",
       seyf_amal:"Pul qo'shish / olish", seyf_qosh:"➕ Qo'shish", seyf_ol:"➖ Olish", btn_saqla:"Saqlash",
@@ -1000,7 +1031,10 @@
       banner_desc:"Выберите фото для баннера на главной (хранится только на этом устройстве).", banner_pick:"Выбрать фото", banner_remove:"Убрать фото",
       iqtibos_card:"Цитата", iqtibos_desc:"Добавьте свои цитаты — на главной они показываются по очереди (хранятся на этом устройстве).",
       iqtibos_text_ph:"Текст цитаты", iqtibos_auth_ph:"Автор (необязательно)", iqtibos_add:"Добавить",
-      usd_lbl:"Курс доллара (ЦБ)", nav_seyf:"Сейф", p_seyf:"Сейф",
+      usd_lbl:"Курс доллара", dollar:"Доллар",
+      dollar_ayir:"Обмен долларов", dollar_qaysi:"С каким счётом?",
+      dol_pl_usd:"С карты в $", dol_nq_usd:"С налички в $", dol_usd_pl:"$ на карту", dol_usd_nq:"$ в наличные",
+      nav_seyf:"Сейф", p_seyf:"Сейф",
       seyf_locked:"Сейф заблокирован", seyf_open:"Открыть", pin_ph:"••••",
       seyf_jami:"Сейф + накопления целей", seyf_sof:"Сейф", maqsad_jam:"Цели",
       seyf_amal:"Добавить / снять деньги", seyf_qosh:"➕ Добавить", seyf_ol:"➖ Снять", btn_saqla:"Сохранить",
@@ -1137,7 +1171,28 @@
 
   /* ---- valyuta (som / $) ---- */
   var _unit = {};   // input id -> 'som' | 'usd'
-  function usdRate(){ return (DATA && Number(DATA.usd)>0) ? Number(DATA.usd) : 0; }
+  var _usdFallback=0, _usdCbu=0, _usdFetching=false, _usdLazied=false;
+  // ustuvorlik: CBU (yangi) > backend kesh > brauzer fallback
+  function usdRate(){
+    if(_usdCbu>0) return _usdCbu;
+    if(DATA && Number(DATA.usd)>0) return Number(DATA.usd);
+    return _usdFallback>0 ? _usdFallback : 0;
+  }
+  // backenddan CBU kursini ALOHIDA oladi (app yuklanishini bloklamaydi)
+  function usdLazy(){
+    if(_usdLazied) return; _usdLazied=true;
+    apiRaw({action:"usd"}, function(j){ if(j && j.ok && Number(j.usd)>0){ _usdCbu=Number(j.usd); renderUsd(); } });
+  }
+  // backend bermasa — to'g'ridan-to'g'ri brauzerdan (CORS ochiq, bepul, kalitsiz)
+  function usdFetchFallback(){
+    if(_usdFallback>0 || _usdFetching) return;
+    _usdFetching=true;
+    fetch("https://open.er-api.com/v6/latest/USD").then(function(r){return r.json();}).then(function(j){
+      _usdFetching=false;
+      var rate = j && j.rates && Number(j.rates.UZS);
+      if(rate>0){ _usdFallback=Math.round(rate); renderUsd(); }
+    }).catch(function(){ _usdFetching=false; });
+  }
   function curUnit(id){ return _unit[id]==='usd' ? 'usd' : 'som'; }
   function amtSom(id){
     var raw = parseSum(val(id));
@@ -1175,11 +1230,53 @@
   }
   function renderUsd(){
     var c=document.getElementById("usdCard"); if(!c) return;
-    var r=usdRate();
-    if(r>0){ c.style.display="flex"; var v=document.getElementById("usdVal"); if(v) v.textContent = "1$ = "+grp(r)+" so'm"; }
-    else c.style.display="none";
+    c.style.display="flex";              // bosh menyuda DOIM ko'rinadi
+    var r=usdRate(), v=document.getElementById("usdVal");
+    if(r>0){ if(v) v.textContent = "1$ = "+grp(r)+" so'm"; }
+    else { if(v) v.textContent = L("yuklanmoqda…","загрузка…"); usdFetchFallback(); usdLazy(); }
     // ochiq toggle preview'larini yangilash
     for(var id in _unit) updUnitPrev(id);
+  }
+
+  /* ---- Dollar hisobi (ayirboshlash) ---- */
+  function renderDollar(){
+    var d = (DATA && DATA.dollar) || {usd:0, som:0, value:0, tx:[]};
+    var has = Math.abs(Number(d.usd)||0) > 0.005;
+    var dc=document.getElementById("dolCard"), bd=document.getElementById("balDollar");
+    if(dc) dc.classList.toggle("hidden", !has);
+    if(bd) bd.textContent = EYE.bal ? ("$"+grp(Math.round(d.usd))) : DOTS;
+    var dh=document.getElementById("dolHold");
+    if(dh) dh.innerHTML = L("Dollar hisobingiz: ","Ваш долларовый счёт: ")+"<b>$"+grp(Math.round(d.usd))+"</b>"+((Number(d.value)||0)?(" ≈ "+fmt(d.value)):"");
+    var rh=document.getElementById("dolRateHint");
+    if(rh) rh.textContent = usdRate()>0 ? ("1$ = "+grp(usdRate())+" so'm") : L("Kurs yuklanmoqda…","Курс загружается…");
+    renderDolList(d.tx||[]);
+  }
+  function renderDolList(tx){
+    var el=document.getElementById("dolList"); if(!el) return;
+    if(!tx.length){ el.innerHTML=""; return; }
+    el.innerHTML = tx.slice(0,30).map(function(x){
+      var buy=(Number(x.usd)||0)>=0;
+      return '<div class="tx"><div class="emo">'+(buy?'🟢':'🔴')+'</div>'+
+        '<div class="mid"><div class="k">'+(buy?L("$ olindi","Куплено $"):L("$ qaytarildi","Возврат $"))+' · '+esc(x.hisob)+'</div>'+
+        '<div class="d">'+esc(x.sana||"")+' · 1$='+grp(x.kurs)+' · '+fmt(Math.abs(Number(x.som)||0))+'</div></div>'+
+        '<div class="k" style="font-weight:800;color:'+(buy?'var(--green)':'var(--red)')+'">'+(buy?'+':'−')+'$'+grp(Math.abs(Math.round(x.usd)))+'</div>'+
+        '<div class="x" onclick="dolDel(\''+x.id+'\')">'+ms("close",20,"var(--red)")+'</div></div>';
+    }).join("");
+  }
+  function dolDo(yon, hisob){
+    var s=amtSom("dolSum");
+    if(s<=0){ if(tg) tg.showAlert(L("Summani kiriting.","Введите сумму.")); return; }
+    if(usdRate()<=0){ if(tg) tg.showAlert(L("Dollar kursi hali yuklanmadi.","Курс доллара ещё не загружен.")); return; }
+    if(tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred("light");
+    call({action:"dollaradd", yon:yon, hisob:hisob, summa:s, rate:usdRate()}, function(){
+      var e=document.getElementById("dolSum"); if(e) e.value=""; resetUnit("dolSum");
+      if(tg) tg.showAlert(L("✅ Bajarildi.","✅ Готово."));
+    });
+  }
+  function dolDel(id){
+    var go=function(){ call({action:"dollardel", id:id}); };
+    if(tg) tg.showConfirm(L("Bu konversiyani o'chirasizmi? (so'm hisobga qaytadi)","Удалить эту конверсию? (сумы вернутся на счёт)"), function(ok){ if(ok) go(); });
+    else if(confirm("?")) go();
   }
 
   function liveFmt(el){
@@ -1209,7 +1306,8 @@
       users:"Botni boshqa odamlar ham ishlatishiga ruxsat berasiz. Har kimning ma'lumoti alohida. ID qo'shing yoki ❌ bilan oling. Kun qo'ysangiz — muddat tugagach avtomat o'chadi.",
       hisoblar:"Pulingiz ikki hisobda: 💳 Plastik va 💵 Naqd. Kirim/chiqim qo'shganda qaysi hisob ekanini tanlaysiz.\n«Plastikdan naqd» — plastikdan pul yechganingizda: Plastik kamayadi, Naqd ko'payadi, umumiy balans o'zgarmaydi.",
       oylar:"Har oy bo'yicha hisobot. Grafikda qaysi oyda qancha sarflaganingiz ko'rinadi. Oyni bossangiz — kirim/chiqim/balans va nimalaga ko'p sarflaganingiz (diagramma) chiqadi.\nMalumot har oy avtomat alohida yig'iladi — tozalashga hojat yo'q.",
-      avto:"Avtomobil xarajatlari (benzin, moyka, ta'mir va h.k.). Summani yozib, pul qayerdan ketganini (Plastik/Naqd) tanlab qo'shasiz. «Avtomobil» kategoriyasi chiqimga yoziladi. Shu oy va jami sarf ko'rinadi."
+      avto:"Avtomobil xarajatlari (benzin, moyka, ta'mir va h.k.). Summani yozib, pul qayerdan ketganini (Plastik/Naqd) tanlab qo'shasiz. «Avtomobil» kategoriyasi chiqimga yoziladi. Shu oy va jami sarf ko'rinadi.",
+      dollar:"So'mni dollarga (yoki aksincha) ayirboshlash. Summani yozing (so'm yoki $), keyin: «Plastikdan/Naqddan $ ga» — so'm hisobdan ketadi, dollar hisobiga qo'shiladi; «$ dan Plastikka/Naqdga» — dollar sotiladi, so'm qaytadi. Hisoblash joriy kurs bo'yicha. Dollar hisobingiz $ da qat'iy saqlanadi, umumiy balansga kursga ko'ra qo'shiladi."
     },
     ru:{
       balans:"Общий остаток — все доходы минус расходы.\n👁 можно скрыть или показать.",
@@ -1225,7 +1323,8 @@
       users:"Вы даёте доступ другим людям. У каждого свои данные. Добавьте ID или уберите кнопкой ❌. Если задать дни — доступ закроется автоматически по истечении срока.",
       hisoblar:"Деньги на двух счетах: 💳 Карта и 💵 Наличка. При добавлении дохода/расхода выбираете счёт.\n«С карты в наличные» — при снятии: Карта уменьшается, Наличка растёт, общий баланс не меняется.",
       oylar:"Отчёт по каждому месяцу. На графике видно, сколько в каком месяце потрачено. Нажмите на месяц — доход/расход/баланс и на что ушло больше всего (диаграмма).\nДанные по месяцам собираются автоматически — очищать ничего не нужно.",
-      avto:"Расходы на авто (бензин, мойка, ремонт и т.д.). Вводите сумму, выбираете откуда ушли деньги (Карта/Наличка) и добавляете. Записывается в категорию «Авто». Видно за месяц и всего."
+      avto:"Расходы на авто (бензин, мойка, ремонт и т.д.). Вводите сумму, выбираете откуда ушли деньги (Карта/Наличка) и добавляете. Записывается в категорию «Авто». Видно за месяц и всего.",
+      dollar:"Обмен сумов на доллары (и обратно). Введите сумму (сумы или $), затем: «С карты/налички в $» — списывается с сумового счёта, добавляется на долларовый; «$ на карту/в наличные» — доллары продаются, сумы возвращаются. Расчёт по текущему курсу. Долларовый счёт хранится в $, в общий баланс входит по курсу."
     }
   };
   function info(k){ var t = (INFO[LANG]&&INFO[LANG][k]) || INFO.uz[k] || ""; if(tg) tg.showAlert(t); else alert(t); }
@@ -1244,6 +1343,9 @@
         } else if(j.error==="parol"){ if(tg) tg.showAlert(L("🔒 Parol xato!","🔒 Неверный пароль!")); }
         else if(j.error==="eski_parol"){ if(tg) tg.showAlert(L("🔒 Eski parol noto'g'ri!","🔒 Старый пароль неверный!")); }
         else if(j.error==="summa"){ if(tg) tg.showAlert(L("Summani to'g'ri kiriting.","Введите сумму правильно.")); }
+        else if(j.error==="kurs"){ if(tg) tg.showAlert(L("Dollar kursi hali yuklanmadi. Birozdan keyin urining.","Курс доллара ещё не загружен. Попробуйте позже.")); }
+        else if(j.error==="kam"){ if(tg) tg.showAlert(L("Hisobda yetarli so'm yo'q.","Недостаточно сумов на счёте.")); }
+        else if(j.error==="kam_usd"){ if(tg) tg.showAlert(L("Dollar hisobingizda yetarli $ yo'q.","Недостаточно $ на долларовом счёте.")); }
         else if(j.error==="id"){ if(tg) tg.showAlert(L("Telegram ID faqat raqam bo'lishi kerak.","Telegram ID должен быть числом.")); }
         return;
       }
@@ -1425,6 +1527,7 @@
     renderBanner();
     renderQuote();
     renderUsd();
+    renderDollar();
     renderSeyf();
     lockSettingsSync();
     initCurToggles();
