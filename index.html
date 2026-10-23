@@ -231,6 +231,7 @@
   @keyframes flagFlutter{0%,100%{transform:skewX(0) scaleX(1)} 25%{transform:skewX(-11deg)} 50%{transform:skewX(7deg)} 75%{transform:skewX(-5deg)}}
   @keyframes gearSlow{to{transform:rotate(360deg)}}
   @keyframes qIn{from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:none}}
+  @keyframes twBlink{0%,100%{opacity:1} 50%{opacity:0}}
   /* dizayndagi dumaloqlar */
   @keyframes aurora{0%{transform:translate(0,0) scale(1)} 33%{transform:translate(3%,2%) scale(1.08)} 66%{transform:translate(-2%,3%) scale(1.04)} 100%{transform:translate(0,0) scale(1)}}
   @keyframes orbit{0%{transform:translate(0,0) rotate(0)} 50%{transform:translate(-14px,12px) rotate(180deg)} 100%{transform:translate(0,0) rotate(360deg)}}
@@ -289,6 +290,7 @@
     .nav-bars .ms{animation:pPulse 5s ease-in-out infinite .6s}
     .nav-receipt .ms{animation:pFloat 5s ease-in-out infinite .9s}
     .nav-users .ms{animation:pPulse 5s ease-in-out infinite 1.2s}
+    .nav-lock .ms{animation:pPulse 5s ease-in-out infinite 1.5s}
     .hd-actions .iqr:last-child .ms{animation:pBell 5s ease-in-out infinite; transform-origin:50% 15%; display:inline-block}
     .hd-actions .iqr:not(:last-child) .ms{animation:pFloat 5s ease-in-out infinite .6s; display:inline-block}
     .badge{animation:pPulse 2.2s ease-in-out infinite}
@@ -304,8 +306,8 @@
     .bar>i::after{animation:barShine 2.8s ease-in-out infinite}
     .qmark{animation:pFloat 6s ease-in-out infinite; display:inline-block}
     #themeIco.spin{animation:gearSpin .6s ease}
-    .quote .qtext.qin{animation:qIn .55s ease}
     .quote .qauth.qin{animation:qIn .55s ease .1s both}
+    .twcur{animation:twBlink 1s step-end infinite}
   }
   .twcur{color:var(--accent); font-weight:400; margin-left:1px}
   /* bosh sahifa header + hero + hisob kartalari + tezkor amallar */
@@ -370,6 +372,54 @@
   .tabbar button.on{color:var(--accent)}
   .tabbar button.on .ms{filter:drop-shadow(0 4px 10px rgba(91,99,240,.5))}
   .tabbar button.on .tbars i{box-shadow:0 3px 8px rgba(91,99,240,.45)}
+
+  /* ---- valyuta (som/$) toggle ---- */
+  .amt{display:flex; align-items:stretch; gap:8px; margin-bottom:10px}
+  .amt input{flex:1; margin-bottom:0 !important}
+  .unit{flex:0 0 auto; min-width:58px; border:1px solid var(--line); background:var(--inp-bg); color:var(--accent);
+      border-radius:15px; font-weight:800; font-size:14px; cursor:pointer; font-family:inherit; transition:transform .1s}
+  .unit:active{transform:scale(.95)}
+  .uprev{font-size:12px; color:var(--accent); margin:-4px 2px 10px; font-weight:700; min-height:0}
+  /* ---- dollar kursi karta ---- */
+  .usdcard{display:flex; align-items:center; gap:11px; padding:12px 14px; border-radius:18px; margin-bottom:12px;
+      background:var(--glass); border:1px solid var(--glass-bd); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px)}
+  .usdcard .ui{width:38px; height:38px; flex:0 0 auto; border-radius:12px; display:flex; align-items:center; justify-content:center;
+      background:rgba(47,210,126,.16); color:var(--green)}
+  .usdcard .ut{font-size:12px; color:var(--hint); font-weight:700}
+  .usdcard .uv{font-size:15px; font-weight:800}
+  /* ---- Seyf ---- */
+  .seyfbal{text-align:center; padding:8px 0 4px}
+  .seyfbal .sv{font-size:28px; font-weight:800; letter-spacing:-.5px}
+  .seyfbal .sl{font-size:12px; color:var(--hint); font-weight:700; margin-top:2px}
+  .pinwrap{display:flex; flex-direction:column; align-items:center; gap:14px; padding:14px 0}
+  .pinwrap .pico{width:58px; height:58px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+      background:rgba(176,107,255,.16); color:var(--violet)}
+  .pinin{letter-spacing:10px; text-align:center; font-size:22px; font-weight:800; max-width:200px}
+  .seyf-seg{display:flex; gap:8px; margin-bottom:10px}
+  .seyf-seg button{flex:1; border:1px solid var(--line); background:var(--inp-bg); color:var(--text); border-radius:13px;
+      padding:11px; font-weight:800; cursor:pointer; font-family:inherit}
+  .seyf-seg button.on.add{background:rgba(47,210,126,.16); border-color:var(--green); color:var(--green)}
+  .seyf-seg button.on.rem{background:rgba(244,80,90,.14); border-color:var(--red); color:var(--red)}
+  .seyf-row{display:flex; justify-content:space-between; align-items:center; padding:11px 0; border-bottom:1px solid var(--line)}
+  .seyf-row:last-child{border-bottom:0}
+  .seyf-row .si{font-weight:700} .seyf-row .sa.pos{color:var(--green)} .seyf-row .sa.neg{color:var(--red)}
+  /* ---- app qulf ---- */
+  #lockOverlay{position:fixed; inset:0; z-index:200; background:var(--bg); display:flex; flex-direction:column;
+      align-items:center; justify-content:center; gap:18px; padding:30px}
+  #lockOverlay .lico{width:72px; height:72px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+      background:var(--grad); color:#fff; box-shadow:0 14px 34px rgba(91,99,240,.4)}
+  #lockOverlay .lico .ms{font-size:36px}
+  #lockOverlay .ltitle{font-size:18px; font-weight:800}
+  #lockOverlay .lerr{color:var(--red); font-size:13px; font-weight:700; min-height:16px}
+  #lockOverlay input{max-width:220px}
+  .locktog{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 0}
+  .locktog .lt-l{font-weight:700; font-size:14px}
+  .switch{position:relative; width:48px; height:28px; flex:0 0 auto; cursor:pointer}
+  .switch input{opacity:0; width:0; height:0; position:absolute}
+  .switch .sl{position:absolute; inset:0; background:var(--line); border-radius:999px; transition:.2s}
+  .switch .sl::before{content:""; position:absolute; width:22px; height:22px; left:3px; top:3px; background:#fff; border-radius:50%; transition:.2s}
+  .switch input:checked + .sl{background:var(--accent)}
+  .switch input:checked + .sl::before{transform:translateX(20px)}
 </style>
 </head>
 <body>
@@ -402,6 +452,11 @@
         <div class="acccard naqd"><div class="acccard-t"><span class="ms">payments</span><span data-i18n="naqd">Naqd</span></div><div class="acccard-v" id="balNaqd">—</div></div>
       </div>
 
+      <div class="usdcard" id="usdCard" style="display:none">
+        <span class="ui"><span class="ms">attach_money</span></span>
+        <div><div class="ut" data-i18n="usd_lbl">Dollar kursi (CBU)</div><div class="uv" id="usdVal">—</div></div>
+      </div>
+
       <div class="qa">
         <button onclick="nav('Chiqim')"><span class="qa-i out"><span class="ms">trending_down</span></span><span data-i18n="tab_chiqim">Chiqim</span></button>
         <button onclick="nav('Kirim')"><span class="qa-i in"><span class="ms">trending_up</span></span><span data-i18n="tab_kirim">Kirim</span></button>
@@ -412,7 +467,7 @@
       <div class="card" id="transferCard">
         <div class="hd"><h3><span class="ms" style="font-size:18px">swap_vert</span> <span data-i18n="otkazma">O'tkazma</span></h3>
           <div class="ic"><button class="iq" onclick="info('hisoblar')"><span class="ms" style="font-size:16px">info</span></button></div></div>
-        <input id="yechSum" class="num" inputmode="decimal" data-ph="yech_ph" placeholder="Summa">
+        <input id="yechSum" class="num curinp" inputmode="decimal" data-ph="yech_ph" placeholder="Summa">
         <div class="trow">
           <button class="tbtn a" onclick="yechish('naqdga')">
             <span class="tbi"><span class="ms">credit_card</span><span class="ms arr">east</span><span class="ms">payments</span></span>
@@ -474,6 +529,7 @@
           <button onclick="nav('Chiqim')"><span class="ni nav-out" style="background:rgba(255,90,95,.16)"><span class="ms" style="color:var(--red)">trending_down</span></span><span data-i18n="nav_chiqim">Chiqimlar</span></button>
           <button onclick="nav('Kirim')"><span class="ni nav-in" style="background:rgba(47,210,126,.16)"><span class="ms" style="color:var(--green)">trending_up</span></span><span data-i18n="nav_kirim">Kirimlar</span></button>
           <button onclick="nav('Maqsad')"><span class="ni nav-flag" style="background:rgba(176,107,255,.16)"><span class="ms" style="color:var(--violet)">flag</span></span><span data-i18n="nav_maqsad">Maqsadlar</span></button>
+          <button onclick="nav('Seyf')"><span class="ni nav-lock" style="background:rgba(47,210,126,.16)"><span class="ms" style="color:var(--green)">savings</span></span><span data-i18n="nav_seyf">Seyf</span></button>
           <button onclick="nav('Taqsim')"><span class="ni nav-donut" style="background:rgba(51,144,236,.16)"><span class="ms" style="color:var(--accent)">donut_small</span></span><span data-i18n="nav_taqsim">Byudjet taqsimoti</span></button>
           <button onclick="nav('Qarz')"><span class="ni nav-receipt" style="background:rgba(255,171,46,.16)"><span class="ms" style="color:var(--orange)">receipt_long</span></span><span data-i18n="nav_qarz">Qarz daftarchasi</span></button>
           <button onclick="nav('Limit')"><span class="ni nav-tune" style="background:rgba(90,200,250,.16)"><span class="ms" style="color:#5ac8fa">tune</span></span><span data-i18n="nav_limit">Limitlar</span></button>
@@ -490,7 +546,7 @@
           <div class="tile acc"><span class="ni" style="background:rgba(255,171,46,.16)"><span class="ms" style="color:var(--orange)">calendar_month</span></span><div class="t-lbl" data-i18n="shu_oy">Shu oy</div><div class="t-val" id="avtoOy">—</div></div>
           <div class="tile acc"><span class="ni" style="background:rgba(176,107,255,.16)"><span class="ms" style="color:var(--violet)">functions</span></span><div class="t-lbl" data-i18n="jami">Jami</div><div class="t-val" id="avtoJami">—</div></div>
         </div>
-        <input id="avtoSum" class="num" inputmode="decimal" data-ph="avto_ph" placeholder="Summa" style="margin-top:12px">
+        <input id="avtoSum" class="num curinp" inputmode="decimal" data-ph="avto_ph" placeholder="Summa" style="margin-top:12px">
         <div class="muted" style="font-size:12px;margin:0 2px 6px" data-i18n="acc_chiqim_lbl">Pul qayerdan ketdi?</div>
         <div class="chips" id="avtoAcc"></div>
         <input id="avtoIzoh" data-ph="avto_izoh_ph" placeholder="Izoh (masalan: benzin, moyka)">
@@ -508,7 +564,7 @@
         <div class="muted" style="font-size:12px;margin:4px 2px 6px" data-i18n="acc_chiqim_lbl">Pul qayerdan ketdi?</div>
         <div class="chips" id="accC"></div>
         <input id="boshqaC" class="hidden" data-ph="boshqa_ph" placeholder="Nima uchun? (nomi)">
-        <input id="summaC" class="num" inputmode="decimal" data-ph="summaC_ph" placeholder="Summa (masalan: 50 000 yoki 50k)">
+        <input id="summaC" class="num curinp" inputmode="decimal" data-ph="summaC_ph" placeholder="Summa (masalan: 50 000 yoki 50k)">
         <input id="izohC" data-ph="izoh_ph" placeholder="Izoh (ixtiyoriy)">
         <button class="btn out" onclick="saqla('Chiqim')"><span class="ms">add</span> <span data-i18n="btn_chiqim_add">Chiqim qo'shish</span></button>
       </div>
@@ -531,7 +587,7 @@
         <div class="muted" style="font-size:12px;margin:4px 2px 6px" data-i18n="acc_kirim_lbl">Pul qayerga tushdi?</div>
         <div class="chips" id="accK"></div>
         <input id="boshqaK" class="hidden" data-ph="boshqa_ph" placeholder="Nima uchun? (nomi)">
-        <input id="summaK" class="num" inputmode="decimal" data-ph="summaK_ph" placeholder="Summa (masalan: 3 000 000 yoki 3mln)">
+        <input id="summaK" class="num curinp" inputmode="decimal" data-ph="summaK_ph" placeholder="Summa (masalan: 3 000 000 yoki 3mln)">
         <input id="izohK" data-ph="izoh_ph" placeholder="Izoh (ixtiyoriy)">
         <button class="btn in" onclick="saqla('Kirim')"><span class="ms">add</span> <span data-i18n="btn_kirim_add">Kirim qo'shish</span></button>
       </div>
@@ -555,9 +611,67 @@
       <div class="card">
         <div class="hd"><h3 data-i18n="yangi_maqsad">Yangi maqsad</h3></div>
         <input id="gNom" data-ph="gnom_ph" placeholder="Maqsad nomi (masalan: Telefon)">
-        <input id="gSum" class="num" inputmode="decimal" data-ph="gsum_ph" placeholder="Kerakli summa (masalan: 5mln)">
+        <input id="gSum" class="num curinp" inputmode="decimal" data-ph="gsum_ph" placeholder="Kerakli summa (masalan: 5mln)">
         <input id="gMuddat" data-ph="gmuddat_ph" placeholder="Muddat (ixtiyoriy: 2026-12)">
         <button class="btn" onclick="goalAdd()"><span class="ms">add</span> <span data-i18n="btn_yangi_maqsad">Yangi maqsad</span></button>
+      </div>
+    </div>
+
+    <!-- ============ SEYF ============ -->
+    <div id="pSeyf" class="page hidden">
+      <div class="ptitle"><span class="ms" style="color:var(--green)">savings</span> <span data-i18n="p_seyf">Seyf</span></div>
+
+      <div class="card" id="seyfLock">
+        <div class="pinwrap">
+          <span class="pico"><span class="ms">lock</span></span>
+          <div class="ltitle" data-i18n="seyf_locked">Seyf qulflangan</div>
+          <input id="seyfPinIn" class="pinin" type="password" inputmode="numeric" maxlength="4" data-ph="pin_ph" placeholder="••••">
+          <div class="lerr" id="seyfPinErr"></div>
+          <button class="btn" onclick="seyfUnlock()"><span class="ms">lock_open</span> <span data-i18n="seyf_open">Ochish</span></button>
+        </div>
+      </div>
+
+      <div id="seyfMain" class="hidden">
+        <div class="card">
+          <div class="seyfbal">
+            <div class="sv" id="seyfTotal">—</div>
+            <div class="sl" data-i18n="seyf_jami">Seyf + Maqsadlar jamg'armasi</div>
+          </div>
+          <div class="row" style="margin-top:6px">
+            <div class="tile"><div class="t-lbl" data-i18n="seyf_sof">Seyf</div><div class="t-val t-in" id="seyfBal">—</div></div>
+            <div class="tile"><div class="t-lbl" data-i18n="maqsad_jam">Maqsadlar</div><div class="t-val" id="seyfGoals">—</div></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="hd"><h3 data-i18n="seyf_amal">Pul qo'shish / olish</h3></div>
+          <div class="seyf-seg">
+            <button id="seyfYonAdd" class="add on" onclick="seyfYon('kirim')" data-i18n="seyf_qosh">➕ Qo'shish</button>
+            <button id="seyfYonRem" class="rem" onclick="seyfYon('chiqim')" data-i18n="seyf_ol">➖ Olish</button>
+          </div>
+          <input id="seyfSum" class="num curinp" inputmode="decimal" data-ph="summa_ph" placeholder="Summa">
+          <input id="seyfIzoh" data-ph="izoh_ph" placeholder="Izoh (ixtiyoriy)">
+          <button class="btn" onclick="seyfAdd()"><span class="ms">check</span> <span data-i18n="btn_saqla">Saqlash</span></button>
+        </div>
+
+        <div class="card">
+          <div class="hd"><h3 data-i18n="seyf_tarix">Seyf tarixi</h3></div>
+          <div id="seyfList"></div>
+        </div>
+
+        <div class="card">
+          <div class="hd"><h3><span class="ms" style="font-size:18px">flag</span> <span data-i18n="maqsadlar_jamg">Maqsadlar jamg'armasi</span></h3>
+            <div class="ic"><button class="iq" onclick="nav('Maqsad')"><span class="ms" style="font-size:18px">chevron_right</span></button></div></div>
+          <div id="seyfGoalList"></div>
+        </div>
+
+        <div class="card">
+          <div class="hd"><h3><span class="ms" style="font-size:18px">pin</span> <span data-i18n="seyf_pin_card">Seyf PIN kodi</span></h3></div>
+          <input id="seyfOldPin" type="password" inputmode="numeric" maxlength="4" data-ph="old_pin_ph" placeholder="Eski PIN (o'rnatilgan bo'lsa)">
+          <input id="seyfNewPin" type="password" inputmode="numeric" maxlength="4" data-ph="new_pin_ph" placeholder="Yangi 4 xonali PIN (bo'sh = o'chirish)">
+          <button class="btn" onclick="seyfPinSave()"><span class="ms">key</span> <span data-i18n="seyf_pin_saqla">PIN saqlash</span></button>
+          <div class="muted" style="font-size:12px;margin-top:8px" data-i18n="seyf_pin_hint">4 xonali PIN seyfni himoyalaydi.</div>
+        </div>
       </div>
     </div>
 
@@ -617,7 +731,7 @@
           <option value="Berdim" data-i18n="opt_berdim">Qarz berdim (menga qarzdor)</option>
         </select>
         <input id="qKim" data-ph="qkim_ph" placeholder="Kimdan / kimga (ism)">
-        <input id="qSum" class="num" inputmode="decimal" data-ph="qsum_ph" placeholder="Summa">
+        <input id="qSum" class="num curinp" inputmode="decimal" data-ph="qsum_ph" placeholder="Summa">
         <input id="qMuddat" data-ph="qmuddat_ph" placeholder="Muddat (masalan: 2026-12-01 yoki 3 oy)">
         <button class="btn" onclick="qarzAdd()"><span class="ms">add</span> <span data-i18n="btn_qosh">Qo'shish</span></button>
       </div>
@@ -703,6 +817,24 @@
         <div class="muted" style="font-size:12px;margin-top:8px" data-i18n="til_hint">Interfeys va bot tili.</div>
       </div>
       <div class="card">
+        <div class="hd"><h3><span class="ms" style="font-size:18px">lock</span> <span data-i18n="applock_card">Ilovani qulflash</span></h3></div>
+        <div class="muted" style="font-size:13px;margin-bottom:6px" data-i18n="applock_desc">Yoqilsa — ilovani har ochganda parol yoki Face ID so'raladi (shu qurilmada saqlanadi).</div>
+        <div class="locktog">
+          <span class="lt-l" data-i18n="applock_on">Qulfni yoqish</span>
+          <label class="switch"><input type="checkbox" id="lockOn" onchange="lockToggle(this.checked)"><span class="sl"></span></label>
+        </div>
+        <div id="lockPinBox" class="hidden">
+          <input id="lockPinA" type="password" inputmode="numeric" maxlength="6" data-ph="applock_pin_ph" placeholder="Yangi parol (4-6 raqam)">
+          <input id="lockPinB" type="password" inputmode="numeric" maxlength="6" data-ph="applock_pin2_ph" placeholder="Parolni takrorlang">
+          <button class="btn" onclick="lockSavePin()"><span class="ms">key</span> <span data-i18n="applock_save">Parolni saqlash</span></button>
+          <div class="locktog" id="lockBioBox" style="display:none">
+            <span class="lt-l" data-i18n="applock_bio">Face ID / barmoq izi</span>
+            <label class="switch"><input type="checkbox" id="lockBio" onchange="lockBioToggle(this.checked)"><span class="sl"></span></label>
+          </div>
+        </div>
+        <div class="muted" style="font-size:12px;margin-top:6px" id="lockHint"></div>
+      </div>
+      <div class="card">
         <div class="hd"><h3 data-i18n="tozalash_parol">Tozalash paroli</h3><div class="ic"><button class="iq" onclick="info('parol')"><span class="ms" style="font-size:16px">info</span></button></div></div>
         <input id="oldPass" type="password" data-ph="oldpass_ph" placeholder="Eski parol (o'rnatilgan bo'lsa)">
         <input id="newPass" type="password" data-ph="newpass_ph" placeholder="Yangi parol (bo'sh = o'chirish)">
@@ -714,7 +846,7 @@
         <input id="clearPass" type="password" data-ph="clearpass_ph" placeholder="Parol (o'rnatilgan bo'lsa)">
         <button class="clear" onclick="hammasini()"><span class="ms" style="font-size:18px;vertical-align:-4px">delete</span> <span data-i18n="btn_hammasini">Hammasini tozalash</span></button>
       </div>
-      <div class="muted" style="text-align:center;font-size:12px;margin:4px 0 6px">Pul bot · dizayn v23 (eski strelkalar · iqtibos 10s · bayroq hilpiraydi) · 2026-10-22</div>
+      <div class="muted" style="text-align:center;font-size:12px;margin:4px 0 6px">Pul bot · dizayn v25 (dollar kursi · Seyf+PIN · valyuta toggle · app qulfi) · 2026-10-23</div>
     </div>
 
     <div class="modal hidden" id="notifModal" onclick="closeNotif(event)">
@@ -735,11 +867,21 @@
 
   </div>
 
+  <div id="lockOverlay" style="display:none">
+    <span class="lico"><span class="ms">lock</span></span>
+    <div class="ltitle" data-i18n="applock_title">Ilova qulflangan</div>
+    <input id="lockInput" type="password" inputmode="numeric" maxlength="6" class="pinin" data-ph="applock_enter_ph" placeholder="Parol">
+    <div class="lerr" id="lockErr"></div>
+    <button class="btn" onclick="lockTry()" style="max-width:220px"><span class="ms">lock_open</span> <span data-i18n="applock_unlock">Ochish</span></button>
+    <button class="link-btn" id="lockBioBtn" onclick="lockBioAuth()" style="display:none"><span class="ms" style="vertical-align:-4px">fingerprint</span> <span data-i18n="applock_use_bio">Face ID bilan ochish</span></button>
+  </div>
+
 <script>
   var API = "https://script.google.com/macros/s/AKfycby_Tuq0xlmTV_QpPF-IArtq1UVM8uAKESnKzR1QlnTIrI0ZFKUaBghIG_n_UtgE4MTpiA/exec";
   var tg = window.Telegram ? window.Telegram.WebApp : null;
   var INIT = tg ? tg.initData : "";
   var DATA = null, CUR = "Home";
+  var LOCK = { ok:false };
   var sel = { Chiqim:"", Kirim:"" };
   var acc = { Chiqim:"Plastik", Kirim:"Plastik" };   // hisob tanlovi (Plastik/Naqd)
   var PAL = ["#6366f1","#0ea5e9","#14b8a6","#f59e0b","#ef4444","#ec4899","#8b5cf6","#22c55e","#f97316","#06b6d4","#eab308","#64748b"];
@@ -804,6 +946,17 @@
       banner_desc:"Bosh sahifadagi banner uchun rasm tanlang (faqat shu qurilmada saqlanadi).", banner_pick:"Rasm tanlash", banner_remove:"Rasmni olib tashlash",
       iqtibos_card:"Iqtibos", iqtibos_desc:"O'z iqtiboslaringizni qo'shing — bosh sahifada ular aylanib ko'rsatiladi (shu qurilmada saqlanadi).",
       iqtibos_text_ph:"Iqtibos matni", iqtibos_auth_ph:"Muallif (ixtiyoriy)", iqtibos_add:"Qo'shish",
+      usd_lbl:"Dollar kursi (CBU)", nav_seyf:"Seyf", p_seyf:"Seyf",
+      seyf_locked:"Seyf qulflangan", seyf_open:"Ochish", pin_ph:"••••",
+      seyf_jami:"Seyf + Maqsadlar jamg'armasi", seyf_sof:"Seyf", maqsad_jam:"Maqsadlar",
+      seyf_amal:"Pul qo'shish / olish", seyf_qosh:"➕ Qo'shish", seyf_ol:"➖ Olish", btn_saqla:"Saqlash",
+      summa_ph:"Summa", seyf_tarix:"Seyf tarixi", maqsadlar_jamg:"Maqsadlar jamg'armasi",
+      seyf_pin_card:"Seyf PIN kodi", seyf_pin_saqla:"PIN saqlash", seyf_pin_hint:"4 xonali PIN seyfni himoyalaydi.",
+      old_pin_ph:"Eski PIN (o'rnatilgan bo'lsa)", new_pin_ph:"Yangi 4 xonali PIN (bo'sh = o'chirish)",
+      applock_card:"Ilovani qulflash", applock_desc:"Yoqilsa — ilovani har ochganda parol yoki Face ID so'raladi (shu qurilmada saqlanadi).",
+      applock_on:"Qulfni yoqish", applock_save:"Parolni saqlash", applock_bio:"Face ID / barmoq izi",
+      applock_pin_ph:"Yangi parol (4-6 raqam)", applock_pin2_ph:"Parolni takrorlang",
+      applock_title:"Ilova qulflangan", applock_unlock:"Ochish", applock_use_bio:"Face ID bilan ochish", applock_enter_ph:"Parol",
       acc_chiqim_lbl:"Pul qayerdan ketdi?", acc_kirim_lbl:"Pul qayerga tushdi?",
       avto_card:"Avtomobil xarajatlari", jami:"Jami", avto_add:"Avto xarajat qo'shish",
       avto_ph:"Summa (masalan: 200 000)", avto_izoh_ph:"Izoh (masalan: benzin, moyka)",
@@ -847,6 +1000,17 @@
       banner_desc:"Выберите фото для баннера на главной (хранится только на этом устройстве).", banner_pick:"Выбрать фото", banner_remove:"Убрать фото",
       iqtibos_card:"Цитата", iqtibos_desc:"Добавьте свои цитаты — на главной они показываются по очереди (хранятся на этом устройстве).",
       iqtibos_text_ph:"Текст цитаты", iqtibos_auth_ph:"Автор (необязательно)", iqtibos_add:"Добавить",
+      usd_lbl:"Курс доллара (ЦБ)", nav_seyf:"Сейф", p_seyf:"Сейф",
+      seyf_locked:"Сейф заблокирован", seyf_open:"Открыть", pin_ph:"••••",
+      seyf_jami:"Сейф + накопления целей", seyf_sof:"Сейф", maqsad_jam:"Цели",
+      seyf_amal:"Добавить / снять деньги", seyf_qosh:"➕ Добавить", seyf_ol:"➖ Снять", btn_saqla:"Сохранить",
+      summa_ph:"Сумма", seyf_tarix:"История сейфа", maqsadlar_jamg:"Накопления целей",
+      seyf_pin_card:"PIN-код сейфа", seyf_pin_saqla:"Сохранить PIN", seyf_pin_hint:"4-значный PIN защищает сейф.",
+      old_pin_ph:"Старый PIN (если установлен)", new_pin_ph:"Новый 4-значный PIN (пусто = удалить)",
+      applock_card:"Блокировка приложения", applock_desc:"Если включено — при каждом открытии спросит пароль или Face ID (хранится на этом устройстве).",
+      applock_on:"Включить блокировку", applock_save:"Сохранить пароль", applock_bio:"Face ID / отпечаток",
+      applock_pin_ph:"Новый пароль (4-6 цифр)", applock_pin2_ph:"Повторите пароль",
+      applock_title:"Приложение заблокировано", applock_unlock:"Открыть", applock_use_bio:"Открыть по Face ID", applock_enter_ph:"Пароль",
       acc_chiqim_lbl:"Откуда ушли деньги?", acc_kirim_lbl:"Куда поступили деньги?",
       avto_card:"Расходы на авто", jami:"Всего", avto_add:"Добавить авто-расход",
       avto_ph:"Сумма (например: 200 000)", avto_izoh_ph:"Комментарий (например: бензин, мойка)",
@@ -971,6 +1135,53 @@
   function esc(s){ return String(s||"").replace(/[<>&]/g,function(c){return {"<":"&lt;",">":"&gt;","&":"&amp;"}[c];}); }
   function val(id){ var e=document.getElementById(id); return e? e.value : ""; }
 
+  /* ---- valyuta (som / $) ---- */
+  var _unit = {};   // input id -> 'som' | 'usd'
+  function usdRate(){ return (DATA && Number(DATA.usd)>0) ? Number(DATA.usd) : 0; }
+  function curUnit(id){ return _unit[id]==='usd' ? 'usd' : 'som'; }
+  function amtSom(id){
+    var raw = parseSum(val(id));
+    if(curUnit(id)==='usd'){ var r=usdRate(); return r>0 ? Math.round(raw*r) : 0; }
+    return Math.round(raw);
+  }
+  function toggleUnit(id){
+    if(curUnit(id)==='som' && usdRate()<=0){ if(tg) tg.showAlert(L("Dollar kursi hali yuklanmadi.","Курс доллара ещё не загружен.")); return; }
+    _unit[id] = curUnit(id)==='som' ? 'usd' : 'som';
+    var b=document.getElementById('u_'+id); if(b) b.textContent = curUnit(id)==='usd' ? '$' : "so'm";
+    updUnitPrev(id);
+  }
+  function resetUnit(id){ _unit[id]='som'; var b=document.getElementById('u_'+id); if(b) b.textContent="so'm"; updUnitPrev(id); }
+  function updUnitPrev(id){
+    var pv=document.getElementById('up_'+id); if(!pv) return;
+    if(curUnit(id)!=='usd'){ pv.textContent=''; return; }
+    var som=amtSom(id);
+    pv.textContent = som>0 ? ('≈ '+grp(som)+" so'm") : (usdRate()>0 ? ('1$ = '+grp(usdRate())+" so'm") : '');
+  }
+  function initCurToggles(){
+    var ins=document.querySelectorAll('input.curinp');
+    for(var i=0;i<ins.length;i++){
+      var inp=ins[i]; if(inp._curWrapped) continue; inp._curWrapped=true;
+      var id=inp.id;
+      var wrap=document.createElement('div'); wrap.className='amt';
+      if(inp.style.marginTop){ wrap.style.marginTop=inp.style.marginTop; inp.style.marginTop=''; }
+      inp.parentNode.insertBefore(wrap, inp); wrap.appendChild(inp);
+      var b=document.createElement('button'); b.type='button'; b.className='unit'; b.id='u_'+id; b.textContent="so'm";
+      (function(x){ b.onclick=function(){ toggleUnit(x); }; })(id);
+      wrap.appendChild(b);
+      var pv=document.createElement('div'); pv.className='uprev'; pv.id='up_'+id;
+      wrap.parentNode.insertBefore(pv, wrap.nextSibling);
+      (function(x){ inp.addEventListener('input', function(){ updUnitPrev(x); }); })(id);
+    }
+  }
+  function renderUsd(){
+    var c=document.getElementById("usdCard"); if(!c) return;
+    var r=usdRate();
+    if(r>0){ c.style.display="flex"; var v=document.getElementById("usdVal"); if(v) v.textContent = "1$ = "+grp(r)+" so'm"; }
+    else c.style.display="none";
+    // ochiq toggle preview'larini yangilash
+    for(var id in _unit) updUnitPrev(id);
+  }
+
   function liveFmt(el){
     var v = el.value;
     if(/[a-z]/i.test(v)) return;
@@ -1045,6 +1256,13 @@
       document.getElementById("loading").innerHTML = "⚠️ "+L("Ulanish xatosi. Qayta urinib ko'ring.","Ошибка соединения. Попробуйте снова.");
       document.getElementById("loading").classList.remove("hidden");
     });
+  }
+
+  // DATA'ni almashtirmaydigan xom API chaqiruv (Seyf uchun)
+  function apiRaw(params, cb){
+    var url = API + "?initData=" + encodeURIComponent(INIT);
+    for(var k in params) url += "&" + k + "=" + encodeURIComponent(params[k]);
+    fetch(url).then(function(r){return r.json();}).then(function(j){ cb(j||{ok:false}); }).catch(function(){ cb({ok:false,error:"net"}); });
   }
 
   /* ---- til almashtirish ---- */
@@ -1125,11 +1343,11 @@
   }
   function pickAcc(turi,a){ acc[turi]=a; renderAcc(); }
   function yechish(yon){
-    var s = parseSum(val("yechSum"));
+    var s = amtSom("yechSum");
     if(s<=0){ if(tg) tg.showAlert(L("Summani kiriting.","Введите сумму.")); return; }
     if(tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred("light");
     call({action:"yechish", yon:yon, summa:s}, function(){
-      var e=document.getElementById("yechSum"); if(e) e.value="";
+      var e=document.getElementById("yechSum"); if(e) e.value=""; resetUnit("yechSum");
       if(tg) tg.showAlert(L("✅ O'tkazildi. Umumiy balans o'zgarmaydi.","✅ Переведено. Общий баланс не меняется."));
     });
   }
@@ -1206,6 +1424,10 @@
     renderAvto();
     renderBanner();
     renderQuote();
+    renderUsd();
+    renderSeyf();
+    lockSettingsSync();
+    initCurToggles();
   }
 
   /* ---- Iqtibos (har kuni almashadi) ---- */
@@ -1244,13 +1466,24 @@
     if(!el){ _qTimer=null; return; }
     var list=activeQuotes();
     var q=list[((_qIdx%list.length)+list.length)%list.length];
-    el.textContent = "«"+L(q.u, q.r||q.u)+"»";
-    if(au) au.textContent = (q.a && q.a!=="—") ? ("— "+q.a) : "";
-    // yumshoq paydo bo'lish (o'qishga qulay)
-    el.classList.remove("qin"); if(au) au.classList.remove("qin");
-    void el.offsetWidth;
-    el.classList.add("qin"); if(au) au.classList.add("qin");
-    _qTimer=setTimeout(function(){ _qIdx++; qShow(); }, 10000);
+    var full = "«"+L(q.u, q.r||q.u)+"»";
+    var auth = (q.a && q.a!=="—") ? ("— "+q.a) : "";
+    if(au){ au.textContent=""; au.classList.remove("qin"); }
+    el.classList.remove("qin");
+    // harf-harf yozilgandek (typewriter) — oxirida kursor miltillab turadi
+    var i=0;
+    function type(){
+      el.innerHTML = esc(full.slice(0,i)) + '<span class="twcur">|</span>';
+      if(i < full.length){
+        i++;
+        _qTimer=setTimeout(type, 42);
+      } else {
+        // to'liq matn + miltillovchi kursor (o'qishga qulay), muallif yumshoq chiqadi
+        if(au){ au.textContent=auth; au.classList.add("qin"); }
+        _qTimer=setTimeout(function(){ _qIdx++; qShow(); }, 10000);
+      }
+    }
+    type();
   }
   function renderBanner(){
     var img=document.getElementById("bannerImg"), ph=document.getElementById("bannerPh");
@@ -1322,12 +1555,12 @@
   }
   function pickAvtoAcc(a){ accAvto=a; renderAvtoAcc(); }
   function avtoQosh(){
-    var s=parseSum(val("avtoSum"));
+    var s=amtSom("avtoSum");
     if(s<=0){ if(tg) tg.showAlert(L("Summani kiriting.","Введите сумму.")); return; }
     if(tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred("light");
     call({action:"add", turi:"Chiqim", kategoriya:"Avtomobil", summa:s, izoh:val("avtoIzoh").trim(), hisob:accAvto}, function(){
       var a=document.getElementById("avtoSum"), b=document.getElementById("avtoIzoh");
-      if(a) a.value=""; if(b) b.value="";
+      if(a) a.value=""; if(b) b.value=""; resetUnit("avtoSum");
     });
   }
   function renderAvto(){
@@ -1476,11 +1709,11 @@
     document.getElementById("goals").innerHTML = h;
   }
   function goalAdd(){
-    var nom = val("gNom").trim(), sum = parseSum(val("gSum")), muddat = val("gMuddat").trim();
+    var nom = val("gNom").trim(), sum = amtSom("gSum"), muddat = val("gMuddat").trim();
     if(!nom){ if(tg) tg.showAlert(L("Maqsad nomini yozing.","Введите название цели.")); return; }
     if(sum<=0){ if(tg) tg.showAlert(L("Kerakli summani to'g'ri yozing.","Введите нужную сумму правильно.")); return; }
     call({action:"goaladd", nom:nom, maqsad:sum, muddat:muddat}, function(){
-      document.getElementById("gNom").value=""; document.getElementById("gSum").value=""; document.getElementById("gMuddat").value="";
+      document.getElementById("gNom").value=""; document.getElementById("gSum").value=""; document.getElementById("gMuddat").value=""; resetUnit("gSum");
     });
   }
   function goalHissa(id){
@@ -1492,6 +1725,180 @@
     var go = function(){ call({action:"goaldel", id:id}); };
     if(tg) tg.showConfirm(L("Shu maqsad o'chirilsinmi?","Удалить эту цель?"), function(ok){ if(ok) go(); });
     else if(confirm("?")) go();
+  }
+
+  /* ---- SEYF (jamg'arma qulfi) ---- */
+  var SEYF = { unlocked:false, loaded:false, pin:"", yon:"kirim", balans:0, tx:[] };
+  function renderSeyf(){
+    if(!DATA || !DATA.seyf) return;
+    var lock=document.getElementById("seyfLock"), main=document.getElementById("seyfMain");
+    if(!lock || !main) return;
+    var pinBor = !!DATA.seyf.pinBor;
+    if(!pinBor) SEYF.unlocked = true;
+    if(SEYF.unlocked){
+      lock.classList.add("hidden"); main.classList.remove("hidden");
+      if(!SEYF.loaded){ seyfFetch(); }
+      var goalsSum=(DATA.maqsadlar||[]).reduce(function(s,x){return s+(Number(x.yiglangan)||0);},0);
+      var bal=Number(SEYF.balans)||0;
+      var t=document.getElementById("seyfTotal"); if(t) t.textContent=fmt(bal+goalsSum);
+      var b=document.getElementById("seyfBal"); if(b) b.textContent=fmt(bal);
+      var g=document.getElementById("seyfGoals"); if(g) g.textContent=fmt(goalsSum);
+      renderSeyfList(); renderSeyfGoals();
+    } else {
+      lock.classList.remove("hidden"); main.classList.add("hidden");
+    }
+  }
+  function seyfFetch(){
+    SEYF.loaded=true;
+    apiRaw({action:"seyfunlock", pin:SEYF.pin}, function(j){
+      if(j.ok){ SEYF.unlocked=true; SEYF.balans=j.balans||0; SEYF.tx=j.tx||[]; renderSeyf(); }
+      else if(j.error==="pin"){ SEYF.unlocked=false; SEYF.loaded=false; renderSeyf(); }
+    });
+  }
+  function seyfUnlock(){
+    var pin=val("seyfPinIn").trim();
+    if(!/^\d{4}$/.test(pin)){ var e0=document.getElementById("seyfPinErr"); if(e0) e0.textContent=L("4 xonali PIN kiriting","Введите 4-значный PIN"); return; }
+    apiRaw({action:"seyfunlock", pin:pin}, function(j){
+      if(j.ok){ SEYF.pin=pin; SEYF.unlocked=true; SEYF.loaded=true; SEYF.balans=j.balans||0; SEYF.tx=j.tx||[];
+        var pe=document.getElementById("seyfPinErr"); if(pe) pe.textContent=""; var pi=document.getElementById("seyfPinIn"); if(pi) pi.value="";
+        if(tg && tg.HapticFeedback && tg.HapticFeedback.notificationOccurred) tg.HapticFeedback.notificationOccurred("success");
+        renderSeyf();
+      } else {
+        var e=document.getElementById("seyfPinErr"); if(e) e.textContent=L("PIN noto'g'ri","Неверный PIN");
+        if(tg && tg.HapticFeedback && tg.HapticFeedback.notificationOccurred) tg.HapticFeedback.notificationOccurred("error");
+      }
+    });
+  }
+  function seyfYon(y){
+    SEYF.yon=y;
+    var a=document.getElementById("seyfYonAdd"), r=document.getElementById("seyfYonRem");
+    if(a) a.classList.toggle("on", y==="kirim"); if(r) r.classList.toggle("on", y==="chiqim");
+  }
+  function seyfAdd(){
+    var s=amtSom("seyfSum");
+    if(s<=0){ if(tg) tg.showAlert(L("Summani kiriting.","Введите сумму.")); return; }
+    apiRaw({action:"seyfadd", pin:SEYF.pin, yon:SEYF.yon, summa:s, izoh:val("seyfIzoh").trim()}, function(j){
+      if(j.ok){ SEYF.balans=j.balans||0; SEYF.tx=j.tx||[];
+        document.getElementById("seyfSum").value=""; document.getElementById("seyfIzoh").value=""; resetUnit("seyfSum");
+        if(tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred("light");
+        renderSeyf();
+      }
+      else if(j.error==="kam"){ if(tg) tg.showAlert(L("Seyfda yetarli pul yo'q.","В сейфе недостаточно денег.")); }
+      else if(j.error==="pin"){ if(tg) tg.showAlert(L("PIN noto'g'ri.","Неверный PIN.")); SEYF.unlocked=false; SEYF.loaded=false; renderSeyf(); }
+      else if(j.error==="summa"){ if(tg) tg.showAlert(L("Summani to'g'ri kiriting.","Введите сумму правильно.")); }
+    });
+  }
+  function seyfPinSave(){
+    var eski=val("seyfOldPin").trim(), yangi=val("seyfNewPin").trim();
+    if(yangi && !/^\d{4}$/.test(yangi)){ if(tg) tg.showAlert(L("PIN 4 ta raqam bo'lishi kerak.","PIN должен быть из 4 цифр.")); return; }
+    apiRaw({action:"seyfpin", eski:eski, yangi:yangi}, function(j){
+      if(j.ok){
+        document.getElementById("seyfOldPin").value=""; document.getElementById("seyfNewPin").value="";
+        SEYF.pin=yangi; SEYF.unlocked=true;
+        if(DATA && DATA.seyf) DATA.seyf.pinBor=j.pinBor;
+        if(tg) tg.showAlert(yangi ? L("✅ PIN saqlandi.","✅ PIN сохранён.") : L("✅ PIN o'chirildi.","✅ PIN удалён."));
+        renderSeyf();
+      }
+      else if(j.error==="eski_pin"){ if(tg) tg.showAlert(L("Eski PIN noto'g'ri.","Старый PIN неверный.")); }
+      else if(j.error==="pin_format"){ if(tg) tg.showAlert(L("PIN 4 ta raqam bo'lishi kerak.","PIN должен быть из 4 цифр.")); }
+    });
+  }
+  function renderSeyfList(){
+    var el=document.getElementById("seyfList"); if(!el) return;
+    var tx=SEYF.tx||[];
+    if(!tx.length){ el.innerHTML='<div class="muted" style="text-align:center;padding:12px 0">'+L("Hali yozuv yo'q","Пока нет записей")+'</div>'; return; }
+    el.innerHTML = tx.map(function(x){
+      var pos=(Number(x.summa)||0)>=0;
+      return '<div class="seyf-row"><div><div class="si">'+(x.izoh?esc(x.izoh):(pos?L("Qo'shildi","Добавлено"):L("Olindi","Снято")))+'</div>'+
+        '<div class="muted" style="font-size:12px">'+esc(x.sana||"")+'</div></div>'+
+        '<div class="sa '+(pos?'pos':'neg')+'">'+(pos?'+':'−')+fmt(Math.abs(Number(x.summa)||0))+'</div></div>';
+    }).join("");
+  }
+  function renderSeyfGoals(){
+    var el=document.getElementById("seyfGoalList"); if(!el) return;
+    var gs=(DATA.maqsadlar||[]);
+    if(!gs.length){ el.innerHTML='<div class="muted" style="text-align:center;padding:10px 0">'+L("Maqsad yo'q","Нет целей")+'</div>'; return; }
+    el.innerHTML = gs.map(function(x){
+      var pct=(x.maqsad>0)?Math.min(100,Math.round(x.yiglangan/x.maqsad*100)):0;
+      return '<div class="seyf-row"><div class="si">'+esc(x.nom)+'</div>'+
+        '<div class="sa pos">'+fmt(x.yiglangan)+(x.maqsad>0?(' <span class="muted" style="font-weight:600">/ '+fmt(x.maqsad)+' · '+pct+'%</span>'):'')+'</div></div>';
+    }).join("");
+  }
+
+  /* ---- ILOVA QULFI (parol + Face ID, shu qurilmada) ---- */
+  function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+  function lsSet(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+  function lsDel(k){ try{ localStorage.removeItem(k); }catch(e){} }
+  function lockHash(s){ var h=5381,i=s.length; while(i){ h=(h*33)^s.charCodeAt(--i); } return String(h>>>0); }
+  function lockEnabled(){ return lsGet('applock_on')==='1' && !!lsGet('applock_pin'); }
+  function bioMgr(){ return (tg && tg.BiometricManager) ? tg.BiometricManager : null; }
+  function bioReady(){ var b=bioMgr(); return b && b.isInited && b.isBiometricAvailable; }
+  function lockShow(){
+    var o=document.getElementById("lockOverlay"); if(!o) return;
+    o.style.display="flex"; LOCK.ok=false;
+    var inp=document.getElementById("lockInput"); if(inp) inp.value="";
+    var er=document.getElementById("lockErr"); if(er) er.textContent="";
+    var useBio = lsGet('applock_bio')==='1';
+    var bb=document.getElementById("lockBioBtn");
+    if(bb) bb.style.display = (useBio) ? "inline-flex" : "none";
+    if(useBio){ setTimeout(lockBioAuth, 350); }
+  }
+  function lockHide(){ var o=document.getElementById("lockOverlay"); if(o) o.style.display="none"; LOCK.ok=true; }
+  function lockTry(){
+    var v=val("lockInput").trim();
+    if(v && lockHash(v)===lsGet('applock_pin')){ lockHide(); if(tg&&tg.HapticFeedback&&tg.HapticFeedback.notificationOccurred) tg.HapticFeedback.notificationOccurred("success"); }
+    else { var e=document.getElementById("lockErr"); if(e) e.textContent=L("Parol noto'g'ri","Неверный пароль"); if(tg&&tg.HapticFeedback&&tg.HapticFeedback.notificationOccurred) tg.HapticFeedback.notificationOccurred("error"); }
+  }
+  function lockBioAuth(){
+    var b=bioMgr(); if(!b) return;
+    var go=function(){ try{ b.authenticate({reason:L("Ilovani ochish","Открыть приложение")}, function(ok){ if(ok) lockHide(); }); }catch(e){} };
+    if(b.isInited) go(); else try{ b.init(go); }catch(e){}
+  }
+  function lockToggle(on){
+    var box=document.getElementById("lockPinBox");
+    if(on){ if(box) box.classList.remove("hidden"); lockSyncBioBox(); }
+    else {
+      lsDel('applock_on'); lsDel('applock_pin'); lsDel('applock_bio');
+      if(box) box.classList.add("hidden");
+      lockSettingsSync();
+      if(tg) tg.showAlert(L("🔓 Qulf o'chirildi.","🔓 Блокировка выключена."));
+    }
+  }
+  function lockSavePin(){
+    var a=val("lockPinA").trim(), b=val("lockPinB").trim();
+    if(!/^\d{4,6}$/.test(a)){ if(tg) tg.showAlert(L("Parol 4-6 ta raqam bo'lsin.","Пароль 4-6 цифр.")); return; }
+    if(a!==b){ if(tg) tg.showAlert(L("Parollar mos emas.","Пароли не совпадают.")); return; }
+    lsSet('applock_pin', lockHash(a)); lsSet('applock_on','1');
+    document.getElementById("lockPinA").value=""; document.getElementById("lockPinB").value="";
+    lockSettingsSync();
+    if(tg) tg.showAlert(L("🔒 Parol saqlandi. Ilova endi qulflanadi.","🔒 Пароль сохранён. Приложение будет блокироваться."));
+  }
+  function lockBioToggle(on){
+    var cb=document.getElementById("lockBio");
+    if(on){
+      var b=bioMgr();
+      if(!b){ if(cb) cb.checked=false; if(tg) tg.showAlert(L("Bu qurilmada Face ID mavjud emas.","Face ID недоступен на этом устройстве.")); return; }
+      var req=function(){ try{ b.requestAccess({reason:L("Ilovani Face ID bilan ochish","Открывать по Face ID")}, function(ok){
+            if(ok){ lsSet('applock_bio','1'); if(tg) tg.showAlert(L("✅ Face ID yoqildi.","✅ Face ID включён.")); }
+            else { if(cb) cb.checked=false; }
+          }); }catch(e){ if(cb) cb.checked=false; } };
+      if(b.isInited) req(); else try{ b.init(req); }catch(e){ if(cb) cb.checked=false; }
+    } else { lsDel('applock_bio'); }
+  }
+  function lockSyncBioBox(){
+    var box=document.getElementById("lockBioBox"); if(!box) return;
+    var b=bioMgr();
+    var show=function(){ box.style.display = bioReady() ? "flex" : "none"; var cb=document.getElementById("lockBio"); if(cb) cb.checked = lsGet('applock_bio')==='1'; };
+    if(b && !b.isInited){ try{ b.init(show); }catch(e){ box.style.display="none"; } } else show();
+  }
+  function lockSettingsSync(){
+    var on=document.getElementById("lockOn"); if(on) on.checked = lsGet('applock_on')==='1';
+    var box=document.getElementById("lockPinBox"); if(box) box.classList.toggle("hidden", lsGet('applock_on')!=='1');
+    var hint=document.getElementById("lockHint");
+    if(hint) hint.textContent = lockEnabled()
+      ? L("🔒 Qulf yoniq. Parolni unutsangiz — ilova ma'lumotini (localStorage) tozalab, qayta o'rnatasiz.","🔒 Блокировка включена. Забыли пароль — очистите данные приложения и задайте заново.")
+      : L("Qulf o'chiq.","Блокировка выключена.");
+    if(lsGet('applock_on')==='1') lockSyncBioBox();
   }
 
   /* ---- Byudjet taqsimoti ---- */
@@ -1607,10 +2014,10 @@
     return h;
   }
   function qarzAdd(){
-    var tr = val("qTuri"), kim = val("qKim").trim(), sum = parseSum(val("qSum")), muddat = val("qMuddat").trim();
+    var tr = val("qTuri"), kim = val("qKim").trim(), sum = amtSom("qSum"), muddat = val("qMuddat").trim();
     if(sum<=0){ if(tg) tg.showAlert(L("Summani to'g'ri yozing.","Введите сумму правильно.")); return; }
     call({action:"qarzadd", turi:tr, kim:kim, summa:sum, muddat:muddat}, function(){
-      document.getElementById("qKim").value=""; document.getElementById("qSum").value=""; document.getElementById("qMuddat").value="";
+      document.getElementById("qKim").value=""; document.getElementById("qSum").value=""; document.getElementById("qMuddat").value=""; resetUnit("qSum");
       if(tg) tg.showAlert(L("✅ Qarz qo'shildi.","✅ Долг добавлен."));
     });
   }
@@ -1719,7 +2126,7 @@
   /* ---- saqlash ---- */
   function saqla(turi){
     var id = (turi==="Kirim") ? "K" : "C";
-    var summa = parseSum(val("summa"+id));
+    var summa = amtSom("summa"+id);
     if(summa<=0){ if(tg) tg.showAlert(L("Summani to'g'ri kiriting.","Введите сумму правильно.")); return; }
     var k = sel[turi] || "Boshqa", izoh = val("izoh"+id).trim();
     if(k==="Boshqa"){
@@ -1729,7 +2136,7 @@
     }
     if(tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred("light");
     call({action:"add", turi:turi, kategoriya:k, summa:summa, izoh:izoh, hisob:acc[turi]||"Plastik"}, function(){
-      document.getElementById("summa"+id).value=""; document.getElementById("izoh"+id).value="";
+      document.getElementById("summa"+id).value=""; document.getElementById("izoh"+id).value=""; resetUnit("summa"+id);
       var bx=document.getElementById("boshqa"+id); if(bx){ bx.value=""; bx.classList.add("hidden"); }
       sel[turi]=""; renderChips(turi);
     });
@@ -1760,6 +2167,8 @@
 
   // Boshlash
   applyLang();
+  initCurToggles();
+  if(lockEnabled()) lockShow();   // ilova qulfi yoqilgan bo'lsa — darhol so'raydi
   if(!INIT){
     document.getElementById("loading").innerHTML = "⛔ "+L("Bu sahifani <b>Telegram bot</b> ichidan oching.","Откройте эту страницу внутри <b>Telegram-бота</b>.");
   } else {
