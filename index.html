@@ -151,7 +151,7 @@
   .donut2 .seg{transition:stroke-width .2s}
   @keyframes donutIn{0%{opacity:0; transform:rotate(-160deg) scale(.4)} 100%{opacity:1; transform:rotate(0) scale(1)}}
   .donut2 .track{fill:none; stroke:var(--bar-bg); stroke-width:13}
-  .donut2 .seg{fill:none; stroke-width:13; stroke-linecap:butt; filter:drop-shadow(0 2px 5px rgba(0,0,0,.22))}
+  .donut2 .seg{fill:none; stroke-width:13; stroke-linecap:round; filter:drop-shadow(0 2px 5px rgba(0,0,0,.22))}
   .dc{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center}
   .dc .l{font-size:11px; color:var(--hint); text-transform:uppercase; letter-spacing:.6px; font-weight:700}
   .dc .v{font-size:19px; font-weight:800; margin-top:3px; letter-spacing:-.3px}
@@ -913,7 +913,7 @@
         <input id="clearPass" type="password" data-ph="clearpass_ph" placeholder="Parol (o'rnatilgan bo'lsa)">
         <button class="clear" onclick="hammasini()"><span class="ms" style="font-size:18px;vertical-align:-4px">delete</span> <span data-i18n="btn_hammasini">Hammasini tozalash</span></button>
       </div>
-      <div class="muted" style="text-align:center;font-size:12px;margin:4px 0 6px">Pul bot · dizayn v31.5 (klaviatura ustma-ust qoplaydi · layout qimirlamaydi) · 2026-10-23</div>
+      <div class="muted" style="text-align:center;font-size:12px;margin:4px 0 6px">Pul bot · dizayn v31.6 (diagramma yumaloq chet · orqa halqa olib tashlandi) · 2026-10-23</div>
     </div>
 
     <div class="modal hidden" id="notifModal" onclick="closeNotif(event)">
@@ -1448,13 +1448,17 @@
     segs = (segs||[]).filter(function(s){return (Number(s.value)||0)>0;});
     var total = segs.reduce(function(s,x){return s+(Number(x.value)||0);},0);
     if(total<=0) return '<div class="muted" style="text-align:center;padding:16px 0">'+L("Hali ma'lumot yo'q","Пока нет данных")+'</div>';
-    var R=52, C=2*Math.PI*R, gap=(segs.length>1?5:0), acc=0, arcs="";
+    var R=52, C=2*Math.PI*R, sw=13, one=(segs.length===1), visGap=(one?0:4), acc=0, arcs="";
     segs.forEach(function(s){
-      var len=(s.value/total)*C, seg=Math.max(len-gap,0.6);
-      var dash=seg.toFixed(2)+' '+(C-seg).toFixed(2), off=(-acc).toFixed(2); acc+=len;
+      var len=(s.value/total)*C;
+      // yumaloq uch uchun stroke eni (sw) + ko'rinadigan bo'shliq joyini qoldiramiz
+      var drawn = one ? C : (len - visGap - sw);
+      if(drawn < 0.5) drawn = 0.5;
+      var pad = (len - drawn) / 2;   // bo'lakни o'z joyida markazlashtiramiz (uchlar chiqib ketmaydi)
+      var dash=drawn.toFixed(2)+' '+(C-drawn).toFixed(2), off=(-(acc+pad)).toFixed(2); acc+=len;
       arcs+='<circle class="seg" cx="60" cy="60" r="'+R+'" stroke="'+s.color+'" stroke-dasharray="'+dash+'" stroke-dashoffset="'+off+'"></circle>';
     });
-    var svg='<div class="donut2"><svg viewBox="0 0 120 120"><circle class="track" cx="60" cy="60" r="'+R+'"></circle>'+
+    var svg='<div class="donut2"><svg viewBox="0 0 120 120">'+
             '<g transform="rotate(-90 60 60)">'+arcs+'</g></svg>'+
             '<div class="dc"><div class="l">'+esc(cLabel)+'</div><div class="v">'+cVal+'</div></div></div>';
     var legend = segs.map(function(s){
