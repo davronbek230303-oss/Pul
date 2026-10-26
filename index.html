@@ -147,11 +147,12 @@
   /* diagramma (donut) */
   .chartwrap{display:flex; flex-direction:column; align-items:center; gap:16px}
   .donut2{position:relative; width:190px; height:190px; flex:0 0 auto}
-  .donut2 svg{width:100%; height:100%; display:block; animation:donutIn .75s cubic-bezier(.22,1,.36,1); overflow:visible}
-  .donut2 .seg{transition:stroke-width .2s}
+  /* conic-gradient donut — CSS o'zi chizadi, bo'laklar hech qachon ustma-ust chiqmaydi */
+  .donutRing{width:100%; height:100%; border-radius:50%;
+    -webkit-mask:radial-gradient(farthest-side, transparent calc(100% - 17px), #000 calc(100% - 16px));
+            mask:radial-gradient(farthest-side, transparent calc(100% - 17px), #000 calc(100% - 16px));
+    animation:donutIn .7s cubic-bezier(.22,1,.36,1)}
   @keyframes donutIn{0%{opacity:0; transform:rotate(-160deg) scale(.4)} 100%{opacity:1; transform:rotate(0) scale(1)}}
-  .donut2 .track{fill:none; stroke:var(--bar-bg); stroke-width:13}
-  .donut2 .seg{fill:none; stroke-width:10; filter:drop-shadow(0 2px 5px rgba(0,0,0,.22))}
   .dc{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center}
   .dc .l{font-size:11px; color:var(--hint); text-transform:uppercase; letter-spacing:.6px; font-weight:700}
   .dc .v{font-size:19px; font-weight:800; margin-top:3px; letter-spacing:-.3px}
@@ -266,7 +267,7 @@
     .hero2:after{animation:orbit2 16s ease-in-out infinite}
     .acccard:before{animation:orbit2 14s ease-in-out infinite}
     /* donut doimiy aylanadi (markaz matni qimirlamaydi) */
-    .donut2 svg{animation:donutIn .75s cubic-bezier(.22,1,.36,1), dRotate 26s 1s linear infinite}
+    .donut2 .donutRing{animation:donutIn .7s cubic-bezier(.22,1,.36,1), dRotate 30s 1s linear infinite}
     /* bosh sahifa tezkor amallar — periodik (strelka siljiydi, ustunlar ko'tariladi) */
     .qa button:nth-child(1) .qa-i .ms{animation:drawDownLoop 5s ease infinite; display:inline-block}
     .qa button:nth-child(2) .qa-i .ms{animation:drawUpLoop 5s ease infinite .4s; display:inline-block}
@@ -580,11 +581,6 @@
         <div id="homeChart" class="chartwrap"></div>
       </div>
 
-      <div class="card save hidden" id="tejamCard">
-        <div class="hd"><h3 style="color:var(--green)"><span class="ms" style="font-size:18px">savings</span> <span data-i18n="tejalgan">Tejalgan pul</span></h3>
-          <div class="ic"><button class="iq" onclick="info('tejam')"><span class="ms" style="font-size:16px">info</span></button></div></div>
-        <div id="tejamBox"></div>
-      </div>
 
       <div class="card warn hidden" id="warnCard">
         <div class="hd"><h3 style="color:var(--red)"><span class="ms" style="font-size:18px">warning</span> <span data-i18n="ogohlantirish">Ogohlantirish</span></h3></div>
@@ -922,7 +918,7 @@
         <input id="clearPass" type="password" data-ph="clearpass_ph" placeholder="Parol (o'rnatilgan bo'lsa)">
         <button class="clear" onclick="hammasini()"><span class="ms" style="font-size:18px;vertical-align:-4px">delete</span> <span data-i18n="btn_hammasini">Hammasini tozalash</span></button>
       </div>
-      <div class="muted" style="text-align:center;font-size:12px;margin:4px 0 6px">Pul bot · dizayn v32 (Tejam = oylik ko'rsatkich · diagramma ustma-ust tuzatildi) · 2026-10-26</div>
+      <div class="muted" style="text-align:center;font-size:12px;margin:4px 0 6px">Pul bot · dizayn v33 (diagramma conic-gradient · Tejam bo'limi olib tashlandi) · 2026-10-26</div>
     </div>
 
     <div class="modal hidden" id="notifModal" onclick="closeNotif(event)">
@@ -1477,25 +1473,19 @@
     segs = (segs||[]).filter(function(s){return (Number(s.value)||0)>0;});
     var total = segs.reduce(function(s,x){return s+(Number(x.value)||0);},0);
     if(total<=0) return '<div class="muted" style="text-align:center;padding:16px 0">'+L("Hali ma'lumot yo'q","Пока нет данных")+'</div>';
-    var R=52, C=2*Math.PI*R, sw=10, one=(segs.length===1), acc=0, arcs="";
+    // conic-gradient: har bo'lak foiz bo'yicha joylashadi; bo'shliqlar shaffof => hech qachon ustma-ust chiqmaydi
+    var one=(segs.length===1), gapP=(one?0:2), acc=0, stops=[];
     segs.forEach(function(s){
-      var len=(s.value/total)*C;
-      if(one){
-        arcs+='<circle class="seg" cx="60" cy="60" r="'+R+'" stroke="'+s.color+'" stroke-linecap="round" stroke-dasharray="'+C.toFixed(2)+' 0" stroke-dashoffset="0"></circle>';
-        return;
-      }
-      var g = Math.min(6, len*0.4);           // bo'shliq, lekin slotning 40% dan oshmaydi
-      var avail = len - g;                     // bo'yoq uchun joy (ustma-ust chiqmaslik kafolati)
-      var cap, drawn;
-      if(avail >= sw + 2){ cap='round'; drawn = avail - sw; }   // joy yetarli — yumaloq uch
-      else { cap='butt'; drawn = Math.max(avail, 0.4); }        // juda kichik — tekis (chiqib ketmaydi)
-      var painted = drawn + (cap==='round' ? sw : 0);
-      var start = acc + (len - painted)/2 + (cap==='round' ? sw/2 : 0);
-      var dash=drawn.toFixed(2)+' '+(C-drawn).toFixed(2), off=(-start).toFixed(2); acc+=len;
-      arcs+='<circle class="seg" cx="60" cy="60" r="'+R+'" stroke="'+s.color+'" stroke-linecap="'+cap+'" stroke-dasharray="'+dash+'" stroke-dashoffset="'+off+'"></circle>';
+      var frac=(s.value/total)*100;
+      var g = (frac <= gapP*1.6) ? 0 : gapP;   // juda kichik bo'lakdan bo'shliq olinmaydi (ko'rinib tursin)
+      var cs=acc+g/2, ce=acc+frac-g/2; if(ce<cs) ce=cs;
+      stops.push('transparent '+acc.toFixed(3)+'% '+cs.toFixed(3)+'%');
+      stops.push(s.color+' '+cs.toFixed(3)+'% '+ce.toFixed(3)+'%');
+      stops.push('transparent '+ce.toFixed(3)+'% '+(acc+frac).toFixed(3)+'%');
+      acc+=frac;
     });
-    var svg='<div class="donut2"><svg viewBox="0 0 120 120">'+
-            '<g transform="rotate(-90 60 60)">'+arcs+'</g></svg>'+
+    var grad='conic-gradient(from -90deg, '+stops.join(', ')+')';
+    var svg='<div class="donut2"><div class="donutRing" style="background:'+grad+'"></div>'+
             '<div class="dc"><div class="l">'+esc(cLabel)+'</div><div class="v">'+cVal+'</div></div></div>';
     var legend = segs.map(function(s){
       var pct=Math.round(s.value/total*100);
@@ -1607,7 +1597,6 @@
     var ttot = tsegs.reduce(function(s,x){return s+x.value;},0);
     document.getElementById("taqChart").innerHTML = donutHTML(tsegs, L("Reja","План"), fmt(ttot), true);
 
-    renderTejam();
     renderWarn();
     updateBell();
     renderHomeGoals();
@@ -1787,23 +1776,6 @@
              '<div class="mid"><div class="k">'+amt(t.summa, EYE.tx)+(t.izoh?' <span class="d">'+esc(t.izoh)+'</span>':'')+'</div>'+
              '<div class="d">'+esc(t.sana)+' · '+(t.hisob==="Naqd"?L("💵 Naqd","💵 Нал."):L("💳 Plastik","💳 Карта"))+'</div></div></div>';
     }).join("") : '<div class="muted" style="font-size:13px;padding:6px 0">'+L("Hali avto xarajat yo'q.","Пока нет авто-расходов.")+'</div>';
-  }
-
-  function renderTejam(){
-    var t = DATA.tejam || {limit:0}, card = document.getElementById("tejamCard");
-    if(!t.limit || t.limit<=0){ card.classList.add("hidden"); return; }
-    card.classList.remove("hidden");
-    var h = '<div style="text-align:center;margin:4px 0 12px">'+
-            '<div class="muted" style="font-size:12px">'+L("Shu oy tejaldi (kunlik limitdan)","Сэкономлено в этом месяце (от дневного лимита)")+'</div>'+
-            '<div class="big" style="color:var(--green)">'+fmt(t.shuOy||0)+'</div></div>';
-    h += '<div class="kv"><span class="muted">'+L("Bugun (shu paytgacha)","Сегодня (пока что)")+'</span><span style="color:var(--green);font-weight:700">+'+fmt(t.bugun||0)+'</span></div>';
-    var oyl = t.oylar||[];
-    if(oyl.length){
-      h += '<div class="muted" style="font-size:12px;margin:12px 0 4px;font-weight:700">'+L("Oylar bo'yicha","По месяцам")+'</div>';
-      h += oyl.map(function(m){ return '<div class="kv"><span class="muted">'+esc(oyNom(m.oy))+'</span><span style="color:var(--green);font-weight:700">+'+fmt(m.summa)+'</span></div>'; }).join("");
-    }
-    h += '<div class="muted" style="font-size:12px;margin-top:10px">💡 '+L("Bu faqat ko'rsatkich. Har kuni limitdan kam sarflasangiz, farqi shu oyga qo'shiladi va har kuni 0 dan boshlanadi. Bu alohida sarflanadigan pul emas.","Это только показатель. Если за день тратите меньше лимита, разница добавляется к месяцу и каждый день начинается с 0. Это не отдельные деньги для трат.")+'</div>';
-    document.getElementById("tejamBox").innerHTML = h;
   }
 
   function renderTxList(turi){
