@@ -918,7 +918,7 @@
         <input id="clearPass" type="password" data-ph="clearpass_ph" placeholder="Parol (o'rnatilgan bo'lsa)">
         <button class="clear" onclick="hammasini()"><span class="ms" style="font-size:18px;vertical-align:-4px">delete</span> <span data-i18n="btn_hammasini">Hammasini tozalash</span></button>
       </div>
-      <div class="muted" style="text-align:center;font-size:12px;margin:4px 0 6px">Pul bot · dizayn v33 (diagramma conic-gradient · Tejam bo'limi olib tashlandi) · 2026-10-26</div>
+      <div class="muted" style="text-align:center;font-size:12px;margin:4px 0 6px">Pul bot · dizayn v33.1 (diagramma ranglari alohida · har bo'lakka bo'shliq) · 2026-10-26</div>
     </div>
 
     <div class="modal hidden" id="notifModal" onclick="closeNotif(event)">
@@ -956,7 +956,8 @@
   var LOCK = { ok:false };
   var sel = { Chiqim:"", Kirim:"" };
   var acc = { Chiqim:"Plastik", Kirim:"Plastik" };   // hisob tanlovi (Plastik/Naqd)
-  var PAL = ["#6366f1","#0ea5e9","#14b8a6","#f59e0b","#ef4444","#ec4899","#8b5cf6","#22c55e","#f97316","#06b6d4","#eab308","#64748b"];
+  // yonma-yon ranglar bir-biridan keskin farq qilsin (qo'shni bo'laklar qo'shilib ketmasin)
+  var PAL = ["#6366f1","#f59e0b","#0ea5e9","#ef4444","#14b8a6","#ec4899","#22c55e","#8b5cf6","#f97316","#06b6d4","#eab308","#64748b"];
   function colorFor(i){ return PAL[i % PAL.length]; }
   // Raqamni silliq sanab chiqadigan animatsiya
   function animateNum(id, target, show){
@@ -1477,7 +1478,7 @@
     var one=(segs.length===1), gapP=(one?0:2), acc=0, stops=[];
     segs.forEach(function(s){
       var frac=(s.value/total)*100;
-      var g = (frac <= gapP*1.6) ? 0 : gapP;   // juda kichik bo'lakdan bo'shliq olinmaydi (ko'rinib tursin)
+      var g = one ? 0 : Math.min(gapP, frac*0.5);   // har bo'lakka bo'shliq (kichkinasiga ham) — hech qachon qo'shilmaydi
       var cs=acc+g/2, ce=acc+frac-g/2; if(ce<cs) ce=cs;
       stops.push('transparent '+acc.toFixed(3)+'% '+cs.toFixed(3)+'%');
       stops.push(s.color+' '+cs.toFixed(3)+'% '+ce.toFixed(3)+'%');
