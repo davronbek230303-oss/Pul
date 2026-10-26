@@ -151,7 +151,7 @@
   .donut2 .seg{transition:stroke-width .2s}
   @keyframes donutIn{0%{opacity:0; transform:rotate(-160deg) scale(.4)} 100%{opacity:1; transform:rotate(0) scale(1)}}
   .donut2 .track{fill:none; stroke:var(--bar-bg); stroke-width:13}
-  .donut2 .seg{fill:none; stroke-width:10; stroke-linecap:round; filter:drop-shadow(0 2px 5px rgba(0,0,0,.22))}
+  .donut2 .seg{fill:none; stroke-width:10; filter:drop-shadow(0 2px 5px rgba(0,0,0,.22))}
   .dc{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center}
   .dc .l{font-size:11px; color:var(--hint); text-transform:uppercase; letter-spacing:.6px; font-weight:700}
   .dc .v{font-size:19px; font-weight:800; margin-top:3px; letter-spacing:-.3px}
@@ -922,7 +922,7 @@
         <input id="clearPass" type="password" data-ph="clearpass_ph" placeholder="Parol (o'rnatilgan bo'lsa)">
         <button class="clear" onclick="hammasini()"><span class="ms" style="font-size:18px;vertical-align:-4px">delete</span> <span data-i18n="btn_hammasini">Hammasini tozalash</span></button>
       </div>
-      <div class="muted" style="text-align:center;font-size:12px;margin:4px 0 6px">Pul bot · dizayn v31.9 (tab menyu pastda qoladi · klaviatura yopish tugmasi) · 2026-10-23</div>
+      <div class="muted" style="text-align:center;font-size:12px;margin:4px 0 6px">Pul bot · dizayn v32 (Tejam = oylik ko'rsatkich · diagramma ustma-ust tuzatildi) · 2026-10-26</div>
     </div>
 
     <div class="modal hidden" id="notifModal" onclick="closeNotif(event)">
@@ -1390,7 +1390,7 @@
     uz:{
       balans:"Umumiy qoldiq — barcha kirimlardan chiqimlar ayirilgani.\n👁 bosib yashirish yoki ko'rsatish mumkin.",
       oy:"Shu oyda qancha kirim qilgansiz va qancha sarflagansiz, limit holati.",
-      tejam:"Kunlik limitdan ortib qolgan (tejalgan) pul oy davomida yig'ilib boradi.\nMasalan limit 100 000, bugun 50 000 sarflasangiz — 50 000 tejaladi.\nUni ishlatsangiz: Chiqim → «Tejamdan» kategoriyasini tanlang (bu kunlik limitga ta'sir qilmaydi).",
+      tejam:"Bu — faqat intizom ko'rsatkichi (sarflanadigan pul emas).\nHar kuni 0 dan boshlanadi: kunlik limitdan kam sarflasangiz, farqi (limit − sarf) shu oyga qo'shiladi.\nMasalan limit 100 000, bugun 50 000 sarflasangiz — o'sha kun 50 000 tejaldi deb hisoblanadi.\nHar oy bo'yicha jami qancha tejaganingiz ko'rsatiladi.",
       yangi:"Turi shu bo'limga mos. Kategoriya tanlang, summa va izoh yozing.",
       maqsad:"Jamg'arma maqsadlari. Byudjet taqsimotidagi maqsad ulushi avtomat shu yerga tushadi.",
       taqsim:"Oylik pul kelganda avtomat bo'laklarga ajratish. ✏️ — rejani o'zgartirish.",
@@ -1407,7 +1407,7 @@
     ru:{
       balans:"Общий остаток — все доходы минус расходы.\n👁 можно скрыть или показать.",
       oy:"Сколько в этом месяце заработали и потратили, статус лимита.",
-      tejam:"Деньги, сэкономленные сверх дневного лимита, копятся весь месяц.\nНапример лимит 100 000, сегодня потратили 50 000 — 50 000 сэкономлено.\nЧтобы потратить: Расход → категория «Из сбережений» (не влияет на дневной лимит).",
+      tejam:"Это только показатель дисциплины (не деньги для трат).\nКаждый день начинается с 0: если за день потратили меньше лимита, разница (лимит − расход) добавляется к этому месяцу.\nНапример лимит 100 000, сегодня потратили 50 000 — за тот день сэкономлено 50 000.\nПоказывается итог за каждый месяц.",
       yangi:"Тип соответствует разделу. Выберите категорию, введите сумму и комментарий.",
       maqsad:"Цели накоплений. Доля цели из распределения бюджета попадает сюда автоматически.",
       taqsim:"Когда приходят деньги за месяц — автоматически разложить по частям. ✏️ — изменить план.",
@@ -1477,15 +1477,22 @@
     segs = (segs||[]).filter(function(s){return (Number(s.value)||0)>0;});
     var total = segs.reduce(function(s,x){return s+(Number(x.value)||0);},0);
     if(total<=0) return '<div class="muted" style="text-align:center;padding:16px 0">'+L("Hali ma'lumot yo'q","Пока нет данных")+'</div>';
-    var R=52, C=2*Math.PI*R, sw=10, one=(segs.length===1), visGap=(one?0:6), acc=0, arcs="";
+    var R=52, C=2*Math.PI*R, sw=10, one=(segs.length===1), acc=0, arcs="";
     segs.forEach(function(s){
       var len=(s.value/total)*C;
-      // yumaloq uch uchun stroke eni (sw) + ko'rinadigan bo'shliq joyini qoldiramiz
-      var drawn = one ? C : (len - visGap - sw);
-      if(drawn < 0.5) drawn = 0.5;
-      var pad = (len - drawn) / 2;   // bo'lakни o'z joyida markazlashtiramiz (uchlar chiqib ketmaydi)
-      var dash=drawn.toFixed(2)+' '+(C-drawn).toFixed(2), off=(-(acc+pad)).toFixed(2); acc+=len;
-      arcs+='<circle class="seg" cx="60" cy="60" r="'+R+'" stroke="'+s.color+'" stroke-dasharray="'+dash+'" stroke-dashoffset="'+off+'"></circle>';
+      if(one){
+        arcs+='<circle class="seg" cx="60" cy="60" r="'+R+'" stroke="'+s.color+'" stroke-linecap="round" stroke-dasharray="'+C.toFixed(2)+' 0" stroke-dashoffset="0"></circle>';
+        return;
+      }
+      var g = Math.min(6, len*0.4);           // bo'shliq, lekin slotning 40% dan oshmaydi
+      var avail = len - g;                     // bo'yoq uchun joy (ustma-ust chiqmaslik kafolati)
+      var cap, drawn;
+      if(avail >= sw + 2){ cap='round'; drawn = avail - sw; }   // joy yetarli — yumaloq uch
+      else { cap='butt'; drawn = Math.max(avail, 0.4); }        // juda kichik — tekis (chiqib ketmaydi)
+      var painted = drawn + (cap==='round' ? sw : 0);
+      var start = acc + (len - painted)/2 + (cap==='round' ? sw/2 : 0);
+      var dash=drawn.toFixed(2)+' '+(C-drawn).toFixed(2), off=(-start).toFixed(2); acc+=len;
+      arcs+='<circle class="seg" cx="60" cy="60" r="'+R+'" stroke="'+s.color+'" stroke-linecap="'+cap+'" stroke-dasharray="'+dash+'" stroke-dashoffset="'+off+'"></circle>';
     });
     var svg='<div class="donut2"><svg viewBox="0 0 120 120">'+
             '<g transform="rotate(-90 60 60)">'+arcs+'</g></svg>'+
@@ -1786,17 +1793,16 @@
     var t = DATA.tejam || {limit:0}, card = document.getElementById("tejamCard");
     if(!t.limit || t.limit<=0){ card.classList.add("hidden"); return; }
     card.classList.remove("hidden");
-    var h = '<div style="text-align:center;margin:4px 0 10px"><div class="muted" style="font-size:12px">'+L("Hozir ishlatish mumkin","Доступно сейчас")+'</div>'+
-            '<div class="big">'+fmt(t.qoldi)+'</div></div>'+
-            '<div class="kv"><span class="muted">'+L("Yig'ilgan (limitdan ortgan)","Накоплено (сверх лимита)")+'</span><span>'+fmt(t.yigildi)+'</span></div>'+
-            '<div class="kv"><span class="muted">'+L("Tejamdan ishlatilgan","Потрачено из сбережений")+'</span><span>'+fmt(t.ishlatildi)+'</span></div>';
-    if(DATA.limitOy>0) h += '<div class="kv"><span class="muted">'+L("Oylik byudjet qoldig'i","Остаток мес. бюджета")+'</span><span>'+fmt(DATA.oyByudjetQoldi||0)+'</span></div>';
+    var h = '<div style="text-align:center;margin:4px 0 12px">'+
+            '<div class="muted" style="font-size:12px">'+L("Shu oy tejaldi (kunlik limitdan)","Сэкономлено в этом месяце (от дневного лимита)")+'</div>'+
+            '<div class="big" style="color:var(--green)">'+fmt(t.shuOy||0)+'</div></div>';
+    h += '<div class="kv"><span class="muted">'+L("Bugun (shu paytgacha)","Сегодня (пока что)")+'</span><span style="color:var(--green);font-weight:700">+'+fmt(t.bugun||0)+'</span></div>';
     var oyl = t.oylar||[];
     if(oyl.length){
-      h += '<div class="muted" style="font-size:12px;margin:12px 0 4px;font-weight:700">'+L("Oylar bo'yicha tejalgan","Накоплено по месяцам")+'</div>';
+      h += '<div class="muted" style="font-size:12px;margin:12px 0 4px;font-weight:700">'+L("Oylar bo'yicha","По месяцам")+'</div>';
       h += oyl.map(function(m){ return '<div class="kv"><span class="muted">'+esc(oyNom(m.oy))+'</span><span style="color:var(--green);font-weight:700">+'+fmt(m.summa)+'</span></div>'; }).join("");
     }
-    h += '<div class="muted" style="font-size:12px;margin-top:10px">💡 '+L("Har kuni limitdan kam sarflasangizgina ortig'i shu yerga yig'iladi. Ishlatish: Chiqim → <b>Tejamdan</b>.","Накапливается только если за день потратили меньше лимита. Использовать: Расход → <b>«Из сбережений»</b>.")+'</div>';
+    h += '<div class="muted" style="font-size:12px;margin-top:10px">💡 '+L("Bu faqat ko'rsatkich. Har kuni limitdan kam sarflasangiz, farqi shu oyga qo'shiladi va har kuni 0 dan boshlanadi. Bu alohida sarflanadigan pul emas.","Это только показатель. Если за день тратите меньше лимита, разница добавляется к месяцу и каждый день начинается с 0. Это не отдельные деньги для трат.")+'</div>';
     document.getElementById("tejamBox").innerHTML = h;
   }
 
